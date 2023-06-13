@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="container__body">
+    <div>
+      <button
+        class="download"
+        color="accent"
+        mat-raised-button
+        (click)="downloadCollaborators()"
+      >
+        Descargar proveedores
+      </button>
+    </div>
+    <div class="wrapper">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title> Listas </mat-panel-title>
+            <mat-panel-description> </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="card">
+            <div class="card__header">
+              <span class="card__header--title">Responsables</span>
+              <button
+                type="button"
+                aria-label="saveDataDifusion"
+                mat-button
+                class="card__header--save"
+                (click)="saveResponsible()"
+              >
+                GUARDAR
+              </button>
+            </div>
+
+            <mat-card class="mat-elevation-z0 card__body">
+              <mat-progress-bar
+                mode="indeterminate"
+                *ngIf="loading$ | async"
+              ></mat-progress-bar>
+              <mat-card-header class="card__body--header">
+                <mat-form-field>
+                  <mat-label>Escribir</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    placeholder="Escribir"
+                    [formControl]="entryResponsibleControl"
+                    (keyup.enter)="addOrDeleteEntryResponsible('add')"
+                    [errorStateMatcher]="matcher"
+                    autocomplete="off"
+                  />
+                  <button
+                    mat-button
+                    *ngIf="entryResponsibleControl.value"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="clearResult"
+                    (click)="entryResponsibleControl.reset()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-hint>Presione ENTER para agregar</mat-hint>
+                  <mat-error
+                    *ngIf="entryResponsibleControl.hasError('required')"
+                  >
+                    El campo es <strong>Requerido</strong>
+                  </mat-error>
+                </mat-form-field>
+              </mat-card-header>
+              <mat-card-content class="card__body--body">
+                <!-- *ngIf="respo      nsible$ | async as listResponsible" -->
+                <div
+                  role="list"
+                  *ngFor="let item of listResponsibleArray; let i = index"
+                >
+                  <div class="card__body--item-list">
+                    <span>{{ item.name }}</span>
+                    <span>
+                      <button
+                        mat-icon-button
+                        aria-label="deletelistWarehouse"
+                        (click)="addOrDeleteEntryResponsible('delete', i)"
+                      >
+                        <mat-icon class="delete-color">delete</mat-icon>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

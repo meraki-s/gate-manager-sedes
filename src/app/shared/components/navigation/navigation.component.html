@@ -1,0 +1,81 @@
+<mat-toolbar class="toolbar">
+  <button mat-icon-button aria-label="main menu" (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <img src="../../../../assets/img/ferrycorp-logo.png" alt="logo" width="100" />
+  <mat-form-field appearance="outline">
+    <mat-label style="font-size: 12px">Sede</mat-label>
+    <mat-select placeholder="Selecciona una sede">
+      <mat-option
+        value="La Joya"
+        style="font-size: 12px; font-family: 'Quicksand'"
+        >La Joya</mat-option
+      >
+      <mat-option
+        value="La Joya"
+        style="font-size: 12px; font-family: 'Quicksand'"
+        >La Joya</mat-option
+      >
+      <mat-option
+        value="La Joya"
+        style="font-size: 12px; font-family: 'Quicksand'"
+        >La Joya</mat-option
+      >
+      <mat-option
+        value="La Joya"
+        style="font-size: 12px; font-family: 'Quicksand'"
+        >La Joya</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+  <span class="version">v {{ version }} r</span>
+  <span class="menu-spacer"></span>
+  <span>
+    <button class="menu-user" mat-button [matMenuTriggerFor]="menuUser">
+      <mat-icon>account_circle</mat-icon>
+      {{ user?.name }}, {{ user?.lastname }}
+    </button>
+    <mat-menu
+      #menuUser="matMenu"
+      style="font-size: 14px; font-family: 'Quicksand'"
+    >
+      <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+    </mat-menu>
+  </span>
+</mat-toolbar>
+
+<mat-sidenav-container [hasBackdrop]="(isHandset$ | async) ? true : false">
+  <mat-sidenav
+    #drawer
+    [attr.role]="(isHandset$ | async) ? 'navigation' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) ? false : true"
+  >
+    <div class="navigate-title">
+      <mat-icon class="navigate-title__icon">local_police</mat-icon>
+      <p class="navigate-title__text">Gate manager</p>
+    </div>
+    <mat-nav-list>
+      <a
+        class="navigate-page"
+        *ngFor="let m of menu"
+        mat-list-item
+        [routerLink]="[m.routerLink]"
+        (click)="drawer.toggle()"
+        (click)="selectMenu(m)"
+      >
+        <mat-icon>{{ m.icon }}</mat-icon>
+        <p class="navigate-page__text">{{ m.nameNavigate }}</p>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="container">
+    <div class="container__title">
+      <p class="container__title--text">
+        {{ selectItem }}
+      </p>
+    </div>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

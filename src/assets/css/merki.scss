@@ -1,0 +1,41 @@
+/* 
+// Dialog style
+.ms-dialog-header {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 10px;
+  
+    &__icon {
+      color: #2b2b2b;
+      align-self: center;
+      margin-right: 12px;
+    }
+  
+    &__title {
+      color: #2b2b2b;
+      align-self: center;
+      font-family: "Poppins", sans-serif;
+      font-weight: 600;
+      color: #2b2b2b;
+      margin: 0px !important;
+    }
+  
+    &__close {
+      height: 25px !important;
+      width: 25px !important;
+      line-height: 25px !important;
+    }
+  }
+ */
+
+.ms-info-container {
+  background: lightsteelblue !important;
+  border: 1px dashed #2b2b2b !important;
+  width: 100%;
+}
+
+.ms-info-text {
+  font-size: 0.8rem !important;
+  color: #2b2b2b !important;
+  font-weight: 500 !important;
+}

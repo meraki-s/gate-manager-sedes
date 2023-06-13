@@ -1,0 +1,49 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">block</mat-icon>
+  <h3 class="dialog-header__title">Bloquear proveedor</h3>
+  <span class="fill"></span>
+  <button mat-icon-button class="header-dialog__close" mat-dialog-close>
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+  <div class="dialog-content">
+    <p>
+      ¿Está seguro que desea bloquear al proveedor
+      <b> {{ data }}</b
+      >?
+    </p>
+    <mat-form-field appearance="fill">
+      <mat-label>Descripción</mat-label>
+      <textarea
+        matInput
+        rows="5"
+        [formControl]="descriptionControl"
+        placeholder="Describa el motivo de bloqueo"
+      ></textarea>
+      <mat-error>Campo requerido *</mat-error>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    class="btn-reject"
+    mat-dialog-close
+    style="margin-left: 20px"
+  >
+    Cancelar
+  </button>
+  <button
+    mat-button
+    class="buttonEnd"
+    (click)="block()"
+    [disabled]="descriptionControl.invalid"
+  >
+    Si, bloquear
+  </button>
+</mat-dialog-actions>

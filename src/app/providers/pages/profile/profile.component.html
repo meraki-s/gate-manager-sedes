@@ -1,0 +1,201 @@
+<div class="container">
+  <div class="form-container">
+    <form [formGroup]="companyFormGroup">
+      <div class="form-header">
+        <span class="form-header__label">Información básica</span>
+        <span class="form-header__description">Datos básicos de empresa</span>
+      </div>
+
+      <div class="form-section">
+        <mat-form-field
+          appearance="fill"
+          class="input"
+          [ngClass]="isMobile ? 'input--mobile' : 'input--desktop'"
+        >
+          <mat-label>Nombre de la empresa</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Nombre de empresa"
+            required
+            formControlName="companyName"
+          />
+          <mat-error *ngIf="companyFormGroup.controls['companyName'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="fill"
+          class="input"
+          [ngClass]="isMobile ? 'input--mobile' : 'input--desktop'"
+        >
+          <mat-label>RUC</mat-label>
+          <input
+            matInput
+            type="number"
+            placeholder="RUC"
+            required
+            formControlName="companyRuc"
+          />
+          <mat-error *ngIf="companyFormGroup.controls['companyRuc'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="fill"
+          class="input"
+          [ngClass]="isMobile ? 'input--mobile' : 'input--desktop'"
+        >
+          <mat-label>Dirección fiscal</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Dirección"
+            required
+            formControlName="companyAddress"
+          />
+          <mat-error *ngIf="companyFormGroup.controls['companyAddress'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-header">
+        <span class="form-header__label">Información complementaria</span>
+        <span class="form-header__description"
+          >Estos datos nos ayudarán a reconocer mejor a tu empresa</span
+        >
+      </div>
+
+      <div class="form-section">
+        <mat-form-field
+          appearance="fill"
+          class="input"
+          [ngClass]="isMobile ? 'input--mobile' : 'input--desktop'"
+        >
+          <mat-label>Rubro</mat-label>
+          <input
+            type="text"
+            matInput
+            placeholder="Rubro"
+            formControlName="companyField"
+            required
+          />
+          <mat-error *ngIf="companyFormGroup.controls['companyField'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div
+          class="logo-container"
+          [ngClass]="
+            isMobile ? 'logo-container--mobile' : 'logo-container--desktop'
+          "
+        >
+          <div class="logo-image">
+            <button
+              class="custom-input-file"
+              [ngClass]="
+                isMobile
+                  ? 'custom-input-file--mobile'
+                  : 'custom-input-file--desktop'
+              "
+              (click)="imageUplaod.click()"
+            >
+              <span>Subir Logo</span>
+            </button>
+            <div *ngIf="urlImage">
+              <img [src]="urlImage" alt="" height="65px" />
+            </div>
+            <input
+              type="file"
+              (change)="onUpload($event)"
+              #imageUplaod
+              class="input-file"
+            />
+          </div>
+
+          <div *ngIf="uploadPercent | async as pct">
+            <div style="margin-top: -22px">
+              <progress
+                class="progress is-info"
+                [value]="pct"
+                max="100"
+              ></progress>
+              {{ pct | number }}%
+              <button
+                *ngIf="urlImage as url"
+                mat-icon-button
+                aria-label="deletelistResult"
+                class="btn-delete"
+                (click)="deleteImage(url)"
+              >
+                <mat-icon style="color: red">delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <input #imageProvider type="url" [value]="urlImage | async"> -->
+      </div>
+
+      <div class="form-section">
+        <mat-form-field
+          appearance="fill"
+          class="input"
+          [ngClass]="isMobile ? 'input--mobile' : 'input--desktop'"
+        >
+          <mat-label>Representante comercial</mat-label>
+          <input
+            type="text"
+            matInput
+            placeholder="Representante comercial"
+            formControlName="salesRepresentative"
+            required
+          />
+          <mat-error
+            *ngIf="companyFormGroup.controls['salesRepresentative'].errors"
+          >
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          appearance="fill"
+          class="input"
+          [ngClass]="isMobile ? 'input--mobile' : 'input--desktop'"
+        >
+          <mat-label>Gerente general</mat-label>
+          <input
+            type="text"
+            matInput
+            placeholder="Gerente general"
+            formControlName="manager"
+            required
+          />
+          <mat-error *ngIf="companyFormGroup.controls['manager'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="fomr-section">
+        <mat-progress-bar
+          *ngIf="loading$ | async"
+          mode="indeterminate"
+        ></mat-progress-bar>
+        <button
+          class="buttonEnd"
+          mat-button
+          type="button"
+          (click)="update()"
+          [disabled]="companyFormGroup.invalid || urlImage === ''"
+          [disabled]="loading$ | async"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

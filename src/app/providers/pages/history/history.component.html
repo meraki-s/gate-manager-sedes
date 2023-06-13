@@ -1,0 +1,149 @@
+<div class="container">
+  <div class="wrapper__status" *ngIf="this.provider$ | async as provider">
+    <button
+      [ngClass]="{
+        'wrapper__status--registered': provider.status === 'registered',
+        'wrapper__status--enabled': provider.status === 'enabled',
+        'wrapper__status--disabled': provider.status === 'disabled'
+      }"
+    >
+      <span *ngIf="provider.status === 'registered'">REGISTRADO</span>
+      <span *ngIf="provider.status === 'enabled'">HABILITADO</span>
+      <span *ngIf="provider.status === 'disabled'">INHABILITADO</span>
+    </button>
+  </div>
+
+  <br />
+  <div class="container--card" ngStyle.xs="width: 100%; margin-left: -25px;">
+    <div fxLayout="row wrap" fxLayoutAlign="space-between start">
+      <div fxLayout="row wrap" fxLayoutAlign="start start">
+        <h3 class="container--title">Historial</h3>
+        <mat-form-field appearance="fill" ngStyle.xs="width: 168px">
+          <mat-label>FECHA/PERIODO</mat-label>
+          <mat-date-range-input [formGroup]="form" [rangePicker]="picker">
+            <input
+              matStartDate
+              formControlName="start"
+              placeholder="Fecha Inicio"
+            />
+            <input matEndDate formControlName="end" placeholder="Fecha Final" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+
+      <div ngStyle.xs="margin-top: -21px;">
+        <button
+          mat-button
+          class="container--btn-request"
+          [routerLink]="'/providers/register-visit'"
+        >
+          <mat-icon>add</mat-icon>Solicitar
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="container--cards"
+      *ngIf="registerVisit$ | async as elemets"
+      ngStyle.xs="width: 100%; margin-left: -11px;"
+    >
+      <div
+        class="card2"
+        *ngFor="let item of elemets"
+        ngStyle.xs="width: 287px;"
+      >
+        <h4 *ngIf="item.status === 'canceled'" class="cancel">
+          Solicitud de visita cancelada
+        </h4>
+        <div class="card2__body">
+          <div class="card2__header">
+            <div fxLayout="column">
+              <div fxLayout="row wrap">
+                <div class="card2__request">
+                  Solicitud:<span class="card2__request--text">
+                    {{ item.createdAt.toMillis() | date: "dd/MM/yy" }}</span
+                  >
+                </div>
+                <div class="card2__visitDate" ngStyle.xs="margin-left: 6px;">
+                  Visita :<span class="card2__visitDate--text">{{
+                    item.visitDate.toMillis() | date: "dd/MM/yy"
+                  }}</span>
+                </div>
+              </div>
+              <div fxLayout="row wrap">
+                <div class="card2__request">
+                  Ingreso:<span class="card2__request--text">--</span>
+                </div>
+                <div class="card2__visitDate">
+                  Salida:<span class="card2__visitDate--text">--</span>
+                </div>
+              </div>
+              <div fxLayout="row wrap">
+                <div class="card2__request">
+                  Invitado por:<span class="card2__request--text">
+                    {{ item.invitedBy }}</span
+                  >
+                </div>
+                <div class="card2__visitDate" ngStyle.xs="margin-left: 0px;">
+                  Motivo:<span class="card2__visitDate--text">
+                    {{ item.reasonVisit }}</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="card2__menu"
+              mat-button
+              ngStyle.xs="margin-left:0px;"
+              [matMenuTriggerFor]="menu"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="openVizorPdf(item.covidFile)">
+                Ver documento COVID
+              </button>
+              <button mat-menu-item (click)="openVizorPdf(item.sctrFile)">
+                Ver documento SCTR
+              </button>
+              <button mat-menu-item (click)="editDialog(item)">Editar</button>
+              <button mat-menu-item (click)="cancelDialog(item)">
+                Cancelar Visita
+              </button>
+              <button mat-menu-item (click)="deleteDialog(item)">Borrar</button>
+            </mat-menu>
+          </div>
+
+          <div class="card2__body">
+            <div class="card2__items" ngStyle.xs="margin-left: -27px;">
+              <div class="card2__item">
+                <div class="card2__item--pending">Pendiente</div>
+                <mat-icon class="card2__item--icon-pending"
+                  >check_circle</mat-icon
+                >
+              </div>
+              <div class="card2__item">
+                <div class="card2__item--pending">Prueba Covid</div>
+                <mat-icon class="card2__item--icon-pending"
+                  >check_circle</mat-icon
+                >
+              </div>
+              <div class="card2__item">
+                <div class="card2__item--rejection">SCTR</div>
+                <mat-icon class="card2__item--icon-rejection"
+                  >check_circle</mat-icon
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

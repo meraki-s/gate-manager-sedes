@@ -1,0 +1,44 @@
+.update-head {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.title-login {
+  font-family: Raleway;
+  font-weight: bold;
+  font-size: 1.05em;
+}
+.update-button {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 24px 0px;
+}
+
+.div-bottom {
+  margin-left: -24px;
+  margin-top: -50px;
+  margin-bottom: -24px;
+  border-bottom: 30px solid #5da92f;
+  width: calc(100% + 48px);
+}
+
+.version {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: grey;
+  background: aliceblue;
+  padding: 4px 0.5rem;
+  border-radius: 20px;
+  border: 1px dashed lightslategrey;
+}
+
+@media (max-width: 340px) {
+  .title-login {
+    font-size: 0.9em;
+  }
+}

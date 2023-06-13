@@ -1,0 +1,361 @@
+<div class="container__body">
+  <div fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-toolbar class="toolbar" fxLayoutAlign="space-between center">
+      <div class="menu-spacer" fxLayout="row" fxLayoutAlign="center center">
+        <mat-icon>edit</mat-icon> <span>Editar</span>
+      </div>
+      <button mat-icon-button mat-dialog-close class="btnClose">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <!-- <div class="menu-spacer" fxLayout="row" fxLayoutAlign="center center" class="title">
+            <mat-icon style="color:
+            rgba(102, 102, 102, 1)">edit</mat-icon> <span>Editar</span>
+        </div>
+       
+
+        <button fxLayout="column" fxLayoutAlign="center center" mat-icon-button mat-dialog-close class="btnClose">
+                <mat-icon style="margin:0px 18px -6px -5px;" white-space='none'>close</mat-icon>
+            </button> -->
+  </div>
+
+  <div class="gm-wrapper">
+    <mat-dialog-content>
+      <div>
+        <h4 class="gm-wrapper__title">Información de visita</h4>
+        <p>
+          Datos sobre la persona que ingresará a planta, fecha de visita, la
+          persona que lo invito y el motivo
+        </p>
+      </div>
+      <form action="" [formGroup]="dataForm">
+        <div class="gm-wrapper__column">
+          <div
+            fxLayout="row wrap"
+            fxLayoutAlign="start start"
+            fxLayout.xs="column"
+            fxLayoutGap.lg="20px"
+            fxLayoutGap.md="20px"
+          >
+            <mat-form-field
+              appearance="fill"
+              color="primary"
+              class="form__input"
+            >
+              <mat-label>Nombres</mat-label>
+              <input
+                matInput
+                type="text"
+                id="name"
+                placeholder="Nombres"
+                formControlName="name"
+              />
+              <mat-error *ngIf="dataForm.controls['name'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Apellidos</mat-label>
+              <input
+                matInput
+                type="text"
+                id="lastname"
+                placeholder="Apellidos"
+                formControlName="lastname"
+              />
+              <mat-error *ngIf="dataForm.controls['lastname'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>DNI</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="DNI"
+                formControlName="dni"
+                maxlength="8"
+              />
+              <mat-error *ngIf="dataForm.controls['dni'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div
+            fxLayout="row wrap"
+            fxLayoutAlign="start start"
+            fxLayout.xs="column"
+            fxLayout.sm="column"
+            fxLayoutGap.lg="20px"
+            fxLayoutGap.md="20px"
+          >
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Cargo</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Cargo"
+                formControlName="jobTitle"
+              />
+              <mat-error *ngIf="dataForm.controls['jobTitle'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Telefono</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Telefono"
+                formControlName="telephone"
+              />
+              <mat-error *ngIf="dataForm.controls['telephone'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div
+            fxLayout="row wrap"
+            fxLayoutAlign="start start"
+            fxLayout.xs="column"
+            fxLayoutGap.lg="20px"
+            fxLayoutGap.md="20px"
+          >
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Fecha de visita</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                formControlName="visitDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker1"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="dataForm.controls['visitDate'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              class="form__input"
+              *ngIf="inviteds$ | async as inviteds"
+            >
+              <mat-label>Invitado por</mat-label>
+              <mat-select formControlName="invitedBy">
+                <mat-option value="">Seleccione</mat-option>
+                <mat-option *ngFor="let item of inviteds" [value]="item.name">
+                  {{ item.name }}
+                </mat-option>
+              </mat-select>
+              <mat-hint *ngIf="!inviteds$">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p>Cargando lista ...</p>
+              </mat-hint>
+              <mat-error *ngIf="dataForm.controls['invitedBy'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Motivo de visita</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Visita comercial"
+                formControlName="reasonVisit"
+              />
+              <mat-error *ngIf="dataForm.controls['reasonVisit'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <h4 class="gm-wrapper__title">Formatos y archivos requeridos</h4>
+          <p class="gm-wrapper__text">
+            Estos datos nos ayudarán a validar los permisos de acceso del
+            visitante
+          </p>
+          <div fxLayout="row wrap">
+            <div>
+              <div class="gm-wrapper--formatFile">
+                <h3 class="gm-wrapper--formatFile--title" appDropzoneFile>
+                  Adjunte documento SCTR*
+                  <input
+                    #uploadFileSCTR
+                    class="file-input"
+                    type="file"
+                    accept="application/pdf"
+                    (change)="onDropSCTR($event.target)"
+                  />
+                  <button mat-icon-button (click)="uploadFileSCTR.click()">
+                    <mat-icon>file_upload</mat-icon>
+                  </button>
+                </h3>
+
+                <div
+                  *ngIf="filesSCTR.length"
+                  class="gm-wrapper__formatFile--link"
+                >
+                  <app-upload-files
+                    *ngFor="let file of filesSCTR"
+                    [file]="file | async"
+                    [pathStorage]="pathStorageSCTR"
+                    (onNewImage)="addNewImageSCTR($event)"
+                  >
+                  </app-upload-files>
+                </div>
+                <div *ngIf="imagesSCTR">
+                  <a
+                    [href]="imagesSCTR.fileURL"
+                    target="_blank"
+                    class="files-link"
+                  >
+                    <span class="files-name"
+                      >{{
+                        imagesSCTR.name.length > 20
+                          ? "..." +
+                            (imagesSCTR.name
+                              | slice
+                                : imagesSCTR.name.length - 20
+                                : imagesSCTR.name.length)
+                          : imagesSCTR.name
+                      }}
+                    </span>
+                  </a>
+                  <button
+                    class="files__delete"
+                    mat-icon-button
+                    (click)="deleteFileSCTR(imagesSCTR.fileURL)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <mat-error
+                  class="ms-dialog-body__formatFile--error"
+                  *ngIf="dataForm.controls['sctrFile'].errors"
+                >
+                  Campo <strong>requerido.</strong>
+                </mat-error>
+                <mat-form-field appearance="fill" class="">
+                  <mat-label>Vigencia</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker2"
+                    formControlName="sctrDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="dataForm.controls['sctrDate'].errors">
+                    Campo <strong>requerido*.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- <div class="gm-wrapper--formatFile" style="margin-left: 20px">
+              <h3 class="gm-wrapper--formatFile--title" appDropzoneFile>
+                Adjunte documento Covid*
+                <input
+                  #uploadFileCOVID
+                  class="file-input"
+                  type="file"
+                  accept="application/pdf"
+                  (change)="onDropCovid($event.target)"
+                />
+                <button mat-icon-button (click)="uploadFileCOVID.click()">
+                  <mat-icon>file_upload</mat-icon>
+                </button>
+              </h3>
+
+              <div
+                *ngIf="filesCOVID.length"
+                class="gm-wrapper__formatFile--link"
+              >
+                <app-upload-files
+                  *ngFor="let file of filesCOVID"
+                  [file]="file | async"
+                  [pathStorage]="pathStorageCOVID"
+                  (onNewImage)="addNewImageCOVID($event)"
+                >
+                </app-upload-files>
+              </div>
+              <mat-error
+                class="ms-dialog-body__formatFile--error"
+                *ngIf="dataForm.controls['covidFile'].errors"
+              >
+                Campo <strong>requerido.</strong>
+              </mat-error>
+              <div *ngIf="imagesCOVID">
+                <a
+                  [href]="imagesCOVID.fileURL"
+                  target="_blank"
+                  class="files-link"
+                >
+                  <span class="files-name"
+                    >{{
+                      imagesCOVID.name.length > 20
+                        ? "..." +
+                          (imagesCOVID.name
+                            | slice
+                              : imagesCOVID.name.length - 20
+                              : imagesCOVID.name.length)
+                        : imagesCOVID.name
+                    }}
+                  </span>
+                </a>
+                <button
+                  class="files-delete"
+                  mat-icon-button
+                  (click)="deleteFileCovid(imagesCOVID.fileURL)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <mat-form-field appearance="fill" class="">
+                <mat-label>Vigencia</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker3"
+                  formControlName="covidDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker3"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker3></mat-datepicker>
+                <mat-error *ngIf="dataForm.controls['covidDate'].errors">
+                  Campo <strong>requerido*.</strong>
+                </mat-error>
+              </mat-form-field>
+            </div> -->
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+
+  <mat-dialog-actions align="start" style="margin-left: 50px">
+    <button
+      mat-stroked-button
+      class="ms-dialog-body__btn-cancel"
+      color="warn"
+      mat-dialog-close
+    >
+      Cancelar
+    </button>
+    <button
+      mat-stroked-button
+      class="btn-register"
+      (click)="save()"
+      [disabled]="loading$ | async"
+    >
+      Actualizar
+    </button>
+  </mat-dialog-actions>
+</div>

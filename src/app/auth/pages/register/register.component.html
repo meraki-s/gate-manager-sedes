@@ -1,0 +1,492 @@
+<div class="container">
+  <div
+    class="container--cardRegister"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+  >
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav-content>
+        <mat-toolbar-row class="toolbar" fxLayoutAlign="space-between center">
+          <div class="menu-spacer" fxLayoutAlign="space-between center">
+            <mat-icon
+              ><span class="material-icons-outlined">
+                local_police
+              </span></mat-icon
+            >
+            <span style="margin-left: 8px">Gate Manager</span>
+          </div>
+
+          <div class="img-center">
+            <img src="../../../../assets/img/logo.png" alt="logo" />
+          </div>
+        </mat-toolbar-row>
+        <mat-toolbar class="toolbar">
+          <h4>Registro</h4>
+        </mat-toolbar>
+
+        <div>
+          <mat-stepper
+            orientation="vertical"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+          >
+            <mat-step>
+              <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Datos Personales</ng-template>
+                <div>
+                  <h3>Cuenta de acceso</h3>
+                  <p class="textp">
+                    Correo y contraseña de acceso. Estas son las credenciales
+                    que usarás para ingresar a plataforma
+                  </p>
+                </div>
+                <div>
+                  <div
+                    fxLayout.sm="column"
+                    fxLayout.xs="column"
+                    fxLayoutGap.lg="20px"
+                    fxLayoutGap.md="20px"
+                  >
+                    <mat-form-field appearance="fill">
+                      <mat-label>Correo</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        id="email"
+                        placeholder="Correo"
+                        required
+                        formControlName="email"
+                      />
+                      <mat-error
+                        *ngIf="firstFormGroup.controls['email'].errors"
+                      >
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Contraseña</mat-label>
+                      <input
+                        matInput
+                        type="password"
+                        placeholder="Contraseña"
+                        id="password"
+                        required
+                        formControlName="password"
+                      />
+                      <mat-error
+                        *ngIf="firstFormGroup.controls['password'].errors"
+                      >
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Repetir Contraseña</mat-label>
+                      <input
+                        matInput
+                        type="password"
+                        placeholder="Repetir Contraseña"
+                        id="password2"
+                        required
+                        formControlName="password2"
+                      />
+                      <mat-error
+                        *ngIf="firstFormGroup.controls['password2'].errors"
+                      >
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="error-form">
+                    <p *ngIf="invalidField('email')">*El email es obliatorio</p>
+                    <p *ngIf="passwordInvalid()">
+                      * Las contraseñas deben ser iguales
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h3>Información de usuario responsable</h3>
+                  <p class="textp">
+                    Saber quien eres y tener algunos datos adicionales, nos
+                    ayuda a saber como comunicarnos contigo.
+                  </p>
+                </div>
+
+                <div fxLayout="column">
+                  <div
+                    fxLayout.sm="column"
+                    fxLayout.xs="column"
+                    fxLayoutGap.lg="20px"
+                    fxLayoutGap.md="20px"
+                  >
+                    <mat-form-field appearance="fill">
+                      <mat-label>Nombre</mat-label>
+                      <input
+                        type="text"
+                        matInput
+                        placeholder="Nombre"
+                        id="name"
+                        formControlName="name"
+                        required
+                      />
+                      <mat-error *ngIf="firstFormGroup.controls['name'].errors">
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Apellido</mat-label>
+                      <input
+                        type="text"
+                        matInput
+                        placeholder="Apellido"
+                        id="lastname"
+                        formControlName="lastname"
+                        required
+                      />
+                      <mat-error
+                        *ngIf="firstFormGroup.controls['lastname'].errors"
+                      >
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>DNI</mat-label>
+                      <input
+                        type="number"
+                        matInput
+                        placeholder="DNI"
+                        id="dni"
+                        formControlName="dni"
+                        required
+                      />
+                      <mat-error *ngIf="firstFormGroup.controls['dni'].errors">
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div
+                    fxLayout.sm="column"
+                    fxLayout.xs="column"
+                    fxLayoutGap.lg="20px"
+                    fxLayoutGap.md="20px"
+                  >
+                    <mat-form-field appearance="fill">
+                      <mat-label>Cargo</mat-label>
+                      <input
+                        type="text"
+                        matInput
+                        placeholder="Cargo"
+                        id="charge"
+                        formControlName="charge"
+                        required
+                      />
+                      <mat-error
+                        *ngIf="firstFormGroup.controls['charge'].errors"
+                      >
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Teléfono</mat-label>
+                      <input
+                        type="number"
+                        matInput
+                        placeholder="Teléfono"
+                        id="phone"
+                        formControlName="phone"
+                        required
+                      />
+                      <mat-error
+                        *ngIf="firstFormGroup.controls['phone'].errors"
+                      >
+                        Campo <strong>requerido.</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="error-form">
+                    <p *ngIf="invalidField('name')">*El nombre es obliatorio</p>
+                    <p *ngIf="invalidField('lastName')">
+                      *El apellido es obliatorio
+                    </p>
+                    <p *ngIf="invalidField('dni')">*El dni es obliatorio</p>
+                    <p *ngIf="invalidField('charge')">
+                      *El cargo es obliatorio
+                    </p>
+                    <p *ngIf="invalidField('phone')">
+                      *El telefono es obliatorio
+                    </p>
+                  </div>
+                </div>
+                <br />
+                <div>
+                  <button
+                    mat-stroked-button
+                    class="btn-reject"
+                    mat-dialog-close
+                    [disabled]="loading$ | async"
+                    style="margin-left: 20px"
+                  >
+                    Cancelar
+                  </button>
+                  <button mat-button class="buttonEnd" matStepperNext>
+                    Continuar
+                  </button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step>
+              <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Datos de la empresa</ng-template>
+
+                <div>
+                  <h3>Información básica</h3>
+                  <p class="textp">Datos básicos de empresa</p>
+                </div>
+
+                <div
+                  fxLayout.sm="column"
+                  fxLayout.xs="column"
+                  fxLayoutGap.lg="20px"
+                  fxLayoutGap.md="20px"
+                  fxLayoutGap.sm="10px"
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Nombre de la empresa</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Nombre empresa"
+                      id="companyName"
+                      required
+                      formControlName="companyName"
+                    />
+                    <mat-error
+                      *ngIf="secondFormGroup.controls['companyName'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>RUC</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      placeholder="RUC"
+                      id="companyRuc"
+                      required
+                      formControlName="companyRuc"
+                    />
+                    <mat-progress-bar
+                      mode="indeterminate"
+                      *ngIf="checkingRuc$ | async"
+                    ></mat-progress-bar>
+                    <mat-error
+                      *ngIf="secondFormGroup.controls['companyRuc'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                    <mat-hint>{{ rucMessage }}</mat-hint>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Dirección fiscal</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      id="companyAddress"
+                      placeholder="Urb. El Mirador de la Alameda, Bloque  ..."
+                      required
+                      formControlName="companyAddress"
+                    />
+                    <mat-error
+                      *ngIf="secondFormGroup.controls['companyAddress'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <h3>Información complementaria</h3>
+                  <p class="textp">
+                    Estos datos nos ayudarán a reconocer mejor a tu empresa
+                  </p>
+                </div>
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="start center"
+                  fxLayout.sm="column"
+                  fxLayout.xs="column"
+                  fxLayoutGap.lg="20px"
+                  fxLayoutGap.md="20px"
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Rubro</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Rubro"
+                      id="companyField"
+                      formControlName="companyField"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="secondFormGroup.controls['companyField'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div
+                    fxLayout.sm="column"
+                    fxLayout.xs="column"
+                    fxLayoutGap.lg="200px"
+                    fxLayoutGap.md="200px"
+                    class="logo-container"
+                  >
+                    <div fxLayout="row wrap">
+                      <div class="custom-input-file">
+                        <input
+                          type="file"
+                          (change)="onUpload($event)"
+                          id="fichero-tarifas"
+                          class="input-file"
+                        />
+                        <span>Subir Logo</span>
+                      </div>
+                      <div *ngIf="urlImage" style="margin-left: 20px">
+                        <img [src]="urlImage" alt="" height="65px" />
+                      </div>
+                    </div>
+
+                    <div *ngIf="uploadPercent | async as pct">
+                      <div style="margin-top: -22px">
+                        <progress
+                          class="progress is-info"
+                          [value]="pct"
+                          max="100"
+                        ></progress>
+                        {{ pct | number }}%
+                        <button
+                          *ngIf="urlImage as url"
+                          mat-icon-button
+                          aria-label="deletelistResult"
+                          class="btn-delete"
+                          (click)="deleteImage(url)"
+                        >
+                          <mat-icon style="color: red">delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <input #imageProvider type="url" [value]="urlImage | async"> -->
+                </div>
+
+                <div
+                  fxLayout.sm="column"
+                  fxLayout.xs="column"
+                  fxLayoutGap.lg="20px"
+                  fxLayoutGap.md="20px"
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Representante comercial</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Representante comercial"
+                      id="salesRepresentative"
+                      formControlName="salesRepresentative"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        secondFormGroup.controls['salesRepresentative'].errors
+                      "
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Gerente general</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Gerente general"
+                      formControlName="ceo"
+                      required
+                    />
+                    <mat-error *ngIf="secondFormGroup.controls['ceo'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="error-form">
+                  <p *ngIf="invalidField('companyName')">
+                    *El nombre es obliatorio
+                  </p>
+                  <p *ngIf="invalidField('companyRuc')">
+                    *El apellido es obliatorio
+                  </p>
+                  <p *ngIf="invalidField('companyAddress')">
+                    *El dni es obliatorio
+                  </p>
+                </div>
+
+                <div class="error-form">
+                  <p *ngIf="invalidField('companyField')">
+                    *El nombre es obliatorio
+                  </p>
+                  <p *ngIf="invalidField('salesRepresentative')">
+                    *El apellido es obliatorio
+                  </p>
+                  <p *ngIf="invalidField('ceo')">*El CEO es obligatorio</p>
+                </div>
+              </form>
+              <div fxLayout="column" fxLayoutAlign="space-around start">
+                <br />
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading$ | async"
+                ></mat-progress-bar>
+                <br />
+                <div>
+                  <button mat-button matStepperPrevious class="buttonPrevious">
+                    Regresar
+                  </button>
+                  <button
+                    class="buttonEnd"
+                    mat-button
+                    type="button"
+                    (click)="createProvider()"
+                    [disabled]="
+                      firstFormGroup.invalid ||
+                      secondFormGroup.invalid ||
+                      urlImage === '' ||
+                      (loading$ | async) ||
+                      !validRuc
+                    "
+                  >
+                    Finalizar
+                  </button>
+                </div>
+                <br />
+                <button
+                  mat-stroked-button
+                  class="btn-reject"
+                  mat-dialog-close
+                  [disabled]="loading$ | async"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </mat-step>
+          </mat-stepper>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+</div>

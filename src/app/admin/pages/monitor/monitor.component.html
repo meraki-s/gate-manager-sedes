@@ -1,0 +1,112 @@
+<div
+  class="container"
+  [ngClass]="isMobile ? 'container--mobile' : 'container--desktop'"
+>
+  <div
+    class="access-list"
+    [ngClass]="isMobile ? 'access-list--mobile' : 'access-list--desktop'"
+  >
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-collaborator">
+        <mat-label>Buscar por RUC</mat-label>
+        <input
+          matInput
+          [formControl]="rucControl"
+          type="text"
+          placeholder="20602336779"
+          autocomplete="off"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="result-container">
+      <div class="result-container__header">
+        <h3 class="result__title">Total proveedores en planta</h3>
+        <span class="fill"></span>
+        <span class="result__indicator mat-elevation-z2">
+          {{ groupedProviders.length }}</span
+        >
+      </div>
+      <mat-divider></mat-divider>
+      <div *ngIf="true" class="flow">
+        <div class="result__entry" *ngFor="let provider of groupedProviders">
+          <div class="result__entry__company-name">
+            <span class="result__entry__text result__entry__text--company">{{
+              provider.companyName
+            }}</span
+            ><br />
+            <span class="result__entry__text result__entry__text--ruc">
+              {{ provider.companyRuc }}</span
+            >
+          </div>
+          <span class="result__entry__text"
+            >{{ provider.count | number : "2." }} Colaboradores</span
+          >
+          <span class="fill"></span>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="goToProvider(provider)"
+          >
+            Ver proveedor
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="access-list">
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-collaborator">
+        <mat-label>Buscar por DNI</mat-label>
+        <input
+          matInput
+          [formControl]="dniControl"
+          type="text"
+          placeholder="70458078"
+          autocomplete="off"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="result-container">
+      <div class="result-container__header">
+        <h3 class="result__title">Total personal en planta</h3>
+        <span class="fill"></span>
+        <span class="result__indicator mat-elevation-z2">
+          {{ totalPeople }}</span
+        >
+      </div>
+      <mat-divider></mat-divider>
+      <div *ngIf="peopleInPlant$ | async as people" class="flow">
+        <div class="result__entry" *ngFor="let person of people">
+          <span class="result__entry__text result__entry__text--company"
+            >{{ person.name }} {{ person.lastname }}</span
+          >
+          <span class="result__entry__text result__entry__text--company">{{
+            person.companyName
+          }}</span>
+          <span class="fill"></span>
+          <span class="result__entry__text">{{ person.dni }}</span>
+
+          <span
+            *ngIf="person.reasonVisit"
+            class="result__entry__status result__entry__status--visit"
+          >
+            VISITA
+          </span>
+          <span
+            *ngIf="person.entryDeparture"
+            class="result__entry__status"
+            [ngClass]="
+              person.authorizedBy
+                ? 'result__entry__status--disabled'
+                : 'result__entry__status--enabled'
+            "
+            >{{ person.authorizedBy ? "INCOMPLETO" : "HABILITADO" }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

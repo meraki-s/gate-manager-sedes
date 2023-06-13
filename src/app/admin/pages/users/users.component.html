@@ -1,0 +1,268 @@
+<div
+  class="container"
+  [ngClass]="isMobile ? 'container--mobile' : 'container--desktop'"
+>
+  <div
+    class="search-container"
+    [ngClass]="
+      isMobile ? 'search-container--mobile' : 'search-container--desktop'
+    "
+  >
+    <mat-form-field
+      appearance="fill"
+      class="search-input"
+      [ngClass]="isMobile ? 'search-input--mobile' : 'search-input--desktop'"
+    >
+      <mat-label>Filtro por DNI</mat-label>
+      <input
+        matInput
+        [formControl]="dniControl"
+        type="text"
+        placeholder="Número de DNI"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <mat-form-field
+      appearance="fill"
+      class="search-input"
+      [ngClass]="isMobile ? 'search-input--mobile' : 'search-input--desktop'"
+    >
+      <mat-label>Filtro por RUC</mat-label>
+      <input
+        matInput
+        [formControl]="rucControl"
+        type="text"
+        placeholder="Número de RUC"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <mat-form-field
+      appearance="fill"
+      class="search-input"
+      [ngClass]="isMobile ? 'search-input--mobile' : 'search-input--desktop'"
+    >
+      <mat-label>Filtro por correo</mat-label>
+      <input
+        matInput
+        [formControl]="emailControl"
+        type="text"
+        placeholder="Correo"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <mat-form-field
+      appearance="fill"
+      class="search-input"
+      [ngClass]="isMobile ? 'search-input--mobile' : 'search-input--desktop'"
+    >
+      <mat-label>Filtro por rol</mat-label>
+      <mat-select [formControl]="roleControl">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="Administrator">Administrador</mat-option>
+        <mat-option value="Vigilant">Vigilante</mat-option>
+        <mat-option value="Provider">Proveedor</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      class="search-button"
+      [ngClass]="isMobile ? 'search-button--mobile' : 'search-button--desktop'"
+      (click)="createUser()"
+    >
+      <mat-icon>add</mat-icon> Crear usuario
+    </button>
+  </div>
+  <div
+    class="events-container"
+    [ngClass]="isMobile ? 'events-container--mobile' : ''"
+    *ngIf="users$ | async"
+  >
+    <div class="table-header">
+      <h3>Usuarios</h3>
+      <span class="fill"></span>
+      <button mat-raised-button color="primary" (click)="downloadXlsx(users)">
+        Descargar
+      </button>
+    </div>
+    <table
+      mat-table
+      [dataSource]="usersDataSource"
+      matSort
+      (matSortChange)="sortData($event)"
+    >
+      <ng-container matColumnDef="name">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Nombre
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.name }} {{ element.lastname }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Correo
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.email }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="companyName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Empresa
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.companyName ? element.companyName : "---" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="companyRuc">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          RUC
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.companyRuc ? element.companyRuc : "---" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="role">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Rol
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.role === "Administrator" ? "Administrador" : "" }}
+          {{ element.role === "Vigilant" ? "Vigilante" : "" }}
+          {{ element.role === "Provider" ? "Proveedor" : "" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="dni">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          DNI
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.dni }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="jobTitle">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Cargo
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.jobTitle }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="phone">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Teléfono
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.phone }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Estado
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.status === "registered" ? "Registrado" : "" }}
+          {{ element.status === "enabled" ? "Habilitado" : "" }}
+          {{ element.status === "disabled" ? "Bloqueado" : "" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="table__cell"
+          mat-sort-header
+        >
+          Acciones
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button
+              mat-menu-item
+              (click)="enableUser(element)"
+              *ngIf="element.status === 'disabled'"
+            >
+              Habilitar
+            </button>
+            <button
+              mat-menu-item
+              (click)="disableUser(element)"
+              *ngIf="element.status === 'enabled'"
+            >
+              Bloquear
+            </button>
+            <button
+              mat-menu-item
+              (click)="deleteUser(element)"
+            >
+              Borrar usuario
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr
+        mat-header-row
+        *matHeaderRowDef="usersDisplayedColumns; sticky: true"
+      ></tr>
+      <tr mat-row *matRowDef="let element; columns: usersDisplayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No hay usuarios registrados</td>
+      </tr>
+    </table>
+    <mat-paginator
+      #usersPaginator
+      [pageSizeOptions]="[5, 25, 50]"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+</div>

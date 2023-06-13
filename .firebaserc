@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "gate-manager-sedes-staging": {
+      "hosting": {
+        "gate-manager-sedes": [
+          "gate-manager-sedes-staging"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "gate-manager-sedes-staging"
+  }
+}

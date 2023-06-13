@@ -1,0 +1,22 @@
+<div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">delete</mat-icon>
+    <h3 class="ms-dialog-header__title">Borrar visita</h3>
+
+    <button mat-icon-button mat-dialog-close class="ms-dialog-header__close">
+            <mat-icon>close_black</mat-icon>
+        </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="ms-dialog-body">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <div class="ms-dialog-body__title">¿Estas seguro de borrar la visita del día <span class="ms-dialog-body__title--codigo">{{(data.visitDate.seconds * 1000) | date : 'dd/MM/yyyy' }}</span> ? </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close class="ms-dialog-body__btn-cancel"> Cancelar
+    </button>
+    <button mat-stroked-button class="ms-dialog-body__btn-register" (click)="save()" [disabled]="loading$ | async"> Borrar
+    </button>
+</mat-dialog-actions>

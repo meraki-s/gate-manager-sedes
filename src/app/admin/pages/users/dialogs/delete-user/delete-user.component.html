@@ -1,0 +1,44 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">delete</mat-icon>
+  <h3 class="dialog-header__title">Borrar usuario</h3>
+  <span class="fill"></span>
+  <button mat-icon-button class="header-dialog__close" mat-dialog-close>
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar
+  *ngIf="loading$ | async"
+  mode="indeterminate"
+></mat-progress-bar>
+
+<mat-dialog-content>
+  <div class="dialog-content">
+    <p>
+      ¿Está seguro que desea borrar al usuario
+      <b> {{ data.name }} {{ data.lastname }}</b
+      >?
+    </p>
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    class="btn-reject"
+    mat-dialog-close
+    [disabled]="loading$ | async"
+    style="margin-left: 20px"
+  >
+    Cancelar
+  </button>
+  <button
+    mat-button
+    class="buttonEnd"
+    [disabled]="loading$ | async"
+    (click)="delete()"
+  >
+    Si, borrar
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,159 @@
+<div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">local_police</mat-icon>
+    <h3 class="ms-dialog-header__title">Plan de emergencia</h3>
+    <button mat-icon-button class="ms-dialog-header__close" type="button" (click)="closeDialog()">
+        <mat-icon>close_black</mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+<mat-dialog-content class="ms-dialog-body">
+    <div style="display: flex;justify-content: space-between;">
+        <div>
+            <p class="ms-dialog-body__text">
+                Estos datos nos ayudará a validar la información <br> requerida para el ingreso a la planta
+            </p>
+        </div>
+        <div>
+            <button mat-button type="button" class="ms-dialog-body--btn-add" (click)="addControl()"
+                [disabled]="dataForm.invalid">
+                <mat-icon class="ms-dialog-body--icon">add</mat-icon>
+                Agregar nuevo
+            </button>
+        </div>
+    </div>
+    <form [formGroup]="dataForm" class="ms-dialog-body__form" autocomplete="off">
+        <div formArrayName="archive">
+            <div *ngFor="let item of archive.controls;let i=index;"
+                style="margin-bottom: 10px; display: flex;flex-direction: row;justify-content:space-between;">
+                <div [formGroupName]="i" class="ms-dialog-body__formatFile">
+                    <h3 class="ms-dialog-body__formatFile--title">
+                        Adjunte documento*
+                        <input #uploadFile [id]="i" class="ms-dialog-body__file-input" type="file"
+                            (change)="startUpload($event,i)" accept="application/pdf" formControlName="file" />
+                        <button mat-icon-button type="button" (click)="openFileArchive(i)"
+                            [disabled]="archive.controls[i].get('id')?.value!==null">
+                            <mat-icon>file_upload</mat-icon>
+                        </button>
+                        <div *ngIf="archive.controls[i].get('file')?.invalid && 
+                        (archive.controls[i].get('file')?.dirty || archive.controls[i].get('file')?.touched)">
+                            <mat-error *ngIf="archive.controls[i].get('file')?.errors?.['required']">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </div>
+                    </h3>
+                    <div *ngIf="archive.controls[i].get('uploadPercent')?.value" class="wrapper">
+                        <div *ngIf="archive.controls[i].get('fileURL')?.value" class="file" style="margin-left: 15px;">
+                            <a [href]="archive.controls[i].get('fileURL')?.value" target="_blank" class="file__link">
+                                <span class="file__name">{{archive.controls[i].get('name')?.value}} </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div style="margin-left: 10px;">
+                        <mat-form-field appearance="fill" class="ms-dialog-body__form--input" style="width: 50%;">
+                            <mat-label>Vigencia</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="validityDate" readonly
+                                [min]="start_date" (dateInput)="addEventDate($event,i)">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker [disabled]="archive.controls[i].get('id')?.value!==null">
+                            </mat-datepicker>
+                            <mat-error *ngIf="archive.controls[i].get('validityDate')?.hasError">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex;flex-direction: column;justify-content: stretch;">
+                    <button mat-icon-button type="button" disabled>
+                        <mat-icon class="icon">
+                            check_circle
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button type="button"
+                        [disabled]="archive.controls[i].get('fileURL')?.value?false:true" (click)="openVizorPdf(i)">
+                        <mat-icon [ngClass]="{'icon': archive.controls[i].get('fileURL')?.value?true:false}">
+                            visibility
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button type="button" (click)="delete(i)">
+                        <mat-icon class="icon">delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    
+    <div class="ms-dialog-body__form">
+        <div>
+            <div *ngFor="let item of validateDocuments$ | async;let i=index;"
+                style="margin-bottom: 10px; display: flex;flex-direction: row;justify-content:space-between;">
+                <div class="ms-dialog-body__formatFile">
+                    <h3 class="ms-dialog-body__formatFile--title">
+                        Nombre de Archivo*
+                        <input [id]="i" class="ms-dialog-body__file-input" type="file" accept="application/pdf"
+                            value="" />
+                        <button mat-icon-button type="button" [disabled]="item.id !==null">
+                            <mat-icon>file_upload</mat-icon>
+                        </button>
+                        <div></div>
+                    </h3>
+                    <div *ngIf="item.uploadPercent" class="wrapper">
+                        <div *ngIf="item.fileURL" class="file" style="margin-left: 15px;">
+                            <a [href]="item.fileURL" target="_blank" class="file__link">
+                                <span class="file__name">{{item.name}} </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div style="margin-left: 10px;">
+                        <mat-form-field appearance="fill" class="ms-dialog-body__form--input" style="width: 50%;">
+                            <mat-label>Vigencia</mat-label>
+                            <input matInput [value]="insertDateMateInput(item) | date:'dd/MM/yyyy'" readonly>
+                            <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker [disabled]="item.id !==null">
+                            </mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <mat-error *ngIf="validityDate(item)" style="margin-top: -15px;margin-left: 10px;">
+                        <strong> Documento vencido</strong>
+                    </mat-error>
+                </div>
+                <div style="display: flex;flex-direction: column;justify-content: stretch;">
+                    <button mat-icon-button type="button" disabled *ngIf="item.status==='pending'">
+                        <mat-icon class="wrapper__pending-revicion">
+                            rate_review
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button type="button" disabled *ngIf="item.status==='approved'">
+                        <mat-icon class="wrapper__approved">
+                            check_circle
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button type="button" disabled *ngIf="item.status==='rejected'">
+                        <mat-icon class="wrapper__rejected">
+                            cancel
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button type="button" (click)="openVizorPdf(i,item)">
+                        <mat-icon class="icon">
+                            visibility
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button type="button" (click)="delete(i,item)">
+                        <mat-icon class="icon">delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="start">
+    <button mat-stroked-button type="button" class="ms-dialog-body__btn-cancel" color="warn" (click)="closeDialog()">
+        Cancelar
+    </button>
+    <button mat-stroked-button class="ms-dialog-body__btn-register" type="submit" (click)="save()"
+        [disabled]="loading$ | async">
+        Guardar
+    </button>
+</mat-dialog-actions>

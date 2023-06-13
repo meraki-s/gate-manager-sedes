@@ -1,0 +1,167 @@
+.container {
+  width: 100%;
+  height: 100%;
+  background-image: url("../../../../assets/img/background_auth.png");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &--cardRegister {
+    position: absolute;
+    height: 500px;
+    // background: rgba(255, 255, 255, 0.5);
+    // border: 1.13447px solid #FFFFFF;
+    // box-sizing: border-box;
+    box-shadow: 0px 2.26893px 2.26893px rgba(0, 0, 0, 0.25);
+    // backdrop-filter: blur(6.23957px);
+  }
+}
+
+.toolbar {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  height: 60px;
+}
+
+.img-center {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.menu-spacer {
+  // position: static;
+  // width: 89px;
+  height: 16px;
+  left: 46px;
+  top: 10px;
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.textp {
+  font-size: 10px;
+  line-height: 11.72px;
+  color: #00000099;
+}
+
+.example-container .mat-form-field + .mat-form-field {
+  margin-left: 20px;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.example-right-align {
+  -moz-appearance: textfield;
+}
+
+.error-form {
+  color: red;
+  font-size: 10px;
+  line-height: 11.72px;
+}
+
+.mat-step-icon-state-edit {
+  background-color: #ffd740;
+  color: white;
+}
+
+.buttonEnd {
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  border-radius: 4px;
+  color: black;
+  background-color: rgba(255, 192, 0, 1);
+  margin-left: 10px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
+}
+
+.buttonPrevious {
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  border: black 1px solid;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
+}
+
+.logo-container {
+  align-self: start;
+
+  .custom-input-file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(210, 210, 210, 0.5);
+    color: rgba(193, 193, 193, 1);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 auto 0;
+    min-height: 15px;
+    overflow: hidden;
+    padding: 10px;
+    position: relative;
+    text-align: center;
+    text-justify: center;
+    height: 30px;
+    width: 180px;
+    border-radius: 5px;
+    border: 1px solid #828282;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.custom-input-file .input-file {
+  border: 10000px solid transparent;
+  cursor: pointer;
+  font-size: 10000px;
+  margin: 0;
+  opacity: 0;
+  outline: 0 none;
+  padding: 0;
+  position: absolute;
+  right: -1000px;
+  top: -1000px;
+  font-family: Poppins;
+}
+
+.upLoad {
+  margin-right: 200px;
+}
+
+.btn-reject {
+  border: 1px solid #eb5757;
+  box-sizing: border-box;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
+  border-radius: 5 px;
+  padding: 0 px 37 px;
+  margin: 1 px 20 px;
+  height: 35px;
+  padding-right: 20px;
+  margin-right: 12px;
+  background: #f8f8f8;
+  font-family: "Raleway", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  color: #f24e1e;
+  background-color: #f8f8f8;
+}

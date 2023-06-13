@@ -1,0 +1,249 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">edit</mat-icon>
+  <h3 class="dialog-header__title">Crear usuario</h3>
+  <span class="fill"></span>
+  <button mat-icon-button class="dialog-header__close" mat-dialog-close>
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar
+  *ngIf="loading$ | async"
+  mode="indeterminate"
+></mat-progress-bar>
+
+<mat-dialog-content>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav-content>
+      <div>
+        <mat-stepper
+          orientation="vertical"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+        >
+          <mat-step>
+            <form [formGroup]="firstFormGroup">
+              <ng-template matStepLabel>Datos Personales</ng-template>
+              <div>
+                <h3>Cuenta de acceso</h3>
+                <p class="textp">
+                  Correo y contraseña de acceso. Estas son las credenciales que
+                  usarás para ingresar a plataforma
+                </p>
+              </div>
+              <div>
+                <div
+                  [ngClass]="
+                    isMobile
+                      ? 'form-container--mobile'
+                      : 'form-container--desktop'
+                  "
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Correo</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      id="email"
+                      placeholder="Correo"
+                      required
+                      formControlName="email"
+                    />
+                    <mat-error *ngIf="firstFormGroup.controls['email'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Contraseña</mat-label>
+                    <input
+                      matInput
+                      type="password"
+                      placeholder="Contraseña"
+                      id="password"
+                      required
+                      formControlName="password"
+                    />
+                    <mat-error
+                      *ngIf="firstFormGroup.controls['password'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Repetir Contraseña</mat-label>
+                    <input
+                      matInput
+                      type="password"
+                      placeholder="Repetir Contraseña"
+                      id="password2"
+                      required
+                      formControlName="password2"
+                    />
+                    <mat-error
+                      *ngIf="firstFormGroup.controls['password2'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="error-form">
+                  <p *ngIf="invalidField('email')">*El email es obliatorio</p>
+                  <p *ngIf="passwordInvalid()">
+                    * Las contraseñas deben ser iguales
+                  </p>
+                </div>
+              </div>
+              <div>
+                <h3>Información de usuario</h3>
+                <p class="textp">
+                  Saber quien eres y tener algunos datos adicionales, nos ayuda
+                  a saber como comunicarnos contigo.
+                </p>
+              </div>
+
+              <div>
+                <div
+                  [ngClass]="
+                    isMobile
+                      ? 'form-container--mobile'
+                      : 'form-container--desktop'
+                  "
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Nombre</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Nombre"
+                      id="name"
+                      formControlName="name"
+                      required
+                    />
+                    <mat-error *ngIf="firstFormGroup.controls['name'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Apellido</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Apellido"
+                      id="lastname"
+                      formControlName="lastname"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="firstFormGroup.controls['lastname'].errors"
+                    >
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>DNI</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="DNI"
+                      id="dni"
+                      formControlName="dni"
+                      required
+                    />
+                    <mat-error *ngIf="firstFormGroup.controls['dni'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div
+                  [ngClass]="
+                    isMobile
+                      ? 'form-container--mobile'
+                      : 'form-container--desktop'
+                  "
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Cargo</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Cargo"
+                      id="charge"
+                      formControlName="charge"
+                      required
+                    />
+                    <mat-error *ngIf="firstFormGroup.controls['charge'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Teléfono</mat-label>
+                    <input
+                      type="number"
+                      matInput
+                      placeholder="Teléfono"
+                      id="phone"
+                      formControlName="phone"
+                      required
+                    />
+                    <mat-error *ngIf="firstFormGroup.controls['phone'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Tipo de usuario *</mat-label>
+                    <mat-select formControlName="role">
+                      <mat-option value="Administrator"
+                        >Administrador</mat-option
+                      >
+                      <mat-option value="Vigilant">Vigilante</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="firstFormGroup.controls['role'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="error-form">
+                  <p *ngIf="invalidField('name')">*El nombre es obligatorio</p>
+                  <p *ngIf="invalidField('lastName')">
+                    *El apellido es obliatorio
+                  </p>
+                  <p *ngIf="invalidField('dni')">*El dni es obligatorio</p>
+                  <p *ngIf="invalidField('charge')">*El cargo es obligatorio</p>
+                  <p *ngIf="invalidField('phone')">
+                    *El teléfono es obligatorio
+                  </p>
+                </div>
+              </div>
+            </form>
+          </mat-step>
+        </mat-stepper>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    class="btn-reject"
+    mat-dialog-close
+    [disabled]="loading$ | async"
+    style="margin-left: 20px"
+  >
+    Cancelar
+  </button>
+  <button
+    mat-button
+    class="buttonEnd"
+    (click)="createUser()"
+    [disabled]="firstFormGroup.invalid"
+  >
+    Crear
+  </button>
+</mat-dialog-actions>

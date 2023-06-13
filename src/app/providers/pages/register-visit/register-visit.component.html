@@ -1,0 +1,426 @@
+<div class="container">
+  <div class="container__body">
+    <div class="gm-wrapper">
+      <h4 class="gm-wrapper__title">Información de visita</h4>
+      <p class="gm-wrapper__text">
+        Datos sobre la persona que ingresará a planta, fecha de visita, la
+        persona que lo invito y el motivo
+      </p>
+
+      <form [formGroup]="dataForm" autocomplete="off" class="form">
+        <div class="gm-wrapper__column">
+          <div
+            class=""
+            [ngClass]="isMobile ? 'gm-wrapper__column' : 'gm-wrapper__row'"
+          >
+            <mat-form-field
+              appearance="fill"
+              color="primary"
+              class="form__input"
+            >
+              <mat-label>Nombres</mat-label>
+              <input
+                matInput
+                type="text"
+                id="name"
+                placeholder="Nombres"
+                formControlName="name"
+              />
+              <mat-error *ngIf="dataForm.controls['name'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Apellidos</mat-label>
+              <input
+                matInput
+                type="text"
+                id="lastname"
+                placeholder="Apellidos"
+                formControlName="lastname"
+              />
+              <mat-error *ngIf="dataForm.controls['lastname'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>DNI</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="DNI"
+                formControlName="dni"
+                maxlength="8"
+              />
+              <mat-error *ngIf="dataForm.controls['dni'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div [ngClass]="isMobile ? 'gm-wrapper__column' : 'gm-wrapper__row'">
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Cargo</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Cargo"
+                formControlName="jobTitle"
+              />
+              <mat-error *ngIf="dataForm.controls['jobTitle'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Teléfono</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Telefono"
+                formControlName="telephone"
+              />
+              <mat-error *ngIf="dataForm.controls['telephone'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div [ngClass]="isMobile ? 'gm-wrapper__column' : 'gm-wrapper__row'">
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Fecha de visita</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker1"
+                formControlName="visitDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker1"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="dataForm.controls['visitDate'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="fill"
+              class="form__input"
+              *ngIf="inviteds$ | async as inviteds"
+            >
+              <mat-label>Invitado por</mat-label>
+              <mat-select formControlName="invitedBy">
+                <mat-option value="">Seleccione</mat-option>
+                <mat-option *ngFor="let item of inviteds" [value]="item.name">
+                  {{ item.name }}
+                </mat-option>
+              </mat-select>
+              <mat-hint *ngIf="!inviteds$">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p>Cargando lista ...</p>
+              </mat-hint>
+              <mat-error *ngIf="dataForm.controls['invitedBy'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="form__input">
+              <mat-label>Motivo de visita</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Visita comercial"
+                formControlName="reasonVisit"
+              />
+              <mat-error *ngIf="dataForm.controls['reasonVisit'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <h4 class="gm-wrapper__title">Formatos y archivos requeridos</h4>
+          <p class="gm-wrapper__text">
+            Estos datos nos ayudarán a validar los permisos de acceso del
+            visitante <strong>(Solo se adminten PDFs)</strong>
+          </p>
+
+          <div class="gm-wrapper__row">
+            <!-- <div
+              class="gm-wrapper__formatFile"
+              [ngClass]="
+                isMobile
+                  ? 'gm-wrapper__formatFile--mobile'
+                  : 'gm-wrapper__formatFile--desktop'
+              "
+            >
+              <h3 class="gm-wrapper__formatFile--title" appDropzoneFile>
+                Prueba COVID
+                <input
+                  #uploadFileCOVID
+                  class="file-input"
+                  type="file"
+                  accept="application/pdf"
+                  (change)="onDropCOVID($event.target)"
+                  formControlName="covidFile"
+                />
+                <button mat-icon-button (click)="uploadFileCOVID.click()">
+                  <mat-icon>file_upload</mat-icon>
+                </button>
+              </h3>
+
+              <div
+                *ngIf="filesCOVID.length"
+                class="gm-wrapper__formatFile--link"
+              >
+                <app-upload-files
+                  *ngFor="let file of filesCOVID"
+                  [file]="file | async"
+                  [pathStorage]="pathStorageCOVID"
+                  (onNewImage)="addNewImageCOVID($event)"
+                >
+                </app-upload-files>
+              </div>
+
+              <div class="gm-wrapper__formatFile--body">
+                <div
+                  class="gm-wrapper__formatFile--error"
+                  *ngIf="dataForm.controls['covidFile'].errors"
+                >
+                  Documento <strong>requerido.</strong>
+                </div>
+                <mat-form-field
+                  appearance="fill"
+                  [ngClass]="
+                    isMobile
+                      ? 'gm-wrapper__formatFile--date-mobile'
+                      : 'gm-wrapper__formatFile--date-desktop'
+                  "
+                >
+                  <mat-label>Vigencia</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker2"
+                    formControlName="covidDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="dataForm.controls['covidDate'].errors">
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <div
+              class="gm-wrapper__formatFile"
+              [ngClass]="
+                isMobile
+                  ? 'gm-wrapper__formatFile--mobile'
+                  : 'gm-wrapper__formatFile--desktop'
+              "
+            >
+              <h3 class="gm-wrapper__formatFile--title" appDropzoneFile>
+                SCTR*
+                <input
+                  #uploadFileSCTR
+                  class="file-input"
+                  type="file"
+                  accept="application/pdf"
+                  (change)="onDropSCTR($event.target)"
+                  formControlName="sctrFile"
+                />
+                <button mat-icon-button (click)="uploadFileSCTR.click()">
+                  <mat-icon>file_upload</mat-icon>
+                </button>
+              </h3>
+
+              <div
+                *ngIf="filesSCTR.length"
+                class="gm-wrapper__formatFile--link"
+              >
+                <app-upload-files
+                  *ngFor="let file of filesSCTR"
+                  [file]="file | async"
+                  [pathStorage]="pathStorageSCTR"
+                  (onNewImage)="addNewImageSCTR($event)"
+                >
+                </app-upload-files>
+              </div>
+
+              <div class="gm-wrapper__formatFile--body">
+                <div
+                  class="gm-wrapper__formatFile--error"
+                  *ngIf="dataForm.controls['sctrFile'].errors"
+                >
+                  Documento <strong>requerido*.</strong>
+                </div>
+
+                <mat-form-field
+                  appearance="fill"
+                  class=""
+                  [ngClass]="
+                    isMobile
+                      ? 'gm-wrapper__formatFile--date-mobile'
+                      : 'gm-wrapper__formatFile--date-desktop'
+                  "
+                >
+                  <mat-label>Vigencia</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker3"
+                    formControlName="sctrDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker3"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                  <mat-error *ngIf="dataForm.controls['sctrDate'].errors">
+                    Campo <strong>requerido*.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div
+              class="gm-wrapper__formatFile"
+              [ngClass]="
+                isMobile
+                  ? 'gm-wrapper__formatFile--mobile'
+                  : 'gm-wrapper__formatFile--desktop'
+              "
+            >
+              <h3 class="gm-wrapper__formatFile--title" appDropzoneFile>
+                Carnet de vacunación*
+                <input
+                  #uploadFileVaccinationCard
+                  class="file-input"
+                  type="file"
+                  accept="application/pdf"
+                  (change)="onDropVaccinationCard($event.target)"
+                  formControlName="vaccinationCardFile"
+                />
+                <button
+                  mat-icon-button
+                  (click)="uploadFileVaccinationCard.click()"
+                >
+                  <mat-icon>file_upload</mat-icon>
+                </button>
+              </h3>
+
+              <div
+                *ngIf="filesVaccinationCard.length"
+                class="gm-wrapper__formatFile--link"
+              >
+                <app-upload-files
+                  *ngFor="let file of filesVaccinationCard"
+                  [file]="file | async"
+                  [pathStorage]="pathStorageVaccinationCard"
+                  (onNewImage)="addNewImageVaccinationCard($event)"
+                >
+                </app-upload-files>
+              </div>
+
+              <div class="gm-wrapper__formatFile--body">
+                <div
+                  class="gm-wrapper__formatFile--error"
+                  *ngIf="dataForm.controls['vaccinationCardFile'].errors"
+                >
+                  Documento <strong>requerido*.</strong>
+                </div>
+
+                <mat-form-field
+                  appearance="fill"
+                  class=""
+                  [ngClass]="
+                    isMobile
+                      ? 'gm-wrapper__formatFile--date-mobile'
+                      : 'gm-wrapper__formatFile--date-desktop'
+                  "
+                >
+                  <mat-label>Primera dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="firstDosePicker"
+                    formControlName="firstDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="firstDosePicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #firstDosePicker></mat-datepicker>
+                  <mat-error
+                    *ngIf="dataForm.controls['firstDoseDate'].errors"
+                  >
+                    Campo <strong>requerido*.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="fill"
+                  class=""
+                  [ngClass]="
+                    isMobile
+                      ? 'gm-wrapper__formatFile--date-mobile'
+                      : 'gm-wrapper__formatFile--date-desktop'
+                  "
+                >
+                  <mat-label>Segunda dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="secondDosePicker"
+                    formControlName="secondDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="secondDosePicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #secondDosePicker></mat-datepicker>
+                  <mat-error
+                    *ngIf="dataForm.controls['secondDoseDate'].errors"
+                  >
+                    Campo <strong>requerido*.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="fill"
+                  class=""
+                  [ngClass]="
+                    isMobile
+                      ? 'gm-wrapper__formatFile--date-mobile'
+                      : 'gm-wrapper__formatFile--date-desktop'
+                  "
+                >
+                  <mat-label>Tercera dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="thirdDosePicker"
+                    formControlName="thirdDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="thirdDosePicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #thirdDosePicker></mat-datepicker>
+                  <mat-error
+                    *ngIf="dataForm.controls['thirdDoseDate'].errors"
+                  >
+                    Campo <strong>requerido*.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <button mat-button class="gm-wrapper__btn" (click)="save()">Enviar</button>
+    <button mat-button class="gm-wrapper__btn" (click)="clear()">
+      Limpiar
+    </button>
+  </div>
+</div>
