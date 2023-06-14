@@ -100,10 +100,10 @@
 
   &__text {
     margin: 0px 8px;
-    // font-family: 'Roboto';
+    font-family: "Raleway";
     font-size: 14px;
     line-height: 16px;
-    font-weight: 500;
+    font-weight: 700;
     color: rgba(0, 0, 0, 0.5);
   }
 
@@ -116,8 +116,13 @@
   }
 }
 
-.navigate-page:hover {
-  background: rgba(255, 192, 0, 0.4);
+mat-list-item:hover {
+  // background: rgba(255, 192, 0, 0.4);
+  background-color: #008a39;
+
+  .navigate-page .navigate-page__text {
+    color: white;
+  }
 }
 
 .navigate-page {
@@ -129,7 +134,7 @@
 
   &__text {
     margin: 12px 15px;
-    font-family: Roboto;
+    font-family: "Raleway";
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
