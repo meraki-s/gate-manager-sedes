@@ -1,0 +1,88 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+
+  &--desktop {
+    padding: 1.5rem 2rem;
+  }
+
+  &--mobile {
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .tools {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    // background-color: red;
+    align-items: start;
+    width: auto;
+
+    button {
+      color: white;
+      font-family: "Raleway";
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    // styles for search input
+    mat-form-field.search {
+      width: 300px;
+      font-family: "Quicksand";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+
+      mat-label {
+        font-family: "Quicksand";
+      }
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-form-field-flex {
+        height: 36px;
+      }
+
+      ::ng-deep
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+        .mdc-notched-outline--upgraded
+        .mdc-floating-label--float-above {
+        --mat-mdc-form-field-label-transform: translateY(-23.75px)
+          scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+      }
+
+      ::ng-deep
+        .mat-mdc-text-field-wrapper
+        .mat-mdc-form-field-flex
+        .mat-mdc-floating-label {
+        top: 17px;
+      }
+
+      ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+        background-color: rgba(0, 0, 0, 0) !important;
+        height: 36px;
+      }
+
+      ::ng-deep
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+        .mat-mdc-form-field-infix {
+        padding-top: 10px;
+        padding-bottom: 0px;
+      }
+
+      ::placeholder {
+        color: rgba(43, 43, 43, 0.6);
+      }
+
+      ::ng-deep .mat-text-field--outlined-wrapper {
+        height: 30px;
+      }
+    }
+  }
+}

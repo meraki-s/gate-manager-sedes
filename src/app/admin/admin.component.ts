@@ -63,6 +63,11 @@ export class AdminComponent implements OnInit {
         icon: 'manage_accounts',
       },
       {
+        routerLink: '/admin/locations',
+        nameNavigate: 'Sedes',
+        icon: 'domain',
+      },
+      {
         routerLink: '/admin/settings',
         nameNavigate: 'Configuración',
         icon: 'settings',

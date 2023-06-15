@@ -52,7 +52,7 @@
       .mat-mdc-text-field-wrapper
       .mat-mdc-form-field-flex
       .mat-mdc-floating-label {
-      top: 14px;
+      top: 13px;
     }
 
     ::ng-deep .mat-mdc-option {
@@ -172,6 +172,9 @@ mat-list-item:hover {
     &--text {
       margin: 0px 3%;
       padding: 15px 0px 0px 0px;
+      font-family: "Raleway";
+      font-weight: 600;
+      color: #2b2b2b;
       font-size: 18px;
     }
   }

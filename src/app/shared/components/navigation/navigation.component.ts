@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
-import { map, shareReplay, take } from 'rxjs/operators';
+import { filter, map, shareReplay, take } from 'rxjs/operators';
 import { Menu } from '../../models/menu.interface';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/auth/models/user.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,6 +28,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   subscriptions = new Subscription();
   user: User | null | undefined = null;
   version!: string;
+  pathURL: string = '';
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -55,7 +56,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     this.version = this.authService.version;
 
-    encapsulation: ViewEncapsulation.None;
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.pathURL = event.urlAfterRedirects;
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -65,14 +72,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.menu.forEach((val, index, array) => {
-      this.selectItemDefault = array[0]['nameNavigate'];
-      this.selectItem = this.selectItemDefault;
-    });
+    this.setNavigationName();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  setNavigationName(): void {
+    const exist: Menu[] = this.menu.filter((menu) => {
+      return menu.routerLink === this.pathURL;
+    });
+
+    if (exist.length) {
+      this.selectItem = exist[0].nameNavigate;
+    }
   }
 
   selectMenu(menu: Menu): void {
