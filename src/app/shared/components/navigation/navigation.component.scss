@@ -80,6 +80,11 @@
   }
 }
 
+::ng-deep .mdc-list-item__primary-text {
+  font-family: "Quicksand" !important;
+  font-size: 12px !important;
+}
+
 .menu-spacer {
   flex: 1 1 auto;
 }

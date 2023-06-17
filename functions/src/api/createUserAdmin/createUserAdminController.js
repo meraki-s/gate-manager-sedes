@@ -20,7 +20,7 @@ const createUserAdminController = async (req, res) => {
       role: user.role,
     });
 
-    await db.doc(`users/${createUser.uid}`).set({
+    const fsUser = {
       uid: createUser.uid,
       email: user.email,
       name: user.name,
@@ -29,11 +29,19 @@ const createUserAdminController = async (req, res) => {
       dni: user.dni,
       jobTitle: user.charge,
       phone: user.phone,
+      locations: [{ name: user.location.name, id: user.location.id }],
+      currentLocation: user.location.id,
       companyName: "",
       companyRuc: "",
       role: user.role,
       status: "enabled",
       providerId: "",
+    };
+
+    await db.doc(`users/${createUser.uid}`).set(fsUser);
+
+    await db.doc(`locations/${user.location.id}`).update({
+      usersRelated: admin.firestore.FieldValue.arrayUnion(fsUser),
     });
 
     functions.logger.info(`'User created successfully.'`, {

@@ -17,6 +17,8 @@ export interface User {
   ceo: string;
   providerId: string;
   role: 'Administrator' | 'Provider' | 'Visitor' | 'Vigilant' | 'Superuser';
+  locations: Array<{ name: string; id: string }>;
+  currentLocation: string;
   createdAt: Date & firebase.default.firestore.Timestamp;
   createdBy: string;
   status: 'registered' | 'enabled' | 'disabled';

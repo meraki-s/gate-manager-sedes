@@ -6,26 +6,12 @@
   <img src="../../../../assets/img/ferrycorp-logo.png" alt="logo" width="100" />
   <mat-form-field appearance="outline">
     <mat-label style="font-size: 12px">Sede</mat-label>
-    <mat-select placeholder="Seleccione una sede">
+    <mat-select placeholder="Seleccione una sede" [formControl]="locationSelectorControl">
       <mat-option
-        value="La Joya"
+        *ngFor="let location of (user!.role === 'Superuser' ? (locations$ | async) : user?.locations)"
+        [value]="location.id"
         style="font-size: 12px; font-family: 'Quicksand'"
-        >La Joya</mat-option
-      >
-      <mat-option
-        value="La Joya"
-        style="font-size: 12px; font-family: 'Quicksand'"
-        >La Joya</mat-option
-      >
-      <mat-option
-        value="La Joya"
-        style="font-size: 12px; font-family: 'Quicksand'"
-        >La Joya</mat-option
-      >
-      <mat-option
-        value="La Joya"
-        style="font-size: 12px; font-family: 'Quicksand'"
-        >La Joya</mat-option
+        >{{ location.name }}</mat-option
       >
     </mat-select>
   </mat-form-field>

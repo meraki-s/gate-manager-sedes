@@ -1,8 +1,14 @@
+:host ::ng-deep .mat-menu-item {
+  font-family: "Quicksand";
+  font-size: 12px;
+}
+
 .container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: start;
   align-items: start;
+  gap: 24px;
 
   &--desktop {
     padding: 1.5rem 2rem;
@@ -62,6 +68,7 @@
         .mat-mdc-form-field-flex
         .mat-mdc-floating-label {
         top: 17px;
+        font-size: 12px;
       }
 
       ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
@@ -85,4 +92,57 @@
       }
     }
   }
+
+  .locations-container {
+    width: 80%;
+
+    .location {
+      &__title {
+        font-family: "Quicksand";
+        font-weight: 600;
+      }
+      &__edit {
+        // width: 16px;
+        // height: 16px;
+        mat-icon {
+          width: 16px;
+          height: 16px;
+          font-size: 16px;
+          line-height: 16px;
+        }
+      }
+
+      &__description {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        font-family: "Quicksand";
+      }
+
+      &__accounts-container {
+        .tools {
+          button {
+            color: #2b2b2b;
+          }
+        }
+      }
+
+      &__table-container {
+        .table {
+          &__header {
+            font-family: 'Quicksand';
+            font-weight: 600;
+          }
+          &__cell {
+            font-family: 'Quicksand';
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  font-family: "Quicksand" !important;
+  font-size: 12px !important;
 }

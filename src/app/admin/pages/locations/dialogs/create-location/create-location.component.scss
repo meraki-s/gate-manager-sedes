@@ -1,0 +1,23 @@
+.title {
+  width: 350px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  button {
+    font-family: "Raleway";
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .action {
+    color: white;
+  }
+}

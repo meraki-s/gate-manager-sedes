@@ -194,10 +194,33 @@
                   <mat-form-field appearance="fill">
                     <mat-label>Tipo de usuario *</mat-label>
                     <mat-select formControlName="role">
+                      <mat-option value="Vigilant">Vigilante</mat-option>
+                      <mat-option value="Security">Seguridad</mat-option>
+                      <mat-option value="Superuser">Superusuario</mat-option>
                       <mat-option value="Administrator"
                         >Administrador</mat-option
                       >
-                      <mat-option value="Vigilant">Vigilante</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="firstFormGroup.controls['role'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div
+                  [ngClass]="
+                    isMobile
+                      ? 'form-container--mobile'
+                      : 'form-container--desktop'
+                  "
+                >
+                  <mat-form-field appearance="fill">
+                    <mat-label>Sede *</mat-label>
+                    <mat-select formControlName="location">
+                      <mat-option
+                        *ngFor="let location of locations$ | async"
+                        [value]="{name: location.name, id: location.id}"
+                        >{{ location.name }}</mat-option
+                      >
                     </mat-select>
                     <mat-error *ngIf="firstFormGroup.controls['role'].errors">
                       Campo <strong>requerido.</strong>

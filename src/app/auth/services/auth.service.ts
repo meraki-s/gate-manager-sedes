@@ -33,9 +33,15 @@ export class AuthService {
     );
   }
 
+  setCurrentLocation(uid: string, locationId: string) {
+    this.afs.doc(`users/${uid}`).update({
+      currentLocation: locationId,
+    });
+  }
+
   getGeneralConfigDoc(): Observable<GeneralConfig | undefined> {
     return this.afs
-      .doc<GeneralConfig>('/db/generalConfig')
+      .doc<GeneralConfig>('/configuration/generalConfig')
       .valueChanges()
       .pipe(shareReplay(1));
   }

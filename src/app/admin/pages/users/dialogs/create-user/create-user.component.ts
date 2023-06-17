@@ -8,7 +8,9 @@ import {
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import { Location } from 'src/app/admin/models/location.model';
+import { LocationService } from 'src/app/admin/services/location.service';
 import { UsersService } from 'src/app/admin/services/users.service';
 
 @Component({
@@ -29,16 +31,19 @@ export class CreateUserComponent implements OnInit, OnDestroy {
       charge: new FormControl('', Validators.required),
       phone: new FormControl('', Validators.required),
       role: new FormControl('', Validators.required),
+      location: new FormControl('', Validators.required),
     },
     {
       validators: this.samePasswords('password', 'password2'),
     }
   );
-  //#region
+  //#endregion
 
   //#region observables
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
+
+  locations$: Observable<Location[]> = of([]);
   //#endregion
 
   //#region other variables
@@ -52,6 +57,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService,
+    private locationService: LocationService,
     private snackbar: MatSnackBar,
     public dialogRef: MatDialogRef<CreateUserComponent>,
     private breakpoint: BreakpointObserver
@@ -69,6 +75,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
           }
         })
     );
+
+    this.locations$ = this.locationService.getLocations();
   }
 
   ngOnDestroy() {
