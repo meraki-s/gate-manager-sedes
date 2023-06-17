@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+
 $green-palette: (
   50: #e8f4e7,
   100: #c7e4c5,
@@ -11,9 +12,9 @@ $green-palette: (
   800: #297926,
   900: #135a13,
   contrast: (
-    50: rgba(white, 0.87),
-    100: rgba(white, 0.87),
-    200: rgba(white, 0.87),
+    50: white,
+    100: white,
+    200: white,
     300: white,
     400: white,
     500: white,
@@ -21,7 +22,10 @@ $green-palette: (
     700: white,
     800: white,
     900: white,
-    // ... continues to 900
+    A100: white,
+    A200: white,
+    A400: white,
+    A700: white,
   ),
 );
 

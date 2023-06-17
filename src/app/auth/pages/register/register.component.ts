@@ -38,6 +38,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   checkingRuc = new BehaviorSubject<boolean>(false);
   checkingRuc$ = this.checkingRuc.asObservable();
 
+  loadingLogo = new BehaviorSubject<boolean>(false);
+  loadingLogo$ = this.loadingLogo.asObservable();
+
   mediaSub!: Subscription;
   deviceXs: boolean = false;
   deviceSm: boolean = false;
@@ -82,7 +85,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private providerService: ProviderService,
     private snackbar: MatSnackBar,
     private angularFireStorage: AngularFireStorage,
-    public dialogRef: MatDialogRef<RegisterComponent>
+    public dialogRef: MatDialogRef<RegisterComponent>,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -213,9 +217,25 @@ export class RegisterComponent implements OnInit, OnDestroy {
     };
   }
 
-  onUpload(e: any) {
+  onUpload(input: HTMLInputElement) {
+    if (!input.files) return;
+    const files: FileList = input.files;
+
+    // if (files.item(0)?.type !== 'application/pdf') {
+    //   this.snackBar.open(
+    //     '🤖 Lo siento, por ahora solo puedo procesar documentos PDF',
+    //     'Aceptar',
+    //     {
+    //       duration: 6000,
+    //     }
+    //   );
+    //   return;
+    // }
+
+    this.loadingLogo.next(true);
+
     const id = Math.random().toString(36).substring(2);
-    const file = e.target.files[0];
+    const file = files.item(0);
     const filePath = `providers/logo_provider_${id}`;
     const ref = this.angularFireStorage.ref(filePath);
     const task = this.angularFireStorage.upload(filePath, file);
@@ -227,11 +247,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
         finalize(async () => {
           this.urlImage = await ref.getDownloadURL().toPromise();
           let data = {
-            name: file.name,
+            name: file!.name,
             fileURL: this.uploadPercent,
-            type: file.type,
+            type: file!.type,
           };
           this.onNewImage.emit(data);
+          this.loadingLogo.next(false);
         })
       )
       .subscribe();

@@ -38,7 +38,7 @@ const createUserProviderController = async (req, res) => {
       providerId: provider.providerId ? provider.providerId : createUser.uid,
     });
 
-    await db.doc(`db/ferreyros/providers/${createUser.uid}`).set({
+    await db.doc(`providers/${createUser.uid}`).set({
       companyName: provider.companyName,
       companyRuc: provider.companyRuc,
       companyAddress: provider.companyAddress,
@@ -49,8 +49,8 @@ const createUserProviderController = async (req, res) => {
       numberOfWorkers: 0,
       createdBy: `${user.name} ${user.lastname}`,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      editedAt: null,
-      editedBy: null,
+      editedAt: `${user.name} ${user.lastname}`,
+      editedBy: admin.firestore.FieldValue.serverTimestamp(),
       status: "registered",
       id: createUser.uid,
     });
