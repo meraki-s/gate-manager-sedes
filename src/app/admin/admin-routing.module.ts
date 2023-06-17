@@ -49,6 +49,11 @@ const routes: Routes = [
           import('./pages/users/users.module').then((m) => m.UsersModule),
       },
       {
+        path: 'locations',
+        loadChildren: () =>
+          import('./pages/locations/locations.module').then((m) => m.LocationsModule),
+      },
+      {
         path: 'settings',
         loadChildren: () =>
           import('./pages/settings/settings-routing.module').then(

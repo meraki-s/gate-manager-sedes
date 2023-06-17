@@ -8,6 +8,7 @@ import { DropzoneFileDirective } from './upload-files/dropzoneFile.directive';
 import { VisorPdfComponent } from './visor-pdf/visor-pdf.component';
 import { UpdateReadyComponent } from './update-ready/update-ready.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,14 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     VisorPdfComponent,
     UpdateReadyComponent,
   ],
-  imports: [CommonModule, RouterModule, MaterialModule, PdfViewerModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    PdfViewerModule,
+  ],
   exports: [
     NavigationComponent,
     DropzoneFileDirective,

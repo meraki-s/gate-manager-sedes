@@ -9,12 +9,14 @@ export const environment = {
     measurementId: 'G-TXQXZM73RK',
   },
   registerUserProviderURL:
-    'https://us-central1-gate-manager-staging.cloudfunctions.net/createUserProvider',
+    'https://us-central1-gate-manager-sedes-staging.cloudfunctions.net/createUserProvider',
   createUser:
-    'https://us-central1-gate-manager-staging.cloudfunctions.net/createUserAdmin',
+    'https://us-central1-gate-manager-sedes-staging.cloudfunctions.net/createUserAdmin',
   deleteUser:
-    'https://us-central1-gate-manager-staging.cloudfunctions.net/deleteUser',
+    'https://us-central1-gate-manager-sedes-staging.cloudfunctions.net/deleteUser',
   queryDriveURL:
-    'https://us-central1-gate-manager-staging.cloudfunctions.net/QueryDriveInduccion',
+    'https://us-central1-gate-manager-sedes-staging.cloudfunctions.net/QueryDriveInduccion',
+  createLocationURL:
+    'https://us-central1-gate-manager-sedes-staging.cloudfunctions.net/createLocation',
   useEmulators: false,
 };

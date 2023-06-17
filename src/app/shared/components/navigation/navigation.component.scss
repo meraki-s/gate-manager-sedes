@@ -52,7 +52,7 @@
       .mat-mdc-text-field-wrapper
       .mat-mdc-form-field-flex
       .mat-mdc-floating-label {
-      top: 14px;
+      top: 13px;
     }
 
     ::ng-deep .mat-mdc-option {
@@ -80,6 +80,11 @@
   }
 }
 
+::ng-deep .mdc-list-item__primary-text {
+  font-family: "Quicksand" !important;
+  font-size: 12px !important;
+}
+
 .menu-spacer {
   flex: 1 1 auto;
 }
@@ -100,10 +105,10 @@
 
   &__text {
     margin: 0px 8px;
-    // font-family: 'Roboto';
+    font-family: "Raleway";
     font-size: 14px;
     line-height: 16px;
-    font-weight: 500;
+    font-weight: 700;
     color: rgba(0, 0, 0, 0.5);
   }
 
@@ -116,8 +121,13 @@
   }
 }
 
-.navigate-page:hover {
-  background: rgba(255, 192, 0, 0.4);
+mat-list-item:hover {
+  // background: rgba(255, 192, 0, 0.4);
+  background-color: #008a39;
+
+  .navigate-page .navigate-page__text {
+    color: white;
+  }
 }
 
 .navigate-page {
@@ -129,7 +139,7 @@
 
   &__text {
     margin: 12px 15px;
-    font-family: Roboto;
+    font-family: "Raleway";
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -167,6 +177,9 @@
     &--text {
       margin: 0px 3%;
       padding: 15px 0px 0px 0px;
+      font-family: "Raleway";
+      font-weight: 600;
+      color: #2b2b2b;
       font-size: 18px;
     }
   }

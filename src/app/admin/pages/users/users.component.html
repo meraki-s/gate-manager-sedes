@@ -79,9 +79,10 @@
     *ngIf="users$ | async"
   >
     <div class="table-header">
-      <h3>Usuarios</h3>
+      <!-- <h3>Usuarios</h3> -->
       <span class="fill"></span>
-      <button mat-raised-button color="primary" (click)="downloadXlsx(users)">
+      <button mat-stroked-button color="primary" (click)="downloadXlsx(users)">
+        <mat-icon>download</mat-icon>
         Descargar
       </button>
     </div>
@@ -240,10 +241,7 @@
             >
               Bloquear
             </button>
-            <button
-              mat-menu-item
-              (click)="deleteUser(element)"
-            >
+            <button mat-menu-item (click)="deleteUser(element)">
               Borrar usuario
             </button>
           </mat-menu>

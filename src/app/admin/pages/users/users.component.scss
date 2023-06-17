@@ -21,7 +21,6 @@
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
-  
 
   &--desktop {
     margin-bottom: 0;
@@ -44,6 +43,11 @@
   }
 
   .search-button {
+    color: white;
+    font-family: "Raleway";
+    font-weight: 500;
+    font-size: 12px;
+
     &--desktop {
       margin: 0.5rem 0.5rem;
     }
@@ -66,9 +70,17 @@
 
   h3 {
     color: rgba(0, 0, 0, 0.4);
-    font-size: 1.2rem;
+    font-family: "Raleway";
+    font-size: 16px;
     font-weight: 600;
     margin: 0px;
+  }
+
+  button {
+    // color: white;
+    font-family: "Raleway";
+    font-weight: 500;
+    font-size: 12px;
   }
 }
 
