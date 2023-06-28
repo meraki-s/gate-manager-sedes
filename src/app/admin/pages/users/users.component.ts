@@ -41,6 +41,7 @@ export class UsersComponent implements OnInit {
   //#region table variables
   usersDataSource = new MatTableDataSource<User>();
   usersDisplayedColumns: string[] = [
+    'location',
     'name',
     'email',
     'dni',
