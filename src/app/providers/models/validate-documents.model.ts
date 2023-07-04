@@ -1,3 +1,4 @@
+import { Location } from 'src/app/admin/models/location.model';
 import { ShortUser } from 'src/app/auth/models/user.model';
 import { CommonExitsDocumentValidateModel } from 'src/app/shared/models/common.models';
 
@@ -9,6 +10,7 @@ export interface ValidateDocumentsModel {
   name: string;
   type: string;
   uploadPercent: string;
+  locations: Location[];
   createdAt: Date & firebase.default.firestore.Timestamp;
   createdBy: ShortUser;
   updatedAt: Date & firebase.default.firestore.Timestamp;

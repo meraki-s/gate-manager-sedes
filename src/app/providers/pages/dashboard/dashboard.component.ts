@@ -15,6 +15,7 @@ import {
   map,
   take,
   switchMap,
+  tap,
 } from 'rxjs/operators';
 
 //#region Services
@@ -23,9 +24,9 @@ import { CommonDocumentsValidateService } from '../../services/validate-document
 import { CovidValidateDocumentsService } from '../../services/validate-documents/covid-validate-documents.service';
 import { DashboardService } from '../../services/dashboard.services';
 import { IpercValidateDocumentsService } from '../../services/validate-documents/iperc-validate-documents.service';
-import { LotoValidateDocumentsService } from '../../services/validate-documents/loto-validate-documents.service';
+import { EmergencyValidateDocumentsService } from '../../services/validate-documents/emergency-validate-documents.service';
 import { MsdsValidateDocumentsService } from '../../services/validate-documents/msds-validate-documents.service';
-import { ProceduresValidateDocumentsService } from '../../services/validate-documents/procedures-validate-documents.service';
+import { PetsValidateDocumentsService } from '../../services/validate-documents/pets-validate-documents.service';
 import { SwornDeclarationService } from '../../services/sworn-declaration.service';
 //#endregion
 
@@ -43,8 +44,8 @@ import { EditCollaboratorComponent } from './dialogs/edit-collaborator/edit-coll
 import { EditSctrDialogComponent } from './dialogs/edit-sctr-dialog/edit-sctr-dialog.component';
 import { EditSegVidaLeyDialogComponent } from './dialogs/edit-seg-vida-ley-dialog/edit-seg-vida-ley-dialog.component';
 import { IpercComponent } from './dialogs-validate-documents/iperc/iperc.component';
-import { LotoComponent } from './dialogs-validate-documents/loto/loto.component';
-import { ProceduresComponent } from './dialogs-validate-documents/procedures/procedures.component';
+import { EmergencyComponent } from './dialogs-validate-documents/emergency/emergency.component';
+import { PetsComponent } from './dialogs-validate-documents/pets/pets.component';
 import { MsdsComponent } from './dialogs-validate-documents/msds/msds.component';
 import { RegisterCollaboratorComponent } from './dialogs/register-collaborator/register-collaborator.component';
 import { UpdateSwornDeclarationComponent } from './dialogs/sworn-declaration/update-sworn-declaration/update-sworn-declaration.component';
@@ -64,6 +65,12 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Provider } from 'src/app/auth/models/provider.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { CertificatesValidateDocumentsService } from '../../services/validate-documents/certificates-validate-documents.service';
+import { ChecklistValidateDocumentsService } from '../../services/validate-documents/checklist-validate-documents.service';
+import { EquipmentsValidateDocumentsService } from '../../services/validate-documents/equipments-validate-documents.service';
+import { CertificatesComponent } from './dialogs-validate-documents/certificates/certificates.component';
+import { ChecklistComponent } from './dialogs-validate-documents/checklist/checklist.component';
+import { EquipmentsComponent } from './dialogs-validate-documents/equipments/equipments.component';
 //#endregion
 
 @Component({
@@ -98,13 +105,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   provider!: Provider;
 
   validateDocument$!: Observable<{
-    covidDocuments: ExitsDocumentValidateModel[];
+    // covidDocuments: ExitsDocumentValidateModel[];
     ipercDocuments: ExitsDocumentValidateModel[];
     atsDocuments: ExitsDocumentValidateModel[];
-    lotoDocuments: ExitsDocumentValidateModel[];
-    proceduresDocuments: ExitsDocumentValidateModel[];
+    emergencyDocuments: ExitsDocumentValidateModel[];
+    petsDocuments: ExitsDocumentValidateModel[];
+    certificatesDocuments: ExitsDocumentValidateModel[];
     msdsDocuments: ExitsDocumentValidateModel[];
+    checklistDocuments: ExitsDocumentValidateModel[];
+    equipmentsDocuments: ExitsDocumentValidateModel[];
   }>;
+
+  info: string = '🚧 Documentación incompleta';
 
   subscriptions = new Subscription();
   isMobile!: boolean;
@@ -119,9 +131,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private covidValidateDocumentsService: CovidValidateDocumentsService,
     private ipercValidateDocumentsService: IpercValidateDocumentsService,
     private atsValidateDocumentsService: AtsValidateDocumentsService,
-    private lotoValidateDocumentsService: LotoValidateDocumentsService,
-    private proceduresValidateDocumentsService: ProceduresValidateDocumentsService,
+    private emergencyValidateDocumentsService: EmergencyValidateDocumentsService,
+    private petsValidateDocumentsService: PetsValidateDocumentsService,
+    private certificatesValidateDocumentsService: CertificatesValidateDocumentsService,
     private msdsValidateDocumentsService: MsdsValidateDocumentsService,
+    private checklistValidateDocumentsService: ChecklistValidateDocumentsService,
+    private equipmentsValidateDocumentsService: EquipmentsValidateDocumentsService,
     private snackbar: MatSnackBar,
     private breakpoint: BreakpointObserver
   ) {}
@@ -141,13 +156,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const fecha = '22/12/2023';
     const fechaSplitted = fecha.split('/');
-
-    // this.mediaSub = this.mediaObserver.media$.subscribe(
-    //   (result: MediaChange) => {
-    //     this.deviceXs = result.mqAlias === 'xs' ? true : false;
-    //     this.deviceSm = result.mqAlias === 'sm' ? true : false;
-    //   }
-    // );
 
     this.initValidateDocuments();
 
@@ -210,9 +218,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
               collaborator.swornDeclarationDate?.toMillis();
             const medicalExaminationValidity =
               collaborator.medicalExaminationDate?.toMillis();
-            const firstDoseValidity = collaborator.firstDoseDate ? collaborator.firstDoseDate.toMillis() : null;
-            const secondDoseValidity = collaborator.secondDoseDate ? collaborator.secondDoseDate.toMillis() : null;
-            const thirdDoseValidity = collaborator.thirdDoseDate ? collaborator.thirdDoseDate.toMillis() : null;
+            const firstDoseValidity = collaborator.firstDoseDate
+              ? collaborator.firstDoseDate.toMillis()
+              : null;
+            const secondDoseValidity = collaborator.secondDoseDate
+              ? collaborator.secondDoseDate.toMillis()
+              : null;
+            const thirdDoseValidity = collaborator.thirdDoseDate
+              ? collaborator.thirdDoseDate.toMillis()
+              : null;
             const now = Date.now();
 
             if (sctrValidity && sctrValidity < now) {
@@ -408,15 +422,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  openModalValidateDocumennts(value: string): void {
+  openModalValidateDocuments(value: string): void {
     switch (value) {
-      case 'covid':
-        this.dialog.open(CovidComponent, {
-          maxWidth: 600,
-          width: '100vw',
-          panelClass: 'border-dialog',
-        });
-        break;
       case 'iperc':
         this.dialog.open(IpercComponent, {
           maxWidth: 600,
@@ -431,23 +438,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
           panelClass: 'border-dialog',
         });
         break;
-      case 'loto':
-        this.dialog.open(LotoComponent, {
+      case 'emergency':
+        this.dialog.open(EmergencyComponent, {
           maxWidth: 600,
           width: '100vw',
           panelClass: 'border-dialog',
         });
         break;
-      case 'procedures':
-        this.dialog.open(ProceduresComponent, {
+      case 'pets':
+        this.dialog.open(PetsComponent, {
           maxWidth: 600,
           width: '100vw',
           panelClass: 'border-dialog',
         });
         break;
-
+      case 'certificates':
+        this.dialog.open(CertificatesComponent, {
+          maxWidth: 600,
+          width: '100vw',
+          panelClass: 'border-dialog',
+        });
+        break;
+      case 'checklist':
+        this.dialog.open(ChecklistComponent, {
+          maxWidth: 600,
+          width: '100vw',
+          panelClass: 'border-dialog',
+        });
+        break;
       case 'msds':
         this.dialog.open(MsdsComponent, {
+          maxWidth: 600,
+          width: '100vw',
+          panelClass: 'border-dialog',
+        });
+        break;
+      case 'equipments':
+        this.dialog.open(EquipmentsComponent, {
           maxWidth: 600,
           width: '100vw',
           panelClass: 'border-dialog',
@@ -461,77 +488,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.covidValidateDocumentsService.getUser().subscribe((user) => {
         this.user = user;
         this.validateDocument$ = combineLatest([
-          this.covidValidateDocumentsService
-            .getAllValidateDocumentsCovidDesc()
-            .pipe(
-              map((data) => {
-                return {
-                  covidDocuments: data,
-                };
-              }),
-              map((docs: ValidateDocumentsModel | any) => {
-                const val = [];
-                for (let [
-                  index,
-                  covidDocuments,
-                ] of docs.covidDocuments.entries()) {
-                  val.push(
-                    JSON.stringify({
-                      status: covidDocuments.status,
-                      validityDate:
-                        this.commonDocumentsValidateService.validityDate(
-                          covidDocuments
-                        ),
-                    })
-                  );
-                }
-                return val;
-              }),
-              map((value) => {
-                if (value.length === 0) {
-                  return this.commonDocumentsValidateService.getExistsNotDocuments();
-                }
-                const existsApprovedDateFalse = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationApprovedDateFalse
-                  );
-                });
-                const existsPendingDateFalse = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationPendingDateFalse
-                  );
-                });
-                const existsApprovedDateTrue = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationApprovedDateTrue
-                  );
-                });
-                const existsPendingDateTrue = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationPendingDateTrue
-                  );
-                });
-                if (existsApprovedDateFalse[0]) {
-                  return this.commonDocumentsValidateService.getExistsApprovedTrue();
-                } else if (existsPendingDateFalse[0]) {
-                  return this.commonDocumentsValidateService.getExistsPendingTrue();
-                } else if (existsApprovedDateTrue[0]) {
-                  return this.commonDocumentsValidateService.getExistsNotDocuments();
-                } else if (existsPendingDateTrue[0]) {
-                  return this.commonDocumentsValidateService.getExistsNotDocuments();
-                } else {
-                  return this.commonDocumentsValidateService.getExistsRejectTrue();
-                }
-              })
-            ), // end pipe Covid
           this.ipercValidateDocumentsService
             .getAllValidateDocumentsIpercDesc()
             .pipe(
@@ -671,26 +627,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 }
               })
             ), // end pipe ATS
-          this.lotoValidateDocumentsService
-            .getAllValidateDocumentsLotoDesc()
+          this.emergencyValidateDocumentsService
+            .getAllValidateDocumentsEmergencyDesc()
             .pipe(
               map((data) => {
                 return {
-                  lotoDocuments: data,
+                  emergencyDocuments: data,
                 };
               }),
               map((docs: ValidateDocumentsModel | any) => {
                 const val = [];
                 for (let [
                   index,
-                  lotoDocuments,
-                ] of docs.lotoDocuments.entries()) {
+                  emergencyDocuments,
+                ] of docs.emergencyDocuments.entries()) {
                   val.push(
                     JSON.stringify({
-                      status: lotoDocuments.status,
+                      status: emergencyDocuments.status,
                       validityDate:
                         this.commonDocumentsValidateService.validityDate(
-                          lotoDocuments
+                          emergencyDocuments
                         ),
                     })
                   );
@@ -741,27 +697,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
                   return this.commonDocumentsValidateService.getExistsRejectTrue();
                 }
               })
-            ), // end pipe LOTO
-          this.proceduresValidateDocumentsService
-            .getAllValidateDocumentsProceduresDesc()
+            ), // end pipe Emergency Plan
+          this.petsValidateDocumentsService
+            .getAllValidateDocumentsPetsDesc()
             .pipe(
               map((data) => {
                 return {
-                  proceduresDocuments: data,
+                  petsDocuments: data,
                 };
               }),
               map((docs: ValidateDocumentsModel | any) => {
                 const val = [];
                 for (let [
                   index,
-                  proceduresDocuments,
-                ] of docs.proceduresDocuments.entries()) {
+                  petsDocuments,
+                ] of docs.petsDocuments.entries()) {
                   val.push(
                     JSON.stringify({
-                      status: proceduresDocuments.status,
+                      status: petsDocuments.status,
                       validityDate:
                         this.commonDocumentsValidateService.validityDate(
-                          proceduresDocuments
+                          petsDocuments
                         ),
                     })
                   );
@@ -812,7 +768,78 @@ export class DashboardComponent implements OnInit, OnDestroy {
                   return this.commonDocumentsValidateService.getExistsRejectTrue();
                 }
               })
-            ), // end pipe Procedures
+            ), // end pipe PETS
+          this.certificatesValidateDocumentsService
+            .getAllValidateDocumentsCertificatesDesc()
+            .pipe(
+              map((data) => {
+                return {
+                  certificatesDocuments: data,
+                };
+              }),
+              map((docs: ValidateDocumentsModel | any) => {
+                const val = [];
+                for (let [
+                  index,
+                  certificatesDocuments,
+                ] of docs.certificatesDocuments.entries()) {
+                  val.push(
+                    JSON.stringify({
+                      status: certificatesDocuments.status,
+                      validityDate:
+                        this.commonDocumentsValidateService.validityDate(
+                          certificatesDocuments
+                        ),
+                    })
+                  );
+                }
+                return val;
+              }),
+              map((value) => {
+                if (value.length === 0) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                }
+                const existsApprovedDateFalse = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationApprovedDateFalse
+                  );
+                });
+                const existsPendingDateFalse = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationPendingDateFalse
+                  );
+                });
+                const existsApprovedDateTrue = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationApprovedDateTrue
+                  );
+                });
+                const existsPendingDateTrue = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationPendingDateTrue
+                  );
+                });
+                if (existsApprovedDateFalse[0]) {
+                  return this.commonDocumentsValidateService.getExistsApprovedTrue();
+                } else if (existsPendingDateFalse[0]) {
+                  return this.commonDocumentsValidateService.getExistsPendingTrue();
+                } else if (existsApprovedDateTrue[0]) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                } else if (existsPendingDateTrue[0]) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                } else {
+                  return this.commonDocumentsValidateService.getExistsRejectTrue();
+                }
+              })
+            ), // end pipe Certificates
           this.msdsValidateDocumentsService
             .getAllValidateDocumentsMsdsDesc()
             .pipe(
@@ -884,15 +911,159 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 }
               })
             ), // end pipe MSDS
+          this.checklistValidateDocumentsService
+            .getAllValidateDocumentsChecklistDesc()
+            .pipe(
+              map((data) => {
+                return {
+                  checklistDocuments: data,
+                };
+              }),
+              map((docs: ValidateDocumentsModel | any) => {
+                const val = [];
+                for (let [
+                  index,
+                  checklistDocuments,
+                ] of docs.checklistDocuments.entries()) {
+                  val.push(
+                    JSON.stringify({
+                      status: checklistDocuments.status,
+                      validityDate:
+                        this.commonDocumentsValidateService.validityDate(
+                          checklistDocuments
+                        ),
+                    })
+                  );
+                }
+                return val;
+              }),
+              map((value) => {
+                if (value.length === 0) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                }
+                const existsApprovedDateFalse = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationApprovedDateFalse
+                  );
+                });
+                const existsPendingDateFalse = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationPendingDateFalse
+                  );
+                });
+                const existsApprovedDateTrue = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationApprovedDateTrue
+                  );
+                });
+                const existsPendingDateTrue = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationPendingDateTrue
+                  );
+                });
+                if (existsApprovedDateFalse[0]) {
+                  return this.commonDocumentsValidateService.getExistsApprovedTrue();
+                } else if (existsPendingDateFalse[0]) {
+                  return this.commonDocumentsValidateService.getExistsPendingTrue();
+                } else if (existsApprovedDateTrue[0]) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                } else if (existsPendingDateTrue[0]) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                } else {
+                  return this.commonDocumentsValidateService.getExistsRejectTrue();
+                }
+              })
+            ), // end pipe Check List
+          this.equipmentsValidateDocumentsService
+            .getAllValidateDocumentsEquipmentsDesc()
+            .pipe(
+              map((data) => {
+                return {
+                  equipmentsDocuments: data,
+                };
+              }),
+              map((docs: ValidateDocumentsModel | any) => {
+                const val = [];
+                for (let [
+                  index,
+                  equipmentsDocuments,
+                ] of docs.equipmentsDocuments.entries()) {
+                  val.push(
+                    JSON.stringify({
+                      status: equipmentsDocuments.status,
+                      validityDate:
+                        this.commonDocumentsValidateService.validityDate(
+                          equipmentsDocuments
+                        ),
+                    })
+                  );
+                }
+                return val;
+              }),
+              map((value) => {
+                if (value.length === 0) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                }
+                const existsApprovedDateFalse = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationApprovedDateFalse
+                  );
+                });
+                const existsPendingDateFalse = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationPendingDateFalse
+                  );
+                });
+                const existsApprovedDateTrue = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationApprovedDateTrue
+                  );
+                });
+                const existsPendingDateTrue = value.map((vl) => {
+                  return (
+                    vl ===
+                    this.commonDocumentsValidateService.validations
+                      .validationPendingDateTrue
+                  );
+                });
+                if (existsApprovedDateFalse[0]) {
+                  return this.commonDocumentsValidateService.getExistsApprovedTrue();
+                } else if (existsPendingDateFalse[0]) {
+                  return this.commonDocumentsValidateService.getExistsPendingTrue();
+                } else if (existsApprovedDateTrue[0]) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                } else if (existsPendingDateTrue[0]) {
+                  return this.commonDocumentsValidateService.getExistsNotDocuments();
+                } else {
+                  return this.commonDocumentsValidateService.getExistsRejectTrue();
+                }
+              })
+            ), // end pipe MSDS
         ]).pipe(
           map((data) => {
             return {
-              covidDocuments: data[0],
-              ipercDocuments: data[1],
-              atsDocuments: data[2],
-              lotoDocuments: data[3],
-              proceduresDocuments: data[4],
+              ipercDocuments: data[0],
+              atsDocuments: data[1],
+              emergencyDocuments: data[2],
+              petsDocuments: data[3],
+              certificatesDocuments: data[4],
               msdsDocuments: data[5],
+              checklistDocuments: data[6],
+              equipmentsDocuments: data[7],
             };
           })
         ); // end combineLastest

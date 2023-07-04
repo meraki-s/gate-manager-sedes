@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, of } from 'rxjs';
-import { ShortUser, User } from 'src/app/auth/models/user.model';
+import { ShortUser } from 'src/app/auth/models/user.model';
 import { ValidateDocumentsModel } from '../../models/validate-documents.model';
-import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 import * as firebase from 'firebase/compat/app';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { Location } from 'src/app/admin/models/location.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +15,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 export class IpercValidateDocumentsService {
   constructor(
     private afs: AngularFirestore,
-    private authService: AuthService,
-    private afAuth: AngularFireAuth
+    private authService: AuthService
   ) {}
 
   getAllValidateDocumentsIpercDesc(): Observable<ValidateDocumentsModel[]> {
@@ -26,7 +24,7 @@ export class IpercValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `/db/ferreyros/providers/${user?.providerId}/ipercDocumentsValidate`,
+            `providers/${user?.providerId}/ipercDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -39,14 +37,15 @@ export class IpercValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `/db/ferreyros/providers/${id}/ipercDocumentsValidate`,
+        `providers/${id}/ipercDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
   }
 
   addValidateDocumentsIperc(
-    list: ValidateDocumentsModel[]
+    list: ValidateDocumentsModel[],
+    locations: Location[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray: firebase.default.firestore.WriteBatch[] = [];
@@ -65,7 +64,7 @@ export class IpercValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsIpercDocRef = this.afs.firestore
                 .collection(
-                  `/db/ferreyros/providers/${user.providerId}/ipercDocumentsValidate/`
+                  `providers/${user.providerId}/ipercDocumentsValidate/`
                 )
                 .doc();
 
@@ -81,6 +80,7 @@ export class IpercValidateDocumentsService {
                 name: list[j].name,
                 type: list[j].type,
                 uploadPercent: list[j].uploadPercent,
+                locations: locations,
                 createdAt:
                   firebase.default.firestore.FieldValue.serverTimestamp() as Date &
                     firebase.default.firestore.Timestamp,
@@ -109,24 +109,11 @@ export class IpercValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsIpercDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/ipercDocumentsValidate/${idFromDelete}`
+          `providers/${user.providerId}/ipercDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsIpercDocRef);
         return of(batch);
       })
-    );
-  }
-
-  getUser(): Observable<User | undefined> {
-    return this.afAuth.authState.pipe(
-      switchMap((user) => {
-        return this.afs
-          .collection<User>('users')
-          .doc(`${user?.uid}`)
-          .valueChanges();
-      }),
-      shareReplay(1),
-      take(1)
     );
   }
 }

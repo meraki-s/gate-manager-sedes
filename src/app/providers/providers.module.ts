@@ -27,15 +27,15 @@ import { DeleteCollaboratorComponent } from './pages/dashboard/dialogs/delete-co
 import { DeleteSegVidaLeyDialogComponent } from './pages/dashboard/dialogs/delete-seg-vida-ley-dialog/delete-seg-vida-ley-dialog.component';
 import { AtsComponent } from './pages/dashboard/dialogs-validate-documents/ats/ats.component';
 import { IpercComponent } from './pages/dashboard/dialogs-validate-documents/iperc/iperc.component';
-import { LotoComponent } from './pages/dashboard/dialogs-validate-documents/loto/loto.component';
+import { EmergencyComponent } from './pages/dashboard/dialogs-validate-documents/emergency/emergency.component';
 import { MsdsComponent } from './pages/dashboard/dialogs-validate-documents/msds/msds.component';
-import { ProceduresComponent } from './pages/dashboard/dialogs-validate-documents/procedures/procedures.component';
+import { PetsComponent } from './pages/dashboard/dialogs-validate-documents/pets/pets.component';
 import { CovidComponent } from './pages/dashboard/dialogs-validate-documents/covid/covid.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localeEsPe from '@angular/common/locales/es-PE';
 
-registerLocaleData( localeEsPe,'es-PE')
+registerLocaleData(localeEsPe, 'es-PE');
 @NgModule({
   declarations: [
     ProvidersComponent,
@@ -57,7 +57,12 @@ registerLocaleData( localeEsPe,'es-PE')
     DeleteDialogComponent,
     DeleteCollaboratorComponent,
     DeleteSegVidaLeyDialogComponent,
-    IpercComponent, AtsComponent, LotoComponent, MsdsComponent, ProceduresComponent,CovidComponent
+    IpercComponent,
+    AtsComponent,
+    EmergencyComponent,
+    MsdsComponent,
+    PetsComponent,
+    CovidComponent
   ],
   imports: [
     CommonModule,
@@ -66,11 +71,10 @@ registerLocaleData( localeEsPe,'es-PE')
     MaterialModule,
     ReactiveFormsModule,
     // FlexLayoutModule
-
   ],
-  providers:[
+  providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
-    { provide: LOCALE_ID, useValue: 'es-PE' }
-  ]
+    { provide: LOCALE_ID, useValue: 'es-PE' },
+  ],
 })
-export class ProvidersModule { }
+export class ProvidersModule {}

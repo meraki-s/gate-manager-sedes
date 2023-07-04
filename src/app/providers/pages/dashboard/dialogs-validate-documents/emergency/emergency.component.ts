@@ -9,23 +9,24 @@ import {
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize} from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/auth/models/user.model';
+
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ProceduresValidateDocumentsService } from 'src/app/providers/services/validate-documents/procedures-validate-documents.service';
+import { EmergencyValidateDocumentsService } from 'src/app/providers/services/validate-documents/emergency-validate-documents.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { VisorPdfComponent } from 'src/app/shared/components/visor-pdf/visor-pdf.component';
 import { ValidateDocumentsModel } from 'src/app/providers/models/validate-documents.model';
 import { CommonDocumentsValidateService } from 'src/app/providers/services/validate-documents/common-documents-validate.service';
 
 @Component({
-  selector: 'app-procedures',
-  templateUrl: './procedures.component.html',
-  styleUrls: ['./procedures.component.scss'],
+  selector: 'app-emergency',
+  templateUrl: './emergency.component.html',
+  styleUrls: ['./emergency.component.scss'],
 })
-export class ProceduresComponent implements OnInit, OnDestroy {
+export class EmergencyComponent implements OnInit, OnDestroy {
   @ViewChildren('uploadFile', { read: ElementRef })
   uploadFile!: QueryList<ElementRef>;
 
@@ -48,8 +49,8 @@ export class ProceduresComponent implements OnInit, OnDestroy {
     private storage: AngularFireStorage,
     private fb: FormBuilder,
     public authService: AuthService,
-    private proceduresValidateDocumentsService: ProceduresValidateDocumentsService,
-    public dialogRef: MatDialogRef<ProceduresComponent>,
+    private emergencyValidateDocumentsService: EmergencyValidateDocumentsService,
+    public dialogRef: MatDialogRef<EmergencyComponent>,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
     private commonDocumentsValidateService: CommonDocumentsValidateService
@@ -58,12 +59,12 @@ export class ProceduresComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
-        this.pathStorage = `providers/${this.user?.providerId}/procedures-pdf/`;
+        this.pathStorage = `providers/${this.user?.uid}/emergency-pdf/`;
       })
     );
 
-    this.validateDocuments$ = this.proceduresValidateDocumentsService
-      .getAllValidateDocumentsProceduresDesc()
+    this.validateDocuments$ = this.emergencyValidateDocumentsService
+      .getAllValidateDocumentsEmergencyDesc()
       .pipe();
   }
 
@@ -102,8 +103,8 @@ export class ProceduresComponent implements OnInit, OnDestroy {
     }
     try {
       this.subscription.add(
-        this.proceduresValidateDocumentsService
-          .addValidateDocumentsProcedures(this.archive.value)
+        this.emergencyValidateDocumentsService
+          .addValidateDocumentsEmergency(this.archive.value)
           .subscribe((batchArray) => {
             if (batchArray.length > 0) {
               this.archive.clear();
@@ -164,8 +165,8 @@ export class ProceduresComponent implements OnInit, OnDestroy {
     }
     try {
       this.subscription.add(
-        this.proceduresValidateDocumentsService
-          .deleteValidateDocumentsProcedures(id)
+        this.emergencyValidateDocumentsService
+          .deleteValidateDocumentsEmergency(id)
           .subscribe((batch) => {
             if (batch) {
               batch

@@ -1,32 +1,29 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, of } from 'rxjs';
-import { ShortUser, User } from 'src/app/auth/models/user.model';
+import { ShortUser } from 'src/app/auth/models/user.model';
 import { ValidateDocumentsModel } from '../../models/validate-documents.model';
-import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 import * as firebase from 'firebase/compat/app';
-import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LotoValidateDocumentsService {
+export class PetsValidateDocumentsService {
   constructor(
     private afs: AngularFirestore,
     private authService: AuthService,
-    private afAuth: AngularFireAuth
   ) {}
 
-  getAllValidateDocumentsLotoDesc(): Observable<ValidateDocumentsModel[]> {
+  getAllValidateDocumentsPetsDesc(): Observable<ValidateDocumentsModel[]> {
     return this.authService.user$.pipe(
       take(1),
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `/db/ferreyros/providers/${user?.providerId}/lotoDocumentsValidate`,
+            `providers/${user?.providerId}/petsDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -34,18 +31,18 @@ export class LotoValidateDocumentsService {
     );
   }
 
-  getAllValidateDocumentsLotoAsc(
+  getAllValidateDocumentsPetsAsc(
     id: string | null | undefined
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `/db/ferreyros/providers/${id}/lotoDocumentsValidate`,
+        `providers/${id}/petsDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
   }
 
-  addValidateDocumentsLoto(
+  addValidateDocumentsPets(
     list: ValidateDocumentsModel[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
@@ -54,7 +51,7 @@ export class LotoValidateDocumentsService {
     return this.authService.user$.pipe(
       take(1),
       switchMap((user) => {
-        // check if user is defined
+        // check if user is undefined
         if (!user) return of([]);
 
         for (let index = 0; index < batchCount; index++) {
@@ -63,9 +60,9 @@ export class LotoValidateDocumentsService {
             500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
           for (let j = 500 * index; j < limit; j++) {
             if (list[j].id === null) {
-              const validateDocumentsLotoDocRef = this.afs.firestore
+              const validateDocumentsPetsDocRef = this.afs.firestore
                 .collection(
-                  `/db/ferreyros/providers/${user.providerId}/lotoDocumentsValidate/`
+                  `providers/${user.providerId}/petsDocumentsValidate/`
                 )
                 .doc();
 
@@ -75,7 +72,7 @@ export class LotoValidateDocumentsService {
               };
 
               const data: Partial<ValidateDocumentsModel> = {
-                id: validateDocumentsLotoDocRef.id,
+                id: validateDocumentsPetsDocRef.id,
                 validityDate: list[j].validityDate,
                 fileURL: list[j].fileURL,
                 name: list[j].name,
@@ -87,7 +84,7 @@ export class LotoValidateDocumentsService {
                 createdBy: shortUser,
                 status: list[j].status,
               };
-              batch.set(validateDocumentsLotoDocRef, data);
+              batch.set(validateDocumentsPetsDocRef, data);
             }
           }
           batchArray.push(batch);
@@ -97,7 +94,7 @@ export class LotoValidateDocumentsService {
     );
   }
 
-  deleteValidateDocumentsLoto(
+  deleteValidateDocumentsPets(
     idFromDelete: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     return this.authService.user$.pipe(
@@ -105,28 +102,15 @@ export class LotoValidateDocumentsService {
       switchMap((user) => {
         const batch = this.afs.firestore.batch();
 
-        //   check if user is defined
+        // check if user is defined
         if (!user) return of(batch);
 
-        const validateDocumentsLotoDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/lotoDocumentsValidate/${idFromDelete}`
+        const validateDocumentsPetsDocRef = this.afs.firestore.doc(
+          `providers/${user.providerId}/petsDocumentsValidate/${idFromDelete}`
         );
-        batch.delete(validateDocumentsLotoDocRef);
+        batch.delete(validateDocumentsPetsDocRef);
         return of(batch);
       })
-    );
-  }
-
-  getUser(): Observable<User | undefined> {
-    return this.afAuth.authState.pipe(
-      switchMap((user) => {
-        return this.afs
-          .collection<User>('users')
-          .doc(`${user?.uid}`)
-          .valueChanges();
-      }),
-      shareReplay(1),
-      take(1)
     );
   }
 }

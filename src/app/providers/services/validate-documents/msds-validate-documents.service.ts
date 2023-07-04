@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, of } from 'rxjs';
-import { ShortUser, User } from 'src/app/auth/models/user.model';
+import { ShortUser } from 'src/app/auth/models/user.model';
 import { ValidateDocumentsModel } from '../../models/validate-documents.model';
-import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 import * as firebase from 'firebase/compat/app';
 import { AuthService } from 'src/app/auth/services/auth.service';
@@ -16,8 +14,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 export class MsdsValidateDocumentsService {
   constructor(
     private afs: AngularFirestore,
-    private authService: AuthService,
-    private afAuth: AngularFireAuth
+    private authService: AuthService
   ) {}
 
   getAllValidateDocumentsMsdsDesc(): Observable<ValidateDocumentsModel[]> {
@@ -26,7 +23,7 @@ export class MsdsValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `/db/ferreyros/providers/${user?.providerId}/msdsDocumentsValidate`,
+            `providers/${user?.providerId}/msdsDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -39,7 +36,7 @@ export class MsdsValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `/db/ferreyros/providers/${id}/msdsDocumentsValidate`,
+        `providers/${id}/msdsDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -65,7 +62,7 @@ export class MsdsValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsMsdsDocRef = this.afs.firestore
                 .collection(
-                  `/db/ferreyros/providers/${user.providerId}/msdsDocumentsValidate/`
+                  `providers/${user.providerId}/msdsDocumentsValidate/`
                 )
                 .doc();
 
@@ -109,24 +106,11 @@ export class MsdsValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsMsdsDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/msdsDocumentsValidate/${idFromDelete}`
+          `providers/${user.providerId}/msdsDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsMsdsDocRef);
         return of(batch);
       })
-    );
-  }
-
-  getUser(): Observable<User | undefined> {
-    return this.afAuth.authState.pipe(
-      switchMap((user) => {
-        return this.afs
-          .collection<User>('users')
-          .doc(`${user?.uid}`)
-          .valueChanges();
-      }),
-      shareReplay(1),
-      take(1)
     );
   }
 }

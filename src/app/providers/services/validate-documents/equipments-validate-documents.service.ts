@@ -1,29 +1,30 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, of } from 'rxjs';
-import { ShortUser } from 'src/app/auth/models/user.model';
+import { ShortUser, User } from 'src/app/auth/models/user.model';
 import { ValidateDocumentsModel } from '../../models/validate-documents.model';
-import { switchMap, take } from 'rxjs/operators';
+import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 import * as firebase from 'firebase/compat/app';
-import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AtsValidateDocumentsService {
+export class EquipmentsValidateDocumentsService {
   constructor(
     private afs: AngularFirestore,
     private authService: AuthService
   ) {}
 
-  getAllValidateDocumentsAtsDesc(): Observable<ValidateDocumentsModel[]> {
+  getAllValidateDocumentsEquipmentsDesc(): Observable<ValidateDocumentsModel[]> {
     return this.authService.user$.pipe(
       take(1),
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/atsDocumentsValidate`,
+            `providers/${user?.providerId}/equipmentsDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -31,18 +32,18 @@ export class AtsValidateDocumentsService {
     );
   }
 
-  getAllValidateDocumentsAtsAsc(
+  getAllValidateDocumentsEquipmentsAsc(
     id: string | null | undefined
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/atsDocumentsValidate`,
+        `providers/${id}/equipmentsDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
   }
 
-  addValidateDocumentsAts(
+  addValidateDocumentsEquipments(
     list: ValidateDocumentsModel[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
@@ -51,7 +52,7 @@ export class AtsValidateDocumentsService {
     return this.authService.user$.pipe(
       take(1),
       switchMap((user) => {
-        // check if user is defined
+        // check if user is undefined
         if (!user) return of([]);
 
         for (let index = 0; index < batchCount; index++) {
@@ -60,19 +61,19 @@ export class AtsValidateDocumentsService {
             500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
           for (let j = 500 * index; j < limit; j++) {
             if (list[j].id === null) {
-              const validateDocumentsAtsDocRef = this.afs.firestore
+              const validateDocumentsEquipmentsDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/atsDocumentsValidate/`
+                  `providers/${user.providerId}/equipmentsDocumentsValidate/`
                 )
                 .doc();
 
               const shortUser: ShortUser = {
-                uid: user?.uid,
-                displayName: user?.name,
+                uid: user.uid,
+                displayName: user.name,
               };
 
               const data: Partial<ValidateDocumentsModel> = {
-                id: validateDocumentsAtsDocRef.id,
+                id: validateDocumentsEquipmentsDocRef.id,
                 validityDate: list[j].validityDate,
                 fileURL: list[j].fileURL,
                 name: list[j].name,
@@ -84,18 +85,17 @@ export class AtsValidateDocumentsService {
                 createdBy: shortUser,
                 status: list[j].status,
               };
-              batch.set(validateDocumentsAtsDocRef, data);
+              batch.set(validateDocumentsEquipmentsDocRef, data);
             }
           }
           batchArray.push(batch);
         }
-
         return of(batchArray);
       })
     );
   }
 
-  deleteValidateDocumentsAts(
+  deleteValidateDocumentsEquipments(
     idFromDelete: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     return this.authService.user$.pipe(
@@ -106,10 +106,10 @@ export class AtsValidateDocumentsService {
         // check if user is defined
         if (!user) return of(batch);
 
-        const validateDocumentsAtsDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/atsDocumentsValidate/${idFromDelete}`
+        const validateDocumentsEquipmentsDocRef = this.afs.firestore.doc(
+          `providers/${user.providerId}/equipmentsDocumentsValidate/${idFromDelete}`
         );
-        batch.delete(validateDocumentsAtsDocRef);
+        batch.delete(validateDocumentsEquipmentsDocRef);
         return of(batch);
       })
     );

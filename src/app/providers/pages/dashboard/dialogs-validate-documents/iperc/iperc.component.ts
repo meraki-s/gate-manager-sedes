@@ -7,7 +7,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,6 +20,9 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { VisorPdfComponent } from 'src/app/shared/components/visor-pdf/visor-pdf.component';
 import { ValidateDocumentsModel } from 'src/app/providers/models/validate-documents.model';
 import { CommonDocumentsValidateService } from 'src/app/providers/services/validate-documents/common-documents-validate.service';
+import { LocationService } from 'src/app/admin/services/location.service';
+import { Location } from 'src/app/admin/models/location.model';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-iperc',
@@ -45,6 +48,10 @@ export class IpercComponent implements OnInit, OnDestroy {
 
   validateDocuments: ValidateDocumentsModel[] = [];
 
+  locations$: Observable<Array<Location>> = of([]);
+
+  locationModel = new SelectionModel<Location>(true, []);
+
   constructor(
     private storage: AngularFireStorage,
     private fb: FormBuilder,
@@ -53,7 +60,8 @@ export class IpercComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<IpercComponent>,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
-    private commonDocumentsValidateService: CommonDocumentsValidateService
+    private commonDocumentsValidateService: CommonDocumentsValidateService,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +74,8 @@ export class IpercComponent implements OnInit, OnDestroy {
     this.validateDocuments$ = this.ipercValidateDocumentsService
       .getAllValidateDocumentsIpercDesc()
       .pipe();
+
+    this.locations$ = this.locationService.getLocations();
   }
 
   addControl(): void {
@@ -104,7 +114,7 @@ export class IpercComponent implements OnInit, OnDestroy {
     try {
       this.subscription.add(
         this.ipercValidateDocumentsService
-          .addValidateDocumentsIperc(this.archive.value)
+          .addValidateDocumentsIperc(this.archive.value, this.locationModel.selected)
           .subscribe((batchArray) => {
             if (batchArray.length > 0) {
               this.archive.clear();
@@ -302,5 +312,20 @@ export class IpercComponent implements OnInit, OnDestroy {
 
   get archive(): FormArray {
     return this.dataForm.get('archive') as FormArray;
+  }
+
+  setAllLocations(completed: boolean, locations: Location[]) {
+    if (completed) {
+      this.locationModel.setSelection(...locations);
+      console.log(this.locationModel.selected);
+    } else {
+      this.locationModel.clear();
+      console.log(this.locationModel.selected);
+    }
+  }
+
+  setLocation(location: Location) {
+    this.locationModel.toggle(location);
+    console.log(this.locationModel.selected);
   }
 }

@@ -182,7 +182,26 @@ input[type="number"] {
   }
 }
 
-html,
-body {
-  height: 100%;
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+  border-radius: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #a3d3a1;
+  border-radius: 8px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #48aa43;
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3f9b3a;
 }

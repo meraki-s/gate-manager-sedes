@@ -19,6 +19,7 @@ import { MaterialModule } from './shared/material/material.module';
 // import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +32,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     AngularFireAuthModule,
     AngularFireStorageModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSkeletonLoaderModule.forRoot(),
   ],
   providers: [
     {
@@ -46,7 +48,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
       provide: USE_FUNCTIONS_EMULATOR,
       useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' }
+    { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
   ],
   bootstrap: [AppComponent],
 })

@@ -48,7 +48,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctrDocRef = this.afs.firestore
-          .collection(`/db/ferreyros/providers/${user.providerId}/sctrList`)
+          .collection(`providers/${user.providerId}/sctrList`)
           .doc();
 
         const shortUser: ShortUser = {
@@ -74,7 +74,7 @@ export class DashboardService {
         collaboratorList.forEach((collaborator) => {
           const collaboratorDocRef = this.afs.firestore
             .collection(
-              `/db/ferreyros/providers/${user.providerId}/collaborators`
+              `providers/${user.providerId}/collaborators`
             )
             .doc(collaborator.id);
 
@@ -106,7 +106,7 @@ export class DashboardService {
 
         return this.afs
           .collection<SVL>(
-            `/db/ferreyros/providers/${user.providerId}/svlList`,
+            `providers/${user.providerId}/svlList`,
             (ref) => ref.orderBy('createdAt', 'desc')
           )
           .valueChanges();
@@ -124,7 +124,7 @@ export class DashboardService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const svlDocRef = this.afs.firestore
-      .collection(`/db/ferreyros/providers/${user.providerId}/svlList`)
+      .collection(`providers/${user.providerId}/svlList`)
       .doc();
 
     const data: Partial<SVL> = {
@@ -144,7 +144,7 @@ export class DashboardService {
     // correlate svl with collaborators
     collaboratorList.forEach((collaborator) => {
       const collaboratorDocRef = this.afs.firestore
-        .collection(`/db/ferreyros/providers/${user.providerId}/collaborators`)
+        .collection(`providers/${user.providerId}/collaborators`)
         .doc(collaborator.id);
 
       batch.update(collaboratorDocRef, {
@@ -180,7 +180,7 @@ export class DashboardService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const svlDocRef = this.afs.firestore.doc(
-      `/db/ferreyros/providers/${user.providerId}/svlList/${svlId}`
+      `providers/${user.providerId}/svlList/${svlId}`
     );
 
     const data: Partial<SVL> = {
@@ -197,7 +197,7 @@ export class DashboardService {
     // correlate svl with collaborators
     collaboratorList.forEach((collaborator) => {
       const collaboratorDocRef = this.afs.firestore
-        .collection(`/db/ferreyros/providers/${user.providerId}/collaborators`)
+        .collection(`providers/${user.providerId}/collaborators`)
         .doc(collaborator.id);
 
       batch.update(collaboratorDocRef, {
@@ -225,7 +225,7 @@ export class DashboardService {
     // create batch
     const batch = this.afs.firestore.batch();
     const docRef = this.afs.firestore.doc(
-      `db/ferreyros/providers/${providerId}/svlList/${svlId}`
+      `providers/${providerId}/svlList/${svlId}`
     );
     //
     batch.delete(docRef);
@@ -258,7 +258,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctrDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/sctrList/${sctrId}`
+          `providers/${user.providerId}/sctrList/${sctrId}`
         );
 
         const shortUser: ShortUser = {
@@ -281,7 +281,7 @@ export class DashboardService {
         collaboratorList.forEach((collaborator) => {
           const collaboratorDocRef = this.afs.firestore
             .collection(
-              `/db/ferreyros/providers/${user.providerId}/collaborators`
+              `providers/${user.providerId}/collaborators`
             )
             .doc(collaborator.id);
 
@@ -312,7 +312,7 @@ export class DashboardService {
     // create batch
     const batch = this.afs.firestore.batch();
     const docRef = this.afs.firestore.doc(
-      `/db/ferreyros/providers/${providerId}/sctrList/${sctrId}`
+      `providers/${providerId}/sctrList/${sctrId}`
     );
     //
     batch.delete(docRef);
@@ -333,7 +333,7 @@ export class DashboardService {
 
         return this.afs
           .collection<SCTR>(
-            `/db/ferreyros/providers/${user.providerId}/sctrList`,
+            `/providers/${user.providerId}/sctrList`,
             (ref) => ref.orderBy('createdAt', 'desc')
           )
           .valueChanges();
@@ -355,7 +355,7 @@ export class DashboardService {
 
         return this.afs
           .collection<Collaborator>(
-            `/db/ferreyros/providers/${user.providerId}/collaborators`,
+            `providers/${user.providerId}/collaborators`,
             (ref) => ref.orderBy('lastname', 'asc')
           )
           .valueChanges();
@@ -382,13 +382,13 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const docRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/collaborators/${collaboratorId}`
+          `providers/${user.providerId}/collaborators/${collaboratorId}`
         );
 
         batch.delete(docRef);
 
         const providerRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user.providerId}`
+          `providers/${user.providerId}`
         );
 
         providerRef.firestore.runTransaction(async (transaction) => {
@@ -429,7 +429,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/sctrList/${sctrId}`
+          `providers/${user.providerId}/sctrList/${sctrId}`
         );
         // Structuring the data model
         const data: any = {
@@ -456,7 +456,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/svlList/${entryId}`
+          `providers/${user.providerId}/svlList/${entryId}`
         );
         // Structuring the data model
         const data: any = {
@@ -498,7 +498,7 @@ export class DashboardService {
 
         // create reference for document in {doc} entries collection
         const collaboratorDocRef = this.afs.firestore
-          .collection(`db/ferreyros/providers/${user.providerId}/collaborators`)
+          .collection(`providers/${user.providerId}/collaborators`)
           .doc();
 
         const shortUser: ShortUser = {
@@ -545,7 +545,7 @@ export class DashboardService {
         batch.set(collaboratorDocRef, data);
 
         const providerRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user.providerId}`
+          `providers/${user.providerId}`
         );
 
         providerRef.firestore.runTransaction(async (transaction) => {
@@ -590,7 +590,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user?.providerId}/collaborators/${collaboratorId}`
+          `providers/${user?.providerId}/collaborators/${collaboratorId}`
         );
 
         const shortUser: ShortUser = {
@@ -641,7 +641,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user?.providerId}/collaborators/${collaboratorId}`
+          `providers/${user?.providerId}/collaborators/${collaboratorId}`
         );
 
         return this.http.get(environment.queryDriveURL + `/${dni}`).pipe(
@@ -699,7 +699,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user.providerId}/collaborators/${collaboratorId}`
+          `providers/${user.providerId}/collaborators/${collaboratorId}`
         );
 
         const data: any = {
@@ -726,7 +726,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user.providerId}/collaborators/${collaboratorId}`
+          `providers/${user.providerId}/collaborators/${collaboratorId}`
         );
 
         const data: any = {
@@ -744,7 +744,7 @@ export class DashboardService {
 
   getProvider(providerId: string): Observable<Provider | null> {
     return this.afs
-      .doc<Provider>(`db/ferreyros/providers/${providerId}`)
+      .doc<Provider>(`providers/${providerId}`)
       .valueChanges()
       .pipe(
         map((provider) => {
@@ -767,7 +767,7 @@ export class DashboardService {
         collaborators.map((element) => {
           const collaboratorRef = this.afs
             .collection(
-              `/db/ferreyros/providers/${user?.providerId}/collaborators`
+              `providers/${user?.providerId}/collaborators`
             )
             .doc(element.id);
 

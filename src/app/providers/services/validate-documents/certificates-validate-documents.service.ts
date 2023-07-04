@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, of } from 'rxjs';
-import { ShortUser, User } from 'src/app/auth/models/user.model';
+import { ShortUser } from 'src/app/auth/models/user.model';
 import { ValidateDocumentsModel } from '../../models/validate-documents.model';
-import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
 import * as firebase from 'firebase/compat/app';
@@ -13,22 +11,20 @@ import * as firebase from 'firebase/compat/app';
 @Injectable({
   providedIn: 'root',
 })
-export class ProceduresValidateDocumentsService {
+export class CertificatesValidateDocumentsService {
+
   constructor(
     private afs: AngularFirestore,
-    private authService: AuthService,
-    private afAuth: AngularFireAuth
+    private authService: AuthService
   ) {}
 
-  getAllValidateDocumentsProceduresDesc(): Observable<
-    ValidateDocumentsModel[]
-  > {
+  getAllValidateDocumentsCertificatesDesc(): Observable<ValidateDocumentsModel[]> {
     return this.authService.user$.pipe(
       take(1),
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `/db/ferreyros/providers/${user?.providerId}/proceduresDocumentsValidate`,
+            `providers/${user?.providerId}/certificatesDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -36,18 +32,18 @@ export class ProceduresValidateDocumentsService {
     );
   }
 
-  getAllValidateDocumentsProceduresAsc(
+  getAllValidateDocumentsCertificatesAsc(
     id: string | null | undefined
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `/db/ferreyros/providers/${id}/proceduresDocumentsValidate`,
+        `providers/${id}/certificatesDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
   }
 
-  addValidateDocumentsProcedures(
+  addValidateDocumentsCertificates(
     list: ValidateDocumentsModel[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
@@ -65,9 +61,9 @@ export class ProceduresValidateDocumentsService {
             500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
           for (let j = 500 * index; j < limit; j++) {
             if (list[j].id === null) {
-              const validateDocumentsProceduresDocRef = this.afs.firestore
+              const validateDocumentsCertificatesDocRef = this.afs.firestore
                 .collection(
-                  `/db/ferreyros/providers/${user.providerId}/proceduresDocumentsValidate/`
+                  `providers/${user.providerId}/certificatesDocumentsValidate/`
                 )
                 .doc();
 
@@ -77,7 +73,7 @@ export class ProceduresValidateDocumentsService {
               };
 
               const data: Partial<ValidateDocumentsModel> = {
-                id: validateDocumentsProceduresDocRef.id,
+                id: validateDocumentsCertificatesDocRef.id,
                 validityDate: list[j].validityDate,
                 fileURL: list[j].fileURL,
                 name: list[j].name,
@@ -89,7 +85,7 @@ export class ProceduresValidateDocumentsService {
                 createdBy: shortUser,
                 status: list[j].status,
               };
-              batch.set(validateDocumentsProceduresDocRef, data);
+              batch.set(validateDocumentsCertificatesDocRef, data);
             }
           }
           batchArray.push(batch);
@@ -99,7 +95,7 @@ export class ProceduresValidateDocumentsService {
     );
   }
 
-  deleteValidateDocumentsProcedures(
+  deleteValidateDocumentsCertificates(
     idFromDelete: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     return this.authService.user$.pipe(
@@ -110,25 +106,12 @@ export class ProceduresValidateDocumentsService {
         // check if user is defined
         if (!user) return of(batch);
 
-        const validateDocumentsProceduresDocRef = this.afs.firestore.doc(
-          `/db/ferreyros/providers/${user.providerId}/proceduresDocumentsValidate/${idFromDelete}`
+        const validateDocumentsCertificatesDocRef = this.afs.firestore.doc(
+          `providers/${user.providerId}/certificatesDocumentsValidate/${idFromDelete}`
         );
-        batch.delete(validateDocumentsProceduresDocRef);
+        batch.delete(validateDocumentsCertificatesDocRef);
         return of(batch);
       })
-    );
-  }
-
-  getUser(): Observable<User | undefined> {
-    return this.afAuth.authState.pipe(
-      switchMap((user) => {
-        return this.afs
-          .collection<User>('users')
-          .doc(`${user?.uid}`)
-          .valueChanges();
-      }),
-      shareReplay(1),
-      take(1)
     );
   }
 }

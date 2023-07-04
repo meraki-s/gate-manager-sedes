@@ -1,414 +1,129 @@
-<div
-  class="container"
-  ngClass.sm="container--mobile"
-  ngClass.xs="container--mobile"
->
+<div class="container">
   <div class="wrapper">
-    <div
-      class="wrapper__status"
-      *ngIf="provider"
-      ngStyle.xs="margin-right: 20px;"
-      fxLayout.xs="column"
-      fxLayoutAlign.xs="center center"
-    >
-      <button
-        [ngClass]="{
-          'wrapper__status--registered': provider.status === 'registered',
-          'wrapper__status--enabled': provider.status === 'enabled',
-          'wrapper__status--disabled': provider.status === 'disabled'
-        }"
-        cdkFocusInitial
-        ngStyle.xs="width: 100%;"
+    <div class="archives">
+      <div class="header">
+        <span class="title">Documentación</span>
+        <span class="info">{{ info }}</span>
+      </div>
+      <div
+        class="folders"
+        *ngIf="validateDocument$ | async as docs; else docsLoader"
       >
-        <span *ngIf="provider.status === 'registered'">REGISTRADO</span>
-        <span *ngIf="provider.status === 'enabled'">HABILITADO</span>
-        <span *ngIf="provider.status === 'disabled'">INHABILITADO</span>
-      </button>
-      <ng-container *ngIf="validateDocument$ | async as docs">
         <div
-          ngStyle.lg="margin-left: 15px;"
-          ngStyle.md="margin-left: 15px;"
-          fxLayout.lg="row"
-          fxLayoutAlign.lg="start start"
-          fxLayout.md="row"
-          fxLayoutAlign.md="start start"
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.ipercDocuments[1].exists || docs.ipercDocuments[3].exists,
+              'folder--rejected': docs.ipercDocuments[2].exists,
+              'folder--done': docs.ipercDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('iperc')"
         >
-          <div class="documents">
-            <div class="documents__wrapper">
-              <!-- Covid Validate Documents -->
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.covidDocuments[0].exists"
-                (click)="openModalValidateDocumennts('covid')"
-              >
-                <mat-icon class="wrapper__status--btn__approved"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">Plan COVID</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.covidDocuments[1].exists"
-                (click)="openModalValidateDocumennts('covid')"
-              >
-                <mat-icon class="wrapper__status--btn__pending-revicion"
-                  >rate_review</mat-icon
-                >
-                <span class="wrapper__status--text">Plan COVID</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.covidDocuments[2].exists"
-                (click)="openModalValidateDocumennts('covid')"
-              >
-                <mat-icon class="wrapper__status--btn__rejected"
-                  >cancel</mat-icon
-                >
-                <span class="wrapper__status--text">Plan COVID</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.covidDocuments[3].exists"
-                (click)="openModalValidateDocumennts('covid')"
-              >
-                <mat-icon class="wrapper__status--btn__pending"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">Plan COVID</span>
-              </button>
-              <!-- IPERC Validate Documents -->
-
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.ipercDocuments[0].exists"
-                (click)="openModalValidateDocumennts('iperc')"
-              >
-                <mat-icon class="wrapper__status--btn__approved"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">IPERC</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.ipercDocuments[1].exists"
-                (click)="openModalValidateDocumennts('iperc')"
-              >
-                <mat-icon class="wrapper__status--btn__pending-revicion"
-                  >rate_review</mat-icon
-                >
-                <span class="wrapper__status--text">IPERC</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.ipercDocuments[2].exists"
-                (click)="openModalValidateDocumennts('iperc')"
-              >
-                <mat-icon class="wrapper__status--btn__rejected"
-                  >cancel</mat-icon
-                >
-                <span class="wrapper__status--text">IPERC</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.ipercDocuments[3].exists"
-                (click)="openModalValidateDocumennts('iperc')"
-              >
-                <mat-icon class="wrapper__status--btn__pending"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">IPERC</span>
-              </button>
-
-              <!-- ATS Validate Documents -->
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.atsDocuments[0].exists"
-                (click)="openModalValidateDocumennts('ats')"
-              >
-                <mat-icon class="wrapper__status--btn__approved"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">ATS y PTAR</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.atsDocuments[1].exists"
-                (click)="openModalValidateDocumennts('ats')"
-              >
-                <mat-icon class="wrapper__status--btn__pending-revicion"
-                  >rate_review</mat-icon
-                >
-                <span class="wrapper__status--text">ATS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.atsDocuments[2].exists"
-                (click)="openModalValidateDocumennts('ats')"
-              >
-                <mat-icon class="wrapper__status--btn__rejected"
-                  >cancel</mat-icon
-                >
-                <span class="wrapper__status--text">ATS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.atsDocuments[3].exists"
-                (click)="openModalValidateDocumennts('ats')"
-              >
-                <mat-icon class="wrapper__status--btn__pending"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">ATS</span>
-              </button>
-            </div>
-
-            <div class="documents__wrapper">
-              <!-- LOTO Validate Documents -->
-              <button
-                ngStyle.xs="width: 100%;text-align: justify; margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.lotoDocuments[0].exists"
-                (click)="openModalValidateDocumennts('loto')"
-              >
-                <mat-icon class="wrapper__status--btn__approved"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">Plan de emergencia</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify; margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.lotoDocuments[1].exists"
-                (click)="openModalValidateDocumennts('loto')"
-              >
-                <mat-icon class="wrapper__status--btn__pending-revicion"
-                  >rate_review</mat-icon
-                >
-                <span class="wrapper__status--text">Plan de emergencia</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify; margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.lotoDocuments[2].exists"
-                (click)="openModalValidateDocumennts('loto')"
-              >
-                <mat-icon class="wrapper__status--btn__rejected"
-                  >cancel</mat-icon
-                >
-                <span class="wrapper__status--text">Plan de emergencia</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify; margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.lotoDocuments[3].exists"
-                (click)="openModalValidateDocumennts('loto')"
-              >
-                <mat-icon class="wrapper__status--btn__pending"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">Plan de emergencia</span>
-              </button>
-
-              <!-- PROCEDURES Validate Documents -->
-              <button
-                ngStyle.xs="width: 100%;text-align: justify; margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.proceduresDocuments[0].exists"
-                (click)="openModalValidateDocumennts('procedures')"
-              >
-                <mat-icon class="wrapper__status--btn__approved"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">PETS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.proceduresDocuments[1].exists"
-                (click)="openModalValidateDocumennts('procedures')"
-              >
-                <mat-icon class="wrapper__status--btn__pending-revicion"
-                  >rate_review</mat-icon
-                >
-                <span class="wrapper__status--text">PETS</span>
-              </button>
-              <button
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.proceduresDocuments[2].exists"
-                (click)="openModalValidateDocumennts('procedures')"
-              >
-                <mat-icon class="wrapper__status--btn__rejected"
-                  >cancel</mat-icon
-                >
-                <span class="wrapper__status--text">PETS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.proceduresDocuments[3].exists"
-                (click)="openModalValidateDocumennts('procedures')"
-              >
-                <mat-icon class="wrapper__status--btn__pending"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">PETS</span>
-              </button>
-
-              <!-- MSDS Validate Documents -->
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.msdsDocuments[0].exists"
-                (click)="openModalValidateDocumennts('msds')"
-              >
-                <mat-icon class="wrapper__status--btn__approved"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">MSDS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.msdsDocuments[1].exists"
-                (click)="openModalValidateDocumennts('msds')"
-              >
-                <mat-icon class="wrapper__status--btn__pending-revicion"
-                  >rate_review</mat-icon
-                >
-                <span class="wrapper__status--text">MSDS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.msdsDocuments[2].exists"
-                (click)="openModalValidateDocumennts('msds')"
-              >
-                <mat-icon class="wrapper__status--btn__rejected"
-                  >cancel</mat-icon
-                >
-                <span class="wrapper__status--text">MSDS</span>
-              </button>
-              <button
-                ngStyle.xs="width: 100%;text-align: justify;margin-bottom: 8px;"
-                ngStyle.lg="margin-left: 30px;"
-                ngStyle.lg="margin-left: 30px;"
-                type="button"
-                mat-button
-                class="wrapper__status--btn"
-                *ngIf="docs.msdsDocuments[3].exists"
-                (click)="openModalValidateDocumennts('msds')"
-              >
-                <mat-icon class="wrapper__status--btn__pending"
-                  >check_circle</mat-icon
-                >
-                <span class="wrapper__status--text">MSDS</span>
-              </button>
-            </div>
-          </div>
+          <div class="counter">03 Documentos</div>
+          <div class="title">IPERC</div>
         </div>
-      </ng-container>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.atsDocuments[1].exists || docs.atsDocuments[3].exists,
+              'folder--rejected': docs.atsDocuments[2].exists,
+              'folder--done': docs.atsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('ats')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">ATS</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.emergencyDocuments[1].exists || docs.emergencyDocuments[3].exists,
+              'folder--rejected': docs.emergencyDocuments[2].exists,
+              'folder--done': docs.emergencyDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('emergency')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">Plan Emerg.</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.petsDocuments[1].exists || docs.petsDocuments[3].exists,
+              'folder--rejected': docs.petsDocuments[2].exists,
+              'folder--done': docs.petsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('pets')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">PETS</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.certificatesDocuments[1].exists || docs.certificatesDocuments[3].exists,
+              'folder--rejected': docs.certificatesDocuments[2].exists,
+              'folder--done': docs.certificatesDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('certificates')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">Certificados</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.msdsDocuments[1].exists || docs.msdsDocuments[3].exists,
+              'folder--rejected': docs.msdsDocuments[2].exists,
+              'folder--done': docs.msdsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('msds')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">MSDS</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.checklistDocuments[1].exists || docs.checklistDocuments[3].exists,
+              'folder--rejected': docs.checklistDocuments[2].exists,
+              'folder--done': docs.checklistDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('checklist')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">Check List</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.equipmentsDocuments[1].exists || docs.equipmentsDocuments[3].exists,
+              'folder--rejected': docs.equipmentsDocuments[2].exists,
+              'folder--done': docs.equipmentsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('equipments')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">Op. Equipos</div>
+        </div>
+      </div>
+      <ng-template #docsLoader>
+        <mat-progress-bar
+          mode="indeterminate"
+          color="primary"
+        ></mat-progress-bar>
+        <!-- <ngx-skeleton-loader
+          count="5"
+          appearance="circle"
+        ></ngx-skeleton-loader> -->
+      </ng-template>
     </div>
 
     <div
@@ -476,17 +191,13 @@
           <div class="cards__body" *ngIf="sctr$ | async as arraySctr">
             <!--  (item.editedAt['seconds'] * 1000 | date : 'dd/MM/yy') -->
 
-            <div
-              class="card"
-              ngStyle.xs="height: 93px; width:275px;"
-              *ngFor="let item of arraySctr"
-            >
+            <div class="card" *ngFor="let item of arraySctr">
               <div *ngIf="!deviceXs" class="card__codigo">
                 Codigo :<span class="card__codigo--text">{{ item.code }}</span>
               </div>
               <div *ngIf="!deviceXs" class="card__validity">
                 Vigencia:<span class="card__validity--text">{{
-                  item.validityDate.seconds * 1000 | date: "dd/MM/yy"
+                  item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                 }}</span>
               </div>
               <div *ngIf="!deviceXs" class="card__collaborator">
@@ -503,10 +214,10 @@
                 </div>
                 <div class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
-                    item.validityDate.seconds * 1000 | date: "dd/MM/yy"
+                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                   }}</span>
                 </div>
-                <div class="card__collaborator" ngStyle.xs="margin-left:15px">
+                <div class="card__collaborator">
                   Colaboradores :<span class="card__collaborator--text">{{
                     item.collaborators.length
                   }}</span>
@@ -578,11 +289,7 @@
           </div>
           <hr class="cards__divider" />
           <div class="cards__body" *ngIf="seguroVL$ | async as arraySeguroVL">
-            <div
-              class="card"
-              ngStyle.xs="height: 93px; width:275px;"
-              *ngFor="let item of arraySeguroVL"
-            >
+            <div class="card" *ngFor="let item of arraySeguroVL">
               <div *ngIf="deviceXs">
                 <div class="card__codigo">
                   Codigo :<span class="card__codigo--text">{{
@@ -591,7 +298,7 @@
                 </div>
                 <div class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
-                    item.validityDate.seconds * 1000 | date: "dd/MM/yy"
+                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                   }}</span>
                 </div>
                 <div class="card__collaborator" ngStyle.xs="margin-left:15px">
@@ -605,7 +312,7 @@
               </div>
               <div *ngIf="!deviceXs" class="card__validity">
                 Vigencia:<span class="card__validity--text">{{
-                  item.validityDate.seconds * 1000 | date: "dd/MM/yy"
+                  item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                 }}</span>
               </div>
               <div class="card__collaborator" *ngIf="!deviceXs">
@@ -684,11 +391,7 @@
             class="cards__body"
             *ngIf="swornDeclaration$ | async as swornDeclaration"
           >
-            <div
-              class="card"
-              ngStyle.xs="height: 93px; width: 278px;"
-              *ngFor="let item of swornDeclaration"
-            >
+            <div class="card" *ngFor="let item of swornDeclaration">
               <div *ngIf="deviceXs">
                 <div class="card__codigo">
                   Codigo :<span class="card__codigo--text">{{
@@ -697,10 +400,10 @@
                 </div>
                 <div class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
-                    item.validityDate.seconds * 1000 | date: "dd/MM/yy"
+                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                   }}</span>
                 </div>
-                <div class="card__collaborator" ngStyle.xs="margin-left:15px">
+                <div class="card__collaborator">
                   Colaboradores :<span class="card__collaborator--text">{{
                     item.collaborators.length
                   }}</span>
@@ -711,7 +414,7 @@
               </div>
               <div *ngIf="!deviceXs" class="card__validity">
                 Vigencia:<span class="card__validity--text">{{
-                  item.validityDate.seconds * 1000 | date: "dd/MM/yy"
+                  item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                 }}</span>
               </div>
               <div *ngIf="!deviceXs" class="card__collaborator">
@@ -806,7 +509,6 @@
           ></mat-progress-bar>
           <div
             class="cards2__body"
-            ngStyle.xs=" width: 302px;"
             *ngIf="profileCollaborator$ | async as elemets"
           >
             <div
