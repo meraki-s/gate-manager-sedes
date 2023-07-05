@@ -7,6 +7,7 @@ import { switchMap, take } from 'rxjs/operators';
 
 import * as firebase from 'firebase/compat/app';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { Location } from 'src/app/admin/models/location.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +44,8 @@ export class AtsValidateDocumentsService {
   }
 
   addValidateDocumentsAts(
-    list: ValidateDocumentsModel[]
+    list: ValidateDocumentsModel[],
+    locations: Location[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray: firebase.default.firestore.WriteBatch[] = [];
@@ -78,6 +80,7 @@ export class AtsValidateDocumentsService {
                 name: list[j].name,
                 type: list[j].type,
                 uploadPercent: list[j].uploadPercent,
+                locations: locations,
                 createdAt:
                   firebase.default.firestore.FieldValue.serverTimestamp() as Date &
                     firebase.default.firestore.Timestamp,
