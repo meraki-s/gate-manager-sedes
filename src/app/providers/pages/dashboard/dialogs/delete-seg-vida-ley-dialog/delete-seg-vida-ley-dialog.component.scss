@@ -1,0 +1,35 @@
+.ms-dialog-body {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__title {
+    font-size: 12px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 14px;
+    color: rgba(0, 0, 0, 0.8);
+    // margin: 20px 0px 0px 50px;
+    &--codigo {
+      font-weight: bold;
+    }
+  }
+  &__text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0px 0px 10px 0px;
+  }
+}
+
+button {
+  font-family: Quicksand;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+}

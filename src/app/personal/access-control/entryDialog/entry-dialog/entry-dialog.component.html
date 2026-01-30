@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">cancel</mat-icon>
+        <h3 class="ms-dialog-header__title">Ingreso a planta</h3>
+
+        <button mat-icon-button mat-dialog-close class="ms-dialog-header__close">
+                <mat-icon>close_black</mat-icon>
+            </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content class="ms-dialog-body">
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <div class="ms-dialog-body__title">¿Estas seguro de dar ingreso a planta a <span class="ms-dialog-body__title--codigo">{{data.name}} {{data.lastname}}</span> ? </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button mat-dialog-close class="ms-dialog-body__btn-cancel"> Cancelar
+        </button>
+        <button mat-stroked-button class="ms-dialog-body__btn-register" (click)="save(data.id, data.providerId)" [disabled]="loading$ | async"> Si
+        </button>
+    </mat-dialog-actions>
+</div>

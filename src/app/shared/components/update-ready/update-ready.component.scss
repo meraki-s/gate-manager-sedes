@@ -1,0 +1,41 @@
+.dialog-header {
+  min-width: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.update-button {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 24px 0px;
+}
+
+.dialog-info {
+  font-family: "Quicksand";
+  font-size: 14px;
+  font-weight: 600;
+  background-color: aliceblue;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.version {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: grey;
+  background: aliceblue;
+  padding: 4px 0.5rem;
+  border-radius: 20px;
+  border: 1px dashed lightslategrey;
+}
+
+.color-bar {
+  border-bottom: solid 8px #ffc000;
+}

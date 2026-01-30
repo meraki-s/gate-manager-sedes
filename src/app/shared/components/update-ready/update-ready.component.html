@@ -1,0 +1,42 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">fiber_new</mat-icon>
+  <h3 class="dialog-header__title">Nueva versión</h3>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="container">
+  <p class="dialog-info">
+    Hay una nueva versión disponible de la plataforma 🧑‍🚀
+  </p>
+
+  <div class="update-button">
+    <ng-container *ngIf="platform.ANDROID || platform.IOS; else desktop">
+      <span class="dialog-info">Desliza hacia abajo tu pantalla</span>
+      <img
+        src="../../../assets/img/update_mobile.png"
+        width="58px"
+        height="58px"
+        alt=""
+      />
+    </ng-container>
+    <ng-template #desktop>
+      <span class="dialog-info">Presiona la tecla</span>
+      <img
+        src="../../../assets/img/update_desktop.png"
+        width="58px"
+        height="58px"
+        alt=""
+      />
+    </ng-template>
+  </div>
+
+  <p class="dialog-info">
+    En la barra superior, verifica que estes en la versión más reciente:
+    <span class="version">v {{ data }} r</span>
+  </p>
+</mat-dialog-content>
+<mat-divider class="color-bar"></mat-divider>

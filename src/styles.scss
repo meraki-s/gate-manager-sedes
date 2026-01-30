@@ -1,1 +1,210 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+
+$green-palette: (
+  50: #e8f4e7,
+  100: #c7e4c5,
+  200: #a3d3a1,
+  300: #7ec37b,
+  400: #63b75f,
+  500: #48aa43,
+  600: #3f9b3a,
+  700: #348a30,
+  800: #297926,
+  900: #135a13,
+  contrast: (
+    50: white,
+    100: white,
+    200: white,
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: white,
+    A200: white,
+    A400: white,
+    A700: white,
+  ),
+);
+
+@include mat.core();
+$gate-manager-primary: mat.define-palette(mat.$green-palette);
+$gate-manager-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$gate-manager-warn: mat.define-palette(mat.$red-palette);
+$gate-manager-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $gate-manager-primary,
+      accent: $gate-manager-accent,
+      warn: $gate-manager-warn,
+    ),
+  )
+);
+@include mat.all-component-themes($gate-manager-theme);
+
+.mat-primary-text {
+    color: white !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-form-field-outline-start,
+.mat-form-field-outline-end {
+  border-radius: 50px 50px 0px 0px !important;
+}
+
+/* ::ng-deep .mat-form-field-outline-end {
+    border-radius: 0 50px 50px 0 !important;
+}
+ */
+
+mat-form-field {
+  font-family: "Quicksand" !important;
+  font-size: 12px !important;
+  mat-label {
+    font-family: "Quicksand";
+    font-size: 12px !important;
+  }
+
+  ::placeholder {
+    color: rgba(43, 43, 43, 0.6);
+    font-size: 12px;
+  }
+}
+
+::ng-deep .mat-form-field-outline-start {
+  border-radius: 100px 0 0 100px !important;
+}
+
+::ng-deep .mat-form-field-outline-end {
+  border-radius: 0 100px 100px 0 !important;
+}
+
+.mat-form-field-empty.mat-form-field-label {
+  color: #008b39;
+}
+
+/* Change label color on focused */
+
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: #008b39 !important;
+}
+
+/* underline border color on focused */
+
+.mat-focused .mat-form-field-underline .mat-form-field-ripple {
+  background-color: #008b39 !important;
+}
+
+// border dialog
+.border-dialog .mat-dialog-container {
+  border-radius: 15px 15px 0px 0px !important;
+}
+
+.mat-step-header .mat-step-icon-selected {
+  background-color: rgba(255, 192, 0, 1);
+  color: black;
+}
+
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: #ffc000;
+  color: black;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.dialog-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: "Raleway";
+  color: rgba(43, 43, 43, 0.8);
+  margin: 12px 24px;
+  min-width: 350px;
+
+  &__icon {
+    margin-right: 1rem;
+  }
+
+  &__title {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    margin: 0px !important;
+  }
+
+  &__close {
+    mat-icon {
+      // color: #2b2b2b;
+    }
+  }
+}
+
+.dialog-content {
+  padding: 1rem;
+}
+
+.fill {
+  flex: auto 1 1;
+}
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.8)
+  );
+
+  &--scan {
+    min-height: 66vh;
+  }
+
+  &--visit {
+    min-height: 62vh;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+  border-radius: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #a3d3a1;
+  border-radius: 8px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #48aa43;
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3f9b3a;
+}

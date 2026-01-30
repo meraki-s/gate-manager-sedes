@@ -1,0 +1,33 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">delete</mat-icon>
+  <p class="dialog-header__title">Borrar SCTR</p>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close class="dialog-header__close">
+    <mat-icon>close_black</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="ms-dialog-body">
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+  <div class="ms-dialog-body__title">
+    ¿Estas seguro de borrar el SCTR con código
+    <span class="ms-dialog-body__title--codigo">{{ data.code }}</span> ?
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancelar</button>
+  <button
+    mat-raised-button
+    color="warn"
+    (click)="save()"
+    [disabled]="loading$ | async"
+  >
+    Borrar
+  </button>
+</mat-dialog-actions>

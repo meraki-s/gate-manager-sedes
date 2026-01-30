@@ -1,0 +1,24 @@
+{
+  "projects": {
+    "default": "gate-manager-staging",
+    "gate-manager-v1": "gate-manager-staging"
+  },
+  "targets": {
+    "gate-manager-sedes-staging": {
+      "hosting": {
+        "gate-manager-sedes": [
+          "gate-manager-sedes-staging"
+        ]
+      }
+    },
+    "gate-manager-staging": {
+      "hosting": {
+        "gate-manager-staging": [
+          "firebase.json"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

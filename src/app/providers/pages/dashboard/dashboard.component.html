@@ -1,0 +1,907 @@
+<div class="container">
+  <div class="wrapper">
+    <div class="archives">
+      <div class="header">
+        <span class="title">Documentación</span>
+        <span class="info">{{ info }}</span>
+      </div>
+      <div
+        class="folders"
+        *ngIf="validateDocument$ | async as docs; else docsLoader"
+      >
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.ipercDocuments[1].exists || docs.ipercDocuments[3].exists,
+              'folder--rejected': docs.ipercDocuments[2].exists,
+              'folder--done': docs.ipercDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('iperc')"
+        >
+          <div class="counter">
+            {{ numIpercDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">IPERC</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.atsDocuments[1].exists || docs.atsDocuments[3].exists,
+              'folder--rejected': docs.atsDocuments[2].exists,
+              'folder--done': docs.atsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('ats')"
+        >
+          <div class="counter">
+            {{ numAtsDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">ATS</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.emergencyDocuments[1].exists || docs.emergencyDocuments[3].exists,
+              'folder--rejected': docs.emergencyDocuments[2].exists,
+              'folder--done': docs.emergencyDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('emergency')"
+        >
+          <div class="counter">
+            {{ numEmergencyDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">Plan Emerg.</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.petsDocuments[1].exists || docs.petsDocuments[3].exists,
+              'folder--rejected': docs.petsDocuments[2].exists,
+              'folder--done': docs.petsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('pets')"
+        >
+          <div class="counter">
+            {{ numPetsDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">PETS</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.certificatesDocuments[1].exists || docs.certificatesDocuments[3].exists,
+              'folder--rejected': docs.certificatesDocuments[2].exists,
+              'folder--done': docs.certificatesDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('certificates')"
+        >
+          <div class="counter">
+            {{ numCertificatesDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">Certificados</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.msdsDocuments[1].exists || docs.msdsDocuments[3].exists,
+              'folder--rejected': docs.msdsDocuments[2].exists,
+              'folder--done': docs.msdsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('msds')"
+        >
+          <div class="counter">
+            {{ numMsdsDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">MSDS</div>
+        </div>
+        <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.checklistDocuments[1].exists || docs.checklistDocuments[3].exists,
+              'folder--rejected': docs.checklistDocuments[2].exists,
+              'folder--done': docs.checklistDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('checklist')"
+        >
+          <div class="counter">
+            {{ numChecklistDocs | number : "2.0-0" }} Documentos
+          </div>
+          <div class="title">Check List</div>
+        </div>
+        <!-- <div
+          class="folder"
+          [ngClass]="{
+            'folder--empty':
+              docs.equipmentsDocuments[1].exists || docs.equipmentsDocuments[3].exists,
+              'folder--rejected': docs.equipmentsDocuments[2].exists,
+              'folder--done': docs.equipmentsDocuments[0].exists,
+          }"
+          (click)="openModalValidateDocuments('equipments')"
+        >
+          <div class="counter">03 Documentos</div>
+          <div class="title">Op. Equipos</div>
+        </div> -->
+      </div>
+      <ng-template #docsLoader>
+        <mat-progress-bar
+          mode="indeterminate"
+          color="primary"
+        ></mat-progress-bar>
+        <!-- <ngx-skeleton-loader
+          count="5"
+          appearance="circle"
+        ></ngx-skeleton-loader> -->
+      </ng-template>
+    </div>
+
+    <div
+      class="wrapper-container"
+      [ngClass]="
+        isMobile ? 'wrapper-container--mobile' : 'wrapper-container--desktop'
+      "
+    >
+      <div
+        class="wrapper__body"
+        [ngClass]="
+          isMobile ? 'wrapper__body--mobile' : 'wrapper__body--desktop'
+        "
+      >
+        <div class="cards">
+          <div
+            class="cards__header"
+            [ngClass]="
+              isMobile ? 'cards__header--mobile' : 'cards__header--desktop'
+            "
+          >
+            <p
+              class="cards__header--title"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--title--mobile'
+                  : 'cards__header--title--desktop'
+              "
+            >
+              SCTR
+            </p>
+            <mat-form-field
+              class="cards__header--input search"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--input--mobile'
+                  : 'cards__header--input--desktop'
+              "
+              appearance="outline"
+            >
+              <mat-icon matPrefix> filter_list</mat-icon>
+              <input
+                matInput
+                type="text"
+                [formControl]="searchSCTR"
+                placeholder="Buscar"
+                autocomplete="off"
+              />
+            </mat-form-field>
+            <span class="fill"></span>
+            <button
+              mat-raised-button
+              color="primary"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--btn-add--mobile'
+                  : 'cards__header--btn-add--desktop'
+              "
+              (click)="addSCTR()"
+            >
+              <mat-icon>add</mat-icon>
+              <span>Nuevo</span>
+            </button>
+          </div>
+          <hr class="cards__divider" />
+          <div class="cards__body" *ngIf="sctr$ | async as arraySctr">
+            <!--  (item.editedAt['seconds'] * 1000 | date : 'dd/MM/yy') -->
+            <ng-container *ngIf="arraySctr.length > 0; else empty">
+              <div class="group-document" *ngFor="let item of arraySctr">
+                <div *ngIf="!deviceXs" class="card__codigo">
+                  Codigo :<span class="card__codigo--text">{{
+                    item.code
+                  }}</span>
+                </div>
+                <span class="fill"></span>
+                <div *ngIf="!deviceXs" class="card__validity">
+                  Vigencia:<span class="card__validity--text">{{
+                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                  }}</span>
+                </div>
+                <div *ngIf="!deviceXs" class="counter-tag">
+                  <strong>{{
+                    item.collaborators.length | number : "2."
+                  }}</strong>
+                  Colaboradores
+                </div>
+
+                <div *ngIf="deviceXs">
+                  <div class="card__codigo">
+                    Codigo :<span class="card__codigo--text">{{
+                      item.code
+                    }}</span>
+                  </div>
+                  <div class="card__validity">
+                    Vigencia:<span class="card__validity--text">{{
+                      item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                    }}</span>
+                  </div>
+                  <div *ngIf="!deviceXs" class="counter-tag">
+                    <strong>{{
+                      item.collaborators.length | number : "2."
+                    }}</strong>
+                    Colaboradores
+                  </div>
+                </div>
+
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon style="color: #48aa43">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="openVizorPdf(item.sctrFile)">
+                    Ver documento
+                  </button>
+                  <button mat-menu-item (click)="editSCTR(item)">Editar</button>
+                  <button mat-menu-item (click)="deleteSCTR(item)">
+                    Borrar
+                  </button>
+                </mat-menu>
+              </div>
+            </ng-container>
+
+            <ng-template #empty>
+              <div class="empty-container">Agregar nuevo SCTR</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="cards">
+          <div
+            class="cards__header"
+            [ngClass]="
+              isMobile ? 'cards__header--mobile' : 'cards__header--desktop'
+            "
+          >
+            <p
+              class="cards__header--title"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--title--mobile'
+                  : 'cards__header--title--desktop'
+              "
+            >
+              Seguro VL
+            </p>
+            <mat-form-field
+              appearance="outline"
+              class="cards__header--input search"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--input--mobile'
+                  : 'cards__header--input--desktop'
+              "
+            >
+              <mat-icon matPrefix>filter_list</mat-icon>
+              <input
+                matInput
+                type="text"
+                [formControl]="searchVL"
+                placeholder="Buscar"
+                autocomplete="off"
+              />
+            </mat-form-field>
+            <span class="fill"></span>
+            <button
+              mat-raised-button
+              color="primary"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--btn-add--mobile'
+                  : 'cards__header--btn-add--desktop'
+              "
+              (click)="addSegVidaLey()"
+            >
+              <mat-icon>add</mat-icon>
+              Nuevo
+            </button>
+          </div>
+          <hr class="cards__divider" />
+          <div class="cards__body" *ngIf="seguroVL$ | async as arraySeguroVL">
+            <ng-container *ngIf="arraySeguroVL.length > 0; else empty">
+              <div class="group-document" *ngFor="let item of arraySeguroVL">
+                <div *ngIf="deviceXs">
+                  <div class="card__codigo">
+                    Codigo :<span class="card__codigo--text">{{
+                      item.code
+                    }}</span>
+                  </div>
+                  <span class="fill"></span>
+                  <div class="card__validity">
+                    Vigencia:<span class="card__validity--text">{{
+                      item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                    }}</span>
+                  </div>
+                  <div *ngIf="!deviceXs" class="counter-tag">
+                    <strong>{{
+                      item.collaborators.length | number : "2."
+                    }}</strong>
+                    Colaboradores
+                  </div>
+                </div>
+                <div *ngIf="!deviceXs" class="card__codigo">
+                  Codigo :<span class="card__codigo--text">{{
+                    item.code
+                  }}</span>
+                </div>
+                <span class="fill"></span>
+                <div *ngIf="!deviceXs" class="card__validity">
+                  Vigencia:<span class="card__validity--text">{{
+                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                  }}</span>
+                </div>
+                <div *ngIf="!deviceXs" class="counter-tag">
+                  <strong>{{
+                    item.collaborators.length | number : "2."
+                  }}</strong>
+                  Colaboradores
+                </div>
+
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon style="color: #48aa43">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="openVizorPdf(item.svlFile)">
+                    Ver documento
+                  </button>
+                  <button mat-menu-item (click)="editSegVidaLey(item)">
+                    Editar
+                  </button>
+                  <button mat-menu-item (click)="deleteSVL(item)">
+                    Borrar
+                  </button>
+                </mat-menu>
+              </div>
+            </ng-container>
+            <ng-template #empty>
+              <div class="empty-container">Agregar nuevo Seguro Vida Ley</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- <mat-card class="cards">
+          <div
+            class="cards__header"
+            [ngClass]="
+              isMobile ? 'cards__header--mobile' : 'cards__header--desktop'
+            "
+          >
+            <h3
+              class="cards__header--title"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--title--mobile'
+                  : 'cards__header--title--desktop'
+              "
+            >
+              Declaración jurada
+            </h3>
+            <mat-form-field
+              appearance="fill"
+              class="cards__header--input"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--input--mobile'
+                  : 'cards__header--input--desktop'
+              "
+            >
+              <input
+                matInput
+                type="text"
+                [formControl]="searchSwormDeclaration"
+                placeholder="Buscar"
+                autocomplete="off"
+              />
+            </mat-form-field>
+            <span class="fill"></span>
+            <button
+              mat-button
+              class="cards__header--btn-add"
+              [ngClass]="
+                isMobile
+                  ? 'cards__header--btn-add--mobile'
+                  : 'cards__header--btn-add--desktop'
+              "
+              (click)="addSwornDeclaration()"
+            >
+              <mat-icon class="cards__header--icon">add</mat-icon>
+              Agregar
+            </button>
+          </div>
+          <hr class="cards__divider" />
+
+          <div
+            class="cards__body"
+            *ngIf="swornDeclaration$ | async as swornDeclaration"
+          >
+            <div class="card" *ngFor="let item of swornDeclaration">
+              <div *ngIf="deviceXs">
+                <div class="card__codigo">
+                  Codigo :<span class="card__codigo--text">{{
+                    item.code
+                  }}</span>
+                </div>
+                <div class="card__validity">
+                  Vigencia:<span class="card__validity--text">{{
+                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                  }}</span>
+                </div>
+                <div class="card__collaborator">
+                  Colaboradores :<span class="card__collaborator--text">{{
+                    item.collaborators.length
+                  }}</span>
+                </div>
+              </div>
+              <div *ngIf="!deviceXs" class="card__codigo">
+                Codigo :<span class="card__codigo--text">{{ item.code }}</span>
+              </div>
+              <div *ngIf="!deviceXs" class="card__validity">
+                Vigencia:<span class="card__validity--text">{{
+                  item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                }}</span>
+              </div>
+              <div *ngIf="!deviceXs" class="card__collaborator">
+                Colaboradores :<span class="card__collaborator--text">{{
+                  item.collaborators.length
+                }}</span>
+              </div>
+
+              <button
+                class="card__menu"
+                mat-button
+                [matMenuTriggerFor]="swornDeclarationMenu"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #swornDeclarationMenu="matMenu">
+                <button
+                  mat-menu-item
+                  (click)="openVizorPdf(item.swornDeclarationFile!)"
+                >
+                  Ver documento
+                </button>
+                <button mat-menu-item (click)="updateSwornDeclaration(item)">
+                  Editar
+                </button>
+                <button mat-menu-item (click)="deleteSwornDeclaration(item)">
+                  Borrar
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+        </mat-card> -->
+      </div>
+
+      <div
+        class="wrapper__body"
+        [ngClass]="
+          isMobile ? 'wrapper__body--mobile' : 'wrapper__body--desktop'
+        "
+      >
+        <mat-card class="cards2">
+          <div
+            class="cards2__header"
+            [ngClass]="
+              isMobile ? 'cards2__header--mobile' : 'cards2__header--desktop'
+            "
+          >
+            <p
+              class="cards2__header--title"
+              [ngClass]="
+                isMobile
+                  ? 'cards2__header--title--mobile'
+                  : 'cards2__header--title--desktop'
+              "
+            >
+              Colaboradores
+            </p>
+            <mat-form-field
+              appearance="outline"
+              class="cards2__header--input search"
+              [ngClass]="
+                isMobile
+                  ? 'cards2__header--input--mobile'
+                  : 'cards2__header--input--desktop'
+              "
+            >
+              <mat-icon matPrefix>filter_list</mat-icon>
+              <input
+                matInput
+                type="text"
+                [formControl]="searchCollaborator"
+                placeholder="Buscar"
+                autocomplete="off"
+              />
+            </mat-form-field>
+            <span class="fill"></span>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="addCollaborator()"
+            >
+              <mat-icon>add</mat-icon>
+              Nuevo
+            </button>
+          </div>
+          <mat-progress-bar
+            *ngIf="loading$ | async"
+            mode="indeterminate"
+          ></mat-progress-bar>
+          <div
+            class="cards2__body"
+            *ngIf="profileCollaborator$ | async as elemets"
+          >
+            <div
+              class="card2"
+              *ngFor="let item of elemets"
+              [ngClass]="
+                item.entryDeparture === 'inside'
+                  ? 'card2--inside'
+                  : 'card2--outside'
+              "
+            >
+              <div class="card2__header">
+                <div *ngIf="deviceXs">
+                  <div class="card2__name">
+                    Nombre :<span class="card2__name--text">
+                      {{ item.name }} {{ item.lastname }}</span
+                    >
+                  </div>
+                  <div class="card2__position" ngStyle.xs="margin-left: -1px;">
+                    Cargo:<span class="card2__position--text">{{
+                      item.jobTitle
+                    }}</span>
+                  </div>
+
+                  <div class="card2__dni">
+                    DNI :<span class="card2__dni--text">{{ item.dni }}</span>
+                  </div>
+                </div>
+                <div *ngIf="!deviceXs" class="card2__name">
+                  Nombre :<span class="card2__name--text">
+                    {{ item.name }} {{ item.lastname }}</span
+                  >
+                </div>
+                <div *ngIf="!deviceXs" class="card2__position">
+                  Cargo:<span class="card2__position--text">{{
+                    item.jobTitle
+                  }}</span>
+                </div>
+                <div *ngIf="!deviceXs" class="card2__dni">
+                  DNI :<span class="card2__dni--text">{{ item.dni }}</span>
+                </div>
+                <div class="fill"></div>
+                <button
+                  mat-icon-button
+                  color="primary"
+                  [matMenuTriggerFor]="menu"
+                >
+                  <mat-icon style="color: #48aa43">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <!-- <button
+                    mat-menu-item
+                    (click)="openVizorPdf(item.medicalExaminationFile!)"
+                  >
+                    Ver documento examen médico
+                  </button> -->
+                  <!-- <button
+                    mat-menu-item
+                    (click)="openVizorPdf(item.vaccinationCardFile!)"
+                  >
+                    Ver carnet de vacunación
+                  </button> -->
+                  <button mat-menu-item (click)="openVizorPdf(item.sctrFile!)">
+                    Ver SCTR
+                  </button>
+                  <button mat-menu-item (click)="openVizorPdf(item.svlFile!)">
+                    Ver Seguro vida ley
+                  </button>
+                  <!-- <button
+                    mat-menu-item
+                    (click)="openVizorPdf(item.swornDeclarationFile!)"
+                  >
+                    Ver Declaración jurada
+                  </button> -->
+                  <button
+                    mat-menu-item
+                    (click)="checkDrives(item.id, item.dni)"
+                  >
+                    Consultar Drives
+                  </button>
+                  <button mat-menu-item (click)="editCollaborator(item)">
+                    Editar
+                  </button>
+                  <button mat-menu-item (click)="deleteCollaborator(item)">
+                    Borrar
+                  </button>
+                </mat-menu>
+              </div>
+
+              <div class="documents-container">
+                <div class="documents-container__item">
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="
+                      '' + (item.sctrDate?.toMillis() | date) === 'null'
+                        ? 'Sin fecha'
+                        : '' + (item.sctrDate?.toMillis() | date)
+                    "
+                  >
+                    SCTR
+                  </div>
+                  <mat-icon
+                    *ngIf="item.sctrStatus === 'approved'"
+                    class="documents-container__item--icon-approved"
+                    matTooltip="Aprobado"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.sctrStatus === 'pending'"
+                    class="documents-container__item--icon-pending"
+                    matTooltip="En revisión"
+                    >check_circle</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.sctrStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Rechazado"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.sctrStatus === 'unassigned'"
+                    class="documents-container__item--icon-unassigned"
+                    matTooltip="Sin asignar"
+                  >
+                    help</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.sctrStatus === 'expired'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Expirado"
+                  >
+                    alarm</mat-icon
+                  >
+                </div>
+                <div class="documents-container__item">
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="'' + (item.svlDate?.toMillis() | date)"
+                  >
+                    SVL
+                  </div>
+                  <mat-icon
+                    *ngIf="item.svlStatus === 'approved'"
+                    class="documents-container__item--icon-approved"
+                    matTooltip="Aprobado"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.svlStatus === 'pending'"
+                    class="documents-container__item--icon-pending"
+                    matTooltip="En revisión"
+                    >check_circle</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.svlStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Rechazado"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.svlStatus === 'unassigned'"
+                    class="documents-container__item--icon-unassigned"
+                    matTooltip="Sin asignar"
+                  >
+                    help</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.svlStatus === 'expired'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Expirado"
+                  >
+                    alarm</mat-icon
+                  >
+                </div>
+
+                <!-- <div class="documents-container__item">
+                  <div class="documents-container__item--text">D. Jurada</div>
+                  <mat-icon
+                    *ngIf="item.swornDeclarationStatus === 'approved'"
+                    class="documents-container__item--icon-approved"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.swornDeclarationStatus === 'pending'"
+                    class="documents-container__item--icon-pending"
+                    >check_circle</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.swornDeclarationStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.swornDeclarationStatus === 'unassigned'"
+                    class="documents-container__item--icon-unassigned"
+                    matTooltip="Sin asignar"
+                  >
+                    help</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.swornDeclarationStatus === 'expired'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Sin asignar"
+                  >
+                    alarm</mat-icon
+                  >
+                </div> -->
+
+                <div class="documents-container__item">
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="
+                      '' + (item.sctrDate?.toMillis() | date) === 'null'
+                        ? 'Sin fecha'
+                        : '' + (item.sctrDate?.toMillis() | date)
+                    "
+                  >
+                    Induccion
+                  </div>
+                  <mat-icon
+                    *ngIf="item.inductionStatus === 'approved'"
+                    class="documents-container__item--icon-approved"
+                    matTooltip="Aprobado"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.inductionStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Rechazado"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.inductionStatus === 'unassigned'"
+                    class="documents-container__item--icon-unassigned"
+                    matTooltip="Sin asignar"
+                  >
+                    help</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.inductionStatus === 'expired'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Expirado"
+                  >
+                    alarm</mat-icon
+                  >
+                </div>
+
+                <div class="documents-container__item">
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="'' + (item.lotoDate?.toMillis() | date)"
+                  >
+                    LOTO
+                  </div>
+                  <mat-icon
+                    *ngIf="item.lotoStatus === 'approved'"
+                    class="documents-container__item--icon-approved"
+                    matTooltip="Aprobado"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.lotoStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Rechazado"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.lotoStatus === 'unassigned'"
+                    class="documents-container__item--icon-unassigned"
+                    matTooltip="Sin asignar"
+                  >
+                    help</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.lotoStatus === 'expired'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Expirado"
+                  >
+                    alarm</mat-icon
+                  >
+                </div>
+
+                <!-- <div class="documents-container__item">
+                  <div class="documents-container__item--text">E. Médico</div>
+                  <mat-icon
+                    *ngIf="item.medicalExaminationStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Rechazado"
+                    >cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.medicalExaminationStatus === 'pending'"
+                    class="documents-container__item--icon-pending"
+                    matTooltip="En revisión"
+                  >
+                    published_with_changes</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.medicalExaminationStatus === 'unassigned'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Sin examen"
+                  >
+                    cancel</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.medicalExaminationStatus === 'approved'"
+                    class="documents-container__item--icon-approved"
+                    matTooltip="Aprobado"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.medicalExaminationStatus === 'expired'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Sin asignar"
+                  >
+                    alarm</mat-icon
+                  >
+                </div> -->
+
+                <!-- <div class="documents-container__item">
+                  <div class="documents-container__item--text">
+                    C. Vacunación
+                  </div>
+                  <mat-icon
+                    *ngIf="item.doseStatus === 'unassigned'"
+                    class="documents-container__item--icon-pending"
+                    matTooltip="En revisión"
+                  >
+                    published_with_changes</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.doseStatus === 'vaccinated'"
+                    class="documents-container__item--icon-approved"
+                    matTooltip="Aprobado"
+                    >check</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.doseStatus === 'not-fully-vaccinated'"
+                    class="documents-container__item--icon-expired"
+                    matTooltip="Vacunas incompletas"
+                    >vaccines</mat-icon
+                  >
+                  <mat-icon
+                    *ngIf="item.doseStatus === 'rejected'"
+                    class="documents-container__item--icon-rejection"
+                    matTooltip="Sin carnet"
+                    >cancel</mat-icon
+                  >
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,173 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">edit</mat-icon>
+  <p class="dialog-header__title">Editar Seguro Vida Ley</p>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close_black</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="ms-dialog-body">
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+  <h3 class="ms-dialog-body__title">Información básica</h3>
+  <p class="ms-dialog-body__text">Datos básicos del Seguro Vida Ley</p>
+  <form [formGroup]="dataForm" class="ms-dialog-body__form">
+    <mat-form-field appearance="fill" class="ms-dialog-body__form--input">
+      <mat-label>Código de documento</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Código de documento"
+        formControlName="code"
+      />
+      <mat-error *ngIf="dataForm.controls['code'].errors">
+        Campo <strong>requerido.</strong>
+      </mat-error>
+    </mat-form-field>
+    <!-- [ngClass]="isMobile ? 'gm-wrapper__formatFile--date-mobile' : 'gm-wrapper__formatFile--date-desktop'" -->
+
+    <mat-form-field appearance="fill" class="ms-dialog-body__form--input">
+      <mat-label>Vigencia</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="validityDate" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="dataForm.controls['validityDate'].errors">
+        Campo <strong>requerido.</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <!-- [ngClass]="isMobile ? 'gm-wrapper__formatFile--mobile' : 'gm-wrapper__formatFile--desktop'" -->
+
+    <div class="ms-dialog-body__formatFile">
+      <h3 class="ms-dialog-body__formatFile--title" appDropzoneFile>
+        Adjunte documento*
+        <input
+          #uploadFileSeguroVL
+          class="ms-dialog-body__file-input"
+          type="file"
+          accept="application/pdf"
+          (change)="onDropSeguroVL($event.target)"
+          formControlName="SVLFile"
+        />
+        <button mat-icon-button (click)="uploadFileSeguroVL.click()">
+          <mat-icon>file_upload</mat-icon>
+        </button>
+      </h3>
+
+      <div *ngIf="filesSVL.length" class="ms-dialog-body__formatFile--link">
+        <app-upload-files
+          *ngFor="let file of filesSVL"
+          [file]="file | async"
+          [pathStorage]="pathStorageSVL"
+          (onNewImage)="addNewImageSeguroVL($event)"
+        >
+        </app-upload-files>
+      </div>
+      <mat-error
+        class="ms-dialog-body__formatFile--error"
+        *ngIf="dataForm.controls['SVLFile'].errors"
+      >
+        Campo <strong>requerido.</strong>
+      </mat-error>
+    </div>
+
+    <div class="files" *ngIf="image">
+      <a [href]="image.fileURL" target="_blank" class="files__link">
+        <span class="files__name">{{ image.name }} </span>
+      </a>
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="deleteFileSVL(image.fileURL)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </form>
+
+  <h3 class="ms-dialog-body__title">Lista de colaboradores</h3>
+  <p class="ms-dialog-body__text">
+    Estos datos nos ayudarán a asociar a los colaboradores al documento
+  </p>
+
+  <div class="ms-dialog-body__body">
+    <mat-card-header class="ms-dialog-body__body--header">
+      <p *ngIf="missCollaborator()">
+        La lista contiene a {{ missed | number : "2." }} colaboradores que ya no
+        existen en su planilla
+      </p>
+      <mat-form-field
+        *ngIf="collaborator$ | async as collaborators"
+        class="ms-dialog-body__body--header"
+        appearance="fill"
+      >
+        <mat-label>Colaborador</mat-label>
+        <input
+          autocomplete="off"
+          [formControl]="entryCollaboratorControl"
+          [matAutocomplete]="collaboratorListAutocomplete"
+          type="text"
+          matInput
+          name="Colaborador"
+        />
+        <mat-autocomplete
+          autoActiveFirstOption
+          #collaboratorListAutocomplete="matAutocomplete"
+          (optionSelected)="selectedEntryCollaborator($event)"
+          [displayWith]="showEntryCollaborator"
+        >
+          <mat-option *ngFor="let item of collaborators" [value]="item">
+            {{ item.lastname }}, {{ item.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </mat-card-header>
+    <mat-progress-bar
+      class="ms-dialog-body__body--loading"
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
+    <mat-card-content class="ms-dialog-body__body--body">
+      <div>
+        <div
+          role="list"
+          *ngFor="let item of listCollaboratorArray; let i = index"
+        >
+          <div
+            class="ms-dialog-body__body--item-list"
+            [ngClass]="{ notExist: !collaboratorExistList[i] }"
+          >
+            <span>{{ item.lastname }} {{ item.name }}</span>
+            <span>
+              <button
+                mat-icon-button
+                aria-label="deletelistWarehouse"
+                (click)="deleteCollaborator(i)"
+              >
+                <mat-icon class="delete-color">delete</mat-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" mat-dialog-close>Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    style="color: white"
+    (click)="save()"
+    [disabled]="(loading$ | async) || missCollaborator()"
+  >
+    Actualizar
+  </button>
+</mat-dialog-actions>

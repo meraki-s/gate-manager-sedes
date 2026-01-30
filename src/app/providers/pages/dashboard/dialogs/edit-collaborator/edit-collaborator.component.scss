@@ -1,0 +1,24 @@
+.container {
+  background-color: white;
+
+  .form-header {
+    &__title {
+      font-family: "Quicksand";
+      color: black;
+      font-size: 1rem;
+      margin: 0px;
+    }
+
+    &__subtitle {
+      font-family: "Quicksand";
+      font-size: 0.7rem;
+    }
+  }
+
+  .form-block {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}

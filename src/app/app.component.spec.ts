@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'gate-manager-sedes'`, () => {
+  it(`should have as title 'gate-manager'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('gate-manager-sedes');
+    expect(app.title).toEqual('gate-manager');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('gate-manager-sedes app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('gate-manager app is running!');
   });
 });

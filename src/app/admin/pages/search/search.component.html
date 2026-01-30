@@ -1,0 +1,749 @@
+<div
+  class="container"
+  [ngClass]="isMobile ? 'container--mobile' : 'container--desktop'"
+>
+  <div
+    class="access-list"
+    [ngClass]="isMobile ? 'access-list--mobile' : 'access-list--desktop'"
+  >
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-collaborator">
+        <mat-label>Buscar por RUC o R.S.</mat-label>
+        <input
+          matInput
+          [formControl]="searchRUCControl"
+          type="text"
+          placeholder="Razón Social | 20602336779"
+          autocomplete="off"
+          (keyup.enter)="searchByRUC()"
+          [matAutocomplete]="byruc"
+        />
+        <mat-autocomplete
+          #byruc="matAutocomplete"
+          [displayWith]="displayProvider"
+          (optionSelected)="selectedProvider($event)"
+          panelWidth="fit-content"
+        >
+          <mat-option
+            *ngFor="let provider of providers$ | async"
+            [value]="provider"
+            style="font-size: 0.8rem"
+          >
+            <img
+              [src]="provider.companyLogoURL"
+              (error)="
+                provider.companyLogoURL = '../../../../assets/img/logo.png'
+              "
+              alt="company logo"
+              width="50px"
+              style="
+                background: rgba(0, 0, 0, 0.9);
+                border-radius: 2px;
+                vertical-align: middle;
+                margin-right: 0.2rem;
+              "
+            />
+            <span class="filter-option">
+              {{ provider.companyName }} | {{ provider.companyRuc }}
+            </span>
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint>Seleccione una opción</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="search-collaborator">
+        <mat-label>Buscar por DNI</mat-label>
+        <input
+          matInput
+          [formControl]="searchDNIControl"
+          type="text"
+          placeholder="20602336779"
+          autocomplete="off"
+          (keyup.enter)="searchByDNI()"
+        />
+
+        <mat-hint>
+          <ng-container *ngIf="searchDNIControl.disabled">
+            Necesita un proveedor para filtrar por DNI
+          </ng-container>
+          <ng-container *ngIf="!searchDNIControl.disabled">
+            Presionar ENTER
+          </ng-container>
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="access-card mat-elevation-z4" *ngIf="providerSearch">
+      <div class="header">
+        <h3 class="header__title">Datos de empresa</h3>
+        <span
+          class="header__indicator"
+          [ngClass]="
+            providerSearch.status === 'enabled'
+              ? 'header__indicator--enabled'
+              : 'header__indicator--disabled'
+          "
+          >{{
+            providerSearch.status === "enabled" ? "HABILITADO" : "BLOQUEADO"
+          }}</span
+        >
+      </div>
+      <div class="block-container" *ngIf="providerSearch.status === 'disabled'">
+        <div>
+          <span>Bloqueado por: </span>
+          <span class="blocked-by">{{ providerSearch.blockedBy }}</span>
+        </div>
+        <div>
+          <span>Descripción: </span>
+          <span class="description">{{ providerSearch.blockDescription }}</span>
+        </div>
+      </div>
+      <div class="company-info">
+        <div class="company-info__item">
+          <span class="company-info__label">RUC</span>
+          <span class="company-info__value">{{
+            providerSearch.companyRuc
+          }}</span>
+        </div>
+        <div class="company-info__item">
+          <span class="company-info__label">Razón social</span>
+          <span class="company-info__value">{{
+            providerSearch.companyName
+          }}</span>
+        </div>
+        <div class="company-info__item">
+          <span class="company-info__label">Dirección</span>
+          <span class="company-info__value">{{
+            providerSearch.companyAddress
+          }}</span>
+        </div>
+        <div class="company-info__item">
+          <span class="company-info__label">Rubro</span>
+          <span class="company-info__value">{{
+            providerSearch.companyField
+          }}</span>
+        </div>
+        <div class="company-info__item">
+          <span class="company-info__label">Representante Comercial</span>
+          <span class="company-info__value">{{
+            providerSearch.salesRepresentative
+          }}</span>
+        </div>
+        <div class="company-info__item">
+          <span class="company-info__label">Gerente General</span>
+          <span class="company-info__value">{{ providerSearch.manager }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="access-card mat-elevation-z4">
+      <ng-container *ngIf="loading$ | async">
+        <div class="spinner spinner--scan">
+          <mat-spinner></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="providerSearch; else notMatched">
+        <div class="header">
+          <h3 class="header__title">Documentos requeridos</h3>
+        </div>
+        <mat-progress-bar
+          *ngIf="loadingDocuments$ | async"
+          mode="indeterminate"
+        >
+        </mat-progress-bar>
+        <div
+          class="document-card"
+          *ngFor="let document of documents; let i = index"
+        >
+          <ng-container *ngIf="document.files.length > 0; else documentDefault">
+            <div class="document-card__header">
+              <mat-icon
+                class="document-card__header__icon"
+                [ngClass]="{
+                  'document-card__header__icon--approved':
+                    document.status === 'approved',
+                  'document-card__header__icon--pending':
+                    document.status === 'pending',
+                  'document-card__header__icon--rejected':
+                    document.status === 'rejected'
+                }"
+                >{{ document.status === "approved" ? "check_circle" : "" }}
+                {{ document.status === "pending" ? "rate_review" : "" }}
+                {{ document.status === "rejected" ? "cancel" : "" }}</mat-icon
+              >
+              <span class="document-card__header__title">{{
+                document.name
+              }}</span>
+              <span class="fill"></span>
+              <button
+                mat-icon-button
+                class="document-card__header__actions"
+                matTooltip="Aprobar"
+                (click)="
+                  approveDocuments(document.files, document.collection, i)
+                "
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="document-card__header__actions"
+                matTooltip="Rechazar"
+                (click)="
+                  rejectDocuments(document.files, document.collection, i)
+                "
+              >
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </div>
+            <div class="document-card__chips">
+              <div
+                *ngFor="let file of document['files']"
+                class="chip"
+                matTooltip="V: {{
+                  file.validityDate.seconds * 1000 | date : 'dd/MM/yy'
+                }}
+                "
+                (click)="openPdfViewer(file)"
+              >
+                <span class="chip__name">{{
+                  file.name.length > 30
+                    ? "..." + (file.name | slice : -27)
+                    : file.name
+                }}</span>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #documentDefault>
+            <span>
+              Sin documentos <strong>{{ document.name }}</strong> adjuntos.
+            </span>
+          </ng-template>
+        </div>
+        <button
+          mat-raised-button
+          [color]="providerSearch.status === 'enabled' ? 'warn' : 'primary'"
+          (click)="toggleProviderStatus()"
+        >
+          {{ providerSearch.status === "enabled" ? "BLOQUEAR" : "HABILITAR" }}
+        </button>
+      </ng-container>
+      <ng-template #notMatched>
+        <div class="default default--scan" *ngIf="!firstTime">
+          <h3 class="default__title">
+            Este proveedor no existe en nuestras listas
+          </h3>
+          <img
+            class="default__image"
+            src="../../../assets/img/list1.svg"
+            alt="without coincidences"
+          />
+        </div>
+      </ng-template>
+      <ng-container *ngIf="firstTime">
+        <div class="default default--scan">
+          <h3 class="default__title">
+            Digita un RUC/R.S. para iniciar tu búsqueda
+          </h3>
+          <img
+            class="default__image"
+            src="../../../assets/img/search.svg"
+            alt="default image"
+          />
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="access-list">
+    <div class="access-card mat-elevation-z4">
+      <ng-container *ngIf="loading$ | async">
+        <div class="spinner spinner--scan">
+          <mat-spinner></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="providerSearch; else notMatched">
+        <div class="header">
+          <h3 class="header__title">
+            Personal registrado (
+            {{ (filteredCollaborators$ | async)?.length ?? "...cargando" }} )
+          </h3>
+        </div>
+        <div *ngIf="syncingDrive$ | async" class="loading">
+          <span>Sincronizado drive</span>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <div *ngIf="loadingMedicalExamination$ | async" class="loading">
+          <span>Actualizando examen médico</span>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <div *ngIf="loadingVaccinationCard$ | async" class="loading">
+          <span>Actualizando carnet de vacunación</span>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <div
+          class="collaborator-card mat-elevation-z2"
+          *ngFor="let item of filteredCollaborators$ | async; let i = index"
+          [ngClass]="
+            item.entryDeparture === 'inside'
+              ? 'collaborator-card--inside'
+              : 'collaborator-card--outside'
+          "
+        >
+          <div class="collaborator-card__header">
+            <div class="collaborator-card__header__description">
+              <span class="collaborator-card__header__description__label"
+                >Nombre:</span
+              >
+              <span class="collaborator-card__header__description__value">
+                {{ item.name }}, {{ item.lastname }}
+              </span>
+            </div>
+            <div class="collaborator-card__header__description">
+              <span class="collaborator-card__header__description__label"
+                >Cargo:</span
+              >
+              <span class="collaborator-card__header__description__value">
+                {{ item.jobTitle }}
+              </span>
+            </div>
+            <div class="collaborator-card__header__description">
+              <span class="collaborator-card__header__description__label"
+                >DNI:</span
+              >
+              <span class="collaborator-card__header__description__value">
+                {{ item.dni }}
+              </span>
+            </div>
+            <span class="fill" *ngIf="!isMobile"></span>
+            <div class="buttons">
+              <button
+                mat-button
+                color="primary"
+                class="collaborator-card__header__button"
+                (click)="syncDrive(item, i)"
+              >
+                Actualizar
+              </button>
+              <button
+                mat-button
+                color="warn"
+                class="collaborator-card__header__button"
+                (click)="deleteCollaborator(item, providerSearch.providerId)"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+
+          <div class="collaborator-card__documents">
+            <div
+              class="document-item document-item--actionable"
+              (click)="openPdfViewer(item.sctrFile)"
+            >
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                SCTR
+              </div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.sctrStatus === 'approved',
+                  'document-item__icon--pending': item.sctrStatus === 'pending',
+                  'document-item__icon--unassigned':
+                    item.sctrStatus === 'unassigned',
+                  'document-item__icon--rejected':
+                    item.sctrStatus === 'rejected',
+                  'document-item__icon--expired': item.sctrStatus === 'expired'
+                }"
+                [matTooltip]="
+                  item.sctrStatus === 'approved'
+                    ? 'Aprobado'
+                    : item.sctrStatus === 'pending'
+                    ? 'Pendiente'
+                    : item.sctrStatus === 'unassigned'
+                    ? 'No asignado'
+                    : item.sctrStatus === 'rejected'
+                    ? 'Rechazado'
+                    : item.sctrStatus === 'expired'
+                    ? 'Vencido'
+                    : ''
+                "
+                >{{ item.sctrStatus === "approved" ? "check_circle" : "" }}
+                {{ item.sctrStatus === "pending" ? "rate_review" : "" }}
+                {{ item.sctrStatus === "unassigned" ? "help" : "" }}
+                {{ item.sctrStatus === "rejected" ? "cancel" : "" }}
+                {{ item.sctrStatus === "expired" ? "alarm" : "" }}</mat-icon
+              >
+            </div>
+
+            <div
+              class="document-item document-item--actionable"
+              (click)="openPdfViewer(item.svlFile)"
+            >
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                SVL
+              </div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.svlStatus === 'approved',
+                  'document-item__icon--pending': item.svlStatus === 'pending',
+                  'document-item__icon--unassigned':
+                    item.svlStatus === 'unassigned',
+                  'document-item__icon--rejected':
+                    item.svlStatus === 'rejected',
+                  'document-item__icon--expired': item.svlStatus === 'expired'
+                }"
+                [matTooltip]="
+                  item.svlStatus === 'approved'
+                    ? 'Aprobado'
+                    : item.svlStatus === 'pending'
+                    ? 'Pendiente'
+                    : item.svlStatus === 'unassigned'
+                    ? 'No asignado'
+                    : item.svlStatus === 'rejected'
+                    ? 'Rechazado'
+                    : item.svlStatus === 'expired'
+                    ? 'Vencido'
+                    : ''
+                "
+                >{{ item.svlStatus === "approved" ? "check_circle" : "" }}
+                {{ item.svlStatus === "pending" ? "rate_review" : "" }}
+                {{ item.svlStatus === "unassigned" ? "help" : "" }}
+                {{ item.svlStatus === "rejected" ? "cancel" : "" }}
+                {{ item.svlStatus === "expired" ? "alarm" : "" }}</mat-icon
+              >
+            </div>
+            <!-- <div
+              class="document-item document-item--actionable"
+              (click)="openPdfViewer(item.swornDeclarationFile)"
+            >
+              <div class="document-item__title">D. Jurado</div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.swornDeclarationStatus === 'approved',
+                  'document-item__icon--pending':
+                    item.swornDeclarationStatus === 'pending',
+                  'document-item__icon--unassigned':
+                    item.swornDeclarationStatus === 'unassigned',
+                  'document-item__icon--rejected':
+                    item.swornDeclarationStatus === 'rejected',
+                  'document-item__icon--expired':
+                    item.swornDeclarationStatus === 'expired'
+                }"
+                [matTooltip]="
+                  item.swornDeclarationStatus === 'approved'
+                    ? 'Aprobado'
+                    : item.swornDeclarationStatus === 'pending'
+                    ? 'Pendiente'
+                    : item.swornDeclarationStatus === 'unassigned'
+                    ? 'No asignado'
+                    : item.swornDeclarationStatus === 'rejected'
+                    ? 'Rechazado'
+                    : item.swornDeclarationStatus === 'expired'
+                    ? 'Vencido'
+                    : ''
+                "
+                >{{
+                  item.swornDeclarationStatus === "approved"
+                    ? "check_circle"
+                    : ""
+                }}
+                {{
+                  item.swornDeclarationStatus === "pending" ? "rate_review" : ""
+                }}
+                {{ item.swornDeclarationStatus === "unassigned" ? "help" : "" }}
+                {{ item.swornDeclarationStatus === "rejected" ? "cancel" : "" }}
+                {{
+                  item.swornDeclarationStatus === "expired" ? "alarm" : ""
+                }}</mat-icon
+              >
+            </div> -->
+            <div class="document-item">
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                Inducción
+              </div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.inductionStatus === 'approved',
+                  'document-item__icon--pending':
+                    item.inductionStatus === 'pending',
+                  'document-item__icon--unassigned':
+                    item.inductionStatus === 'unassigned',
+                  'document-item__icon--rejected':
+                    item.inductionStatus === 'rejected',
+                  'document-item__icon--expired':
+                    item.inductionStatus === 'expired'
+                }"
+                [matTooltip]="
+                  item.inductionStatus === 'approved'
+                    ? 'Aprobado'
+                    : item.inductionStatus === 'pending'
+                    ? 'Pendiente'
+                    : item.inductionStatus === 'unassigned'
+                    ? 'No asignado'
+                    : item.inductionStatus === 'rejected'
+                    ? 'Rechazado'
+                    : item.inductionStatus === 'expired'
+                    ? 'Vencido'
+                    : ''
+                "
+                >{{ item.inductionStatus === "approved" ? "check_circle" : "" }}
+                {{ item.inductionStatus === "pending" ? "rate_review" : "" }}
+                {{ item.inductionStatus === "unassigned" ? "help" : "" }}
+                {{ item.inductionStatus === "rejected" ? "cancel" : "" }}
+                {{
+                  item.inductionStatus === "expired" ? "alarm" : ""
+                }}</mat-icon
+              >
+            </div>
+            <!-- <div class="document-item">
+              <div class="document-item__title">F. Sintomatológica</div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.symptomatologyStatus === 'approved',
+                  'document-item__icon--pending':
+                    item.symptomatologyStatus === 'pending',
+                  'document-item__icon--unassigned':
+                    item.symptomatologyStatus === 'unassigned',
+                  'document-item__icon--rejected':
+                    item.symptomatologyStatus === 'rejected',
+                  'document-item__icon--expired':
+                    item.symptomatologyStatus === 'expired'
+                }"
+                [matTooltip]="
+                  item.symptomatologyStatus === 'approved'
+                    ? 'Aprobado'
+                    : item.symptomatologyStatus === 'pending'
+                    ? 'Pendiente'
+                    : item.symptomatologyStatus === 'unassigned'
+                    ? 'No asignado'
+                    : item.symptomatologyStatus === 'rejected'
+                    ? 'Rechazado'
+                    : item.symptomatologyStatus === 'expired'
+                    ? 'Vencido'
+                    : ''
+                "
+                >{{
+                  item.symptomatologyStatus === "approved" ? "check_circle" : ""
+                }}
+                {{
+                  item.symptomatologyStatus === "pending" ? "rate_review" : ""
+                }}
+                {{ item.symptomatologyStatus === "unassigned" ? "help" : "" }}
+                {{ item.symptomatologyStatus === "rejected" ? "cancel" : "" }}
+                {{
+                  item.symptomatologyStatus === "expired" ? "alarm" : ""
+                }}</mat-icon
+              >
+            </div> -->
+
+            <div class="document-item">
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                LOTO
+              </div>
+              <mat-icon
+                *ngIf="item.lotoStatus === 'approved'"
+                class="document-item__icon document-item__icon--approved"
+                matTooltip="Aprobado"
+                >check_circle</mat-icon
+              >
+              <mat-icon
+                *ngIf="item.lotoStatus === 'rejected'"
+                class="document-item__icon document-item__icon--rejection"
+                matTooltip="Rechazado"
+                >cancel</mat-icon
+              >
+              <mat-icon
+                *ngIf="item.lotoStatus === 'unassigned'"
+                class="document-item__icon document-item__icon--unassigned"
+                matTooltip="Sin asignar"
+              >
+                help</mat-icon
+              >
+              <mat-icon
+                *ngIf="item.lotoStatus === 'expired'"
+                class="document-item__icon document-item__icon--expired"
+                matTooltip="Expirado"
+              >
+                alarm</mat-icon
+              >
+            </div>
+
+            <!-- <div
+              class="document-item document-item--actionable"
+              [matMenuTriggerFor]="menuExamination"
+            >
+              <div class="document-item__title">E. Médico</div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.medicalExaminationStatus === 'approved',
+                  'document-item__icon--pending':
+                    item.medicalExaminationStatus === 'pending',
+                  'document-item__icon--unassigned':
+                    item.medicalExaminationStatus === 'unassigned',
+                  'document-item__icon--rejected':
+                    item.medicalExaminationStatus === 'rejected',
+                  'document-item__icon--expired':
+                    item.medicalExaminationStatus === 'expired'
+                }"
+                [matTooltip]="
+                  item.medicalExaminationStatus === 'approved'
+                    ? 'Aprobado'
+                    : item.medicalExaminationStatus === 'pending'
+                    ? 'Pendiente'
+                    : item.medicalExaminationStatus === 'unassigned'
+                    ? 'No asignado'
+                    : item.medicalExaminationStatus === 'rejected'
+                    ? 'Rechazado'
+                    : item.medicalExaminationStatus === 'expired'
+                    ? 'Vencido'
+                    : ''
+                "
+                >{{
+                  item.medicalExaminationStatus === "approved"
+                    ? "check_circle"
+                    : ""
+                }}
+                {{
+                  item.medicalExaminationStatus === "pending"
+                    ? "rate_review"
+                    : ""
+                }}
+                {{
+                  item.medicalExaminationStatus === "unassigned" ? "help" : ""
+                }}
+                {{
+                  item.medicalExaminationStatus === "rejected" ? "cancel" : ""
+                }}
+                {{
+                  item.medicalExaminationStatus === "expired" ? "alarm" : ""
+                }}</mat-icon
+              >
+            </div>
+            <mat-menu #menuExamination="matMenu">
+              <button
+                mat-menu-item
+                (click)="openPdfViewer(item.medicalExaminationFile)"
+              >
+                Ver
+              </button>
+              <button mat-menu-item (click)="approveMedicalExamination(item)">
+                Aprobar
+              </button>
+              <button mat-menu-item (click)="rejectMedicalExamination(item)">
+                Rechazar
+              </button>
+            </mat-menu>
+            <div
+              class="document-item document-item--actionable"
+              [matMenuTriggerFor]="menuVaccination"
+            >
+              <div class="document-item__title">C. Vacunación</div>
+              <mat-icon
+                class="document-item__icon"
+                [ngClass]="{
+                  'document-item__icon--approved':
+                    item.doseStatus === 'vaccinated',
+                  'document-item__icon--rejected':
+                    item.doseStatus === 'not-fully-vaccinated' ||
+                    item.doseStatus === 'unassigned'
+                }"
+                [matTooltip]="
+                  item.doseStatus === 'vaccinated'
+                    ? 'Vacunas completas'
+                    : item.doseStatus === 'not-fully-vaccinated'
+                    ? 'Vacunas incompletas'
+                    : item.doseStatus === 'unassigned'
+                    ? 'Sin carnet'
+                    : ''
+                "
+                >{{ item.doseStatus === "vaccinated" ? "check_circle" : "" }}
+                {{ item.doseStatus === "unassigned" ? "cancel" : "" }}
+                {{
+                  item.doseStatus === "not-fully-vaccinated" ? "vaccines" : ""
+                }}</mat-icon
+              >
+            </div>
+            <mat-menu #menuVaccination="matMenu">
+              <button
+                mat-menu-item
+                (click)="openPdfViewer(item.vaccinationCardFile)"
+              >
+                Ver
+              </button>
+              <button mat-menu-item (click)="approveVaccinationCard(item)">
+                Aprobar
+              </button>
+              <button mat-menu-item (click)="rejectVaccinationCard(item)">
+                Rechazar
+              </button>
+            </mat-menu> -->
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #notMatched>
+        <div class="default default--collaborators">
+          <h3 class="default__title">
+            Aquí se mostrará la lista de trabajadores del proveedor
+          </h3>
+          <img
+            class="default__image"
+            src="../../../assets/img/team_page.svg"
+            alt="default image"
+          />
+        </div>
+      </ng-template>
+
+      <ng-container *ngIf="firstTime">
+        <div class="default default--collaborators">
+          <h3 class="default__title">
+            Aquí se mostrará la lista de trabajadores del proveedor
+          </h3>
+          <img
+            class="default__image"
+            src="../../../assets/img/team_page.svg"
+            alt="default image"
+          />
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

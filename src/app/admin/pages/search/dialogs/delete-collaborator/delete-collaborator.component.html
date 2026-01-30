@@ -1,0 +1,28 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">delete</mat-icon>
+  <span class="dialog-header__title">Eliminar colaborador</span>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+  <div class="info">
+    <span
+      >¿Estas seguro de eliminar al colaborador:
+      <strong
+        >{{ data.collaborator.name }}, {{ data.collaborator.lastname }}</strong
+      >?</span
+    >
+  </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="warn" (click)="deleteCollaborator()">
+    Si, eliminar
+  </button>
+</mat-dialog-actions>

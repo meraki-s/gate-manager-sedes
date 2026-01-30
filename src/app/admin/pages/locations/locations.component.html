@@ -1,0 +1,212 @@
+<div
+  class="container"
+  [ngClass]="isMobile ? 'container--mobile' : 'container--desktop'"
+>
+  <div class="tools">
+    <button mat-raised-button color="primary" (click)="createLocation()">
+      <mat-icon>add</mat-icon>
+      Nueva sede
+    </button>
+    <mat-form-field appearance="outline" class="search">
+      <mat-label>Sede</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        [formControl]="locationFilterControl"
+        placeholder="Escriba el nombre de la sede que desea buscar ..."
+      />
+    </mat-form-field>
+  </div>
+  <div class="locations-container">
+    <mat-accordion>
+      <mat-expansion-panel
+        *ngFor="let location of locations$ | async"
+        class="location"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title class="location__title">
+            {{ location.name }}
+
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              (click)="$event.stopPropagation()"
+              class="location__edit"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-panel-title>
+          <mat-panel-description>
+            <div class="location__description">
+              <span>
+                <strong>👷🏻Trabajadores en planta:</strong>
+                {{ location.workersOnLocation | number : "2." }}</span
+              >
+              <span>
+                <strong>🧑🏻‍💼Visitas en planta:</strong>
+                {{ location.workersOnLocation | number : "2." }}</span
+              >
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item class="menu-button">Cambiar nombre</button>
+          <button
+            mat-menu-item
+            [ngStyle]="{ 'font-family': 'Quicksand', 'font-size.px': 12 }"
+          >
+            Deshabilitar
+          </button>
+          <button
+            mat-menu-item
+            [ngStyle]="{ 'font-family': 'Quicksand', 'font-size.px': 12 }"
+          >
+            Borrar
+          </button>
+        </mat-menu>
+        <hr />
+        <div class="location__accounts-container">
+          <div class="tools">
+            <!-- <button mat-stroked-button color="primary">
+              <mat-icon>add</mat-icon>
+              Agregar usuario
+            </button> -->
+            <mat-form-field appearance="outline" class="search">
+              <mat-label>Usuario</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <input matInput type="text" placeholder="Filtrar usuarios ..." />
+            </mat-form-field>
+          </div>
+          <div class="accounts"></div>
+        </div>
+        <div class="location__table-container">
+          <table mat-table [dataSource]="location.usersRelated" class="table">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Nombre
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.name }} {{ element.lastname }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Correo
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.email }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="companyName">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Empresa
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.companyName ? element.companyName : "---" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="companyRuc">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                RUC
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.companyRuc ? element.companyRuc : "---" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="role">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Rol
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.role === "Administrator" ? "Administrador" : "" }}
+                {{ element.role === "Vigilant" ? "Vigilante" : "" }}
+                {{ element.role === "Provider" ? "Proveedor" : "" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="dni">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                DNI
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.dni }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="jobTitle">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Cargo
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.jobTitle }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Teléfono
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.phone }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Estado
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                {{ element.status === "registered" ? "Registrado" : "" }}
+                {{ element.status === "enabled" ? "Habilitado" : "" }}
+                {{ element.status === "disabled" ? "Bloqueado" : "" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="table__header">
+                Acciones
+              </th>
+              <td mat-cell *matCellDef="let element" class="table__cell">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <!-- <button
+                    mat-menu-item
+                    (click)="enableUser(element)"
+                    *ngIf="element.status === 'disabled'"
+                  >
+                    Habilitar
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="disableUser(element)"
+                    *ngIf="element.status === 'enabled'"
+                  >
+                    Bloquear
+                  </button>
+                  <button mat-menu-item (click)="deleteUser(element)">
+                    Borrar usuario
+                  </button> -->
+                </mat-menu>
+              </td>
+            </ng-container>
+            <tr
+              mat-header-row
+              *matHeaderRowDef="usersDisplayedColumns; sticky: true"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let element; columns: usersDisplayedColumns"
+            ></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No hay usuarios registrados</td>
+            </tr>
+          </table>
+          <mat-paginator
+            #usersPaginator
+            [pageSizeOptions]="[5, 25, 50]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

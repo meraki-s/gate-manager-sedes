@@ -1,0 +1,186 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.mat-drawer:not(.mat-drawer-side) {
+  box-shadow: none !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar .mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.toolbar {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  height: 60px;
+  gap: 1rem;
+
+  .version {
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: grey;
+    background: aliceblue;
+    padding: 0px 0.5rem;
+    border-radius: 20px;
+    border: 1px dashed lightslategrey;
+  }
+
+  mat-form-field {
+    height: 30px;
+
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      height: 30px;
+    }
+
+    ::ng-deep
+      .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+      .mdc-notched-outline--upgraded
+      .mdc-floating-label--float-above {
+      --mat-mdc-form-field-label-transform: translateY(-21.75px)
+        scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+    }
+
+    ::ng-deep
+      .mat-mdc-text-field-wrapper
+      .mat-mdc-form-field-flex
+      .mat-mdc-floating-label {
+      top: 13px;
+    }
+
+    ::ng-deep .mat-mdc-option {
+      font-size: 12px;
+      font-family: "Quicksand";
+    }
+  }
+
+  ::ng-deep
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+    .mat-mdc-form-field-infix {
+    padding-top: 2px !important;
+    padding-bottom: 0px !important;
+  }
+
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline {
+    height: 30px;
+  }
+
+  ::ng-deep .mat-mdc-select {
+    font-family: "Quicksand";
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 12px;
+  }
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  font-family: "Quicksand" !important;
+  font-size: 12px !important;
+}
+
+.menu-spacer {
+  flex: 1 1 auto;
+}
+
+.img-center {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.navigate-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+
+  &__text {
+    margin: 0px 8px;
+    font-family: "Raleway";
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__icon {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+  }
+}
+
+mat-list-item:hover {
+  // background: rgba(255, 192, 0, 0.4);
+  background-color: #008a39;
+
+  .navigate-page .navigate-page__text {
+    color: white;
+  }
+}
+
+.navigate-page {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px !important;
+
+  &__text {
+    margin: 12px 15px;
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 12px;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  mat-icon {
+    color: rgba(0, 0, 0, 0.6);
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+  }
+}
+
+.menu-user {
+  background: #ffffff;
+  border: 1px solid #2b2b2b;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 35px;
+  font-size: 14px;
+  font-family: "Quicksand";
+}
+
+.container {
+  width: 100%;
+  height: 90vh;
+
+  &__title {
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    background: #008a39;
+    &--text {
+      margin: 0px 3%;
+      padding: 15px 0px 0px 0px;
+      font-family: "Raleway";
+      font-weight: 600;
+      color: white;
+      font-size: 18px;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+<mat-toolbar class="toolbar">
+  <button mat-icon-button aria-label="main menu" (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <img src="../../../../assets/img/ferreyros-logo-medium.png" alt="logo" width="100" />
+  <!-- <mat-form-field appearance="outline">
+    <mat-label style="font-size: 12px">Sede</mat-label>
+    <mat-select placeholder="Seleccione una sede" [formControl]="locationSelectorControl">
+      <mat-option
+        *ngFor="let location of (user!.role === 'Superuser' ? (locations$ | async) : user?.locations)"
+        [value]="location.id"
+        style="font-size: 12px; font-family: 'Quicksand'"
+        >{{ location.name }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field> -->
+  <span class="version">v {{ version }} r</span>
+  <span class="menu-spacer"></span>
+  <span>
+    <button class="menu-user" mat-button [matMenuTriggerFor]="menuUser">
+      <mat-icon>account_circle</mat-icon>
+      {{ user?.name }}, {{ user?.lastname }}
+    </button>
+    <mat-menu
+      #menuUser="matMenu"
+      style="font-size: 14px; font-family: 'Quicksand'"
+    >
+      <button mat-menu-item (click)="passwordRecovery()">Recuperar contraseña</button>
+      <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+    </mat-menu>
+  </span>
+</mat-toolbar>
+
+<mat-sidenav-container [hasBackdrop]="(isHandset$ | async) ? true : false">
+  <mat-sidenav
+    #drawer
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) ? false : true"
+  >
+    <div class="navigate-title">
+      <mat-icon class="navigate-title__icon">local_police</mat-icon>
+      <p class="navigate-title__text">Gate manager</p>
+    </div>
+    <mat-nav-list>
+      <mat-list-item
+        *ngFor="let m of menu"
+        mat-list-item
+        [routerLink]="[m.routerLink]"
+        (click)="selectMenu(m)"
+      >
+        <div class="navigate-page">
+          <mat-icon>{{ m.icon }}</mat-icon>
+          <span class="navigate-page__text">{{ m.nameNavigate }}</span>
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="container">
+    <div class="container__title">
+      <p class="container__title--text">
+        {{ selectItem }}
+      </p>
+    </div>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

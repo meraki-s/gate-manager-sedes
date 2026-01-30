@@ -1,0 +1,213 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .background-image {
+    background-image: url("../../../../assets/img/background_auth.png");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: left;
+    width: 50%;
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 1rem;
+      width: auto;
+    }
+
+    &--mobile {
+      display: none;
+    }
+
+    &--desktop {
+      display: block;
+    }
+  }
+
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 1rem 1rem;
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .login-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 350px;
+
+      h3 {
+        font-family: "Raleway";
+        font-style: normal;
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 28px;
+        color: rgba(43, 43, 43, 0.5);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        mat-form-field {
+          width: 300px;
+          font-family: "Quicksand";
+          font-style: normal;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 16px;
+
+          ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+            background-color: rgba(0, 0, 0, 0) !important;
+          }
+
+          ::placeholder {
+            color: rgba(43, 43, 43, 0.6);
+          }
+        }
+      }
+
+      .card__buttons {
+        width: 300px;
+
+        &--login {
+          background-color: #ffc800;
+          font-family: "Raleway";
+          font-style: normal;
+          font-weight: 700;
+          font-size: 14px;
+          width: 300px;
+          margin: 10px 0px;
+        }
+
+        &--register {
+          font-style: normal;
+          font-family: "Raleway";
+          font-style: normal;
+          font-weight: 700;
+          font-size: 14px;
+          width: 300px;
+          margin: 10px 0px;
+          color: #2b2b2b;
+        }
+      }
+
+      .recovery {
+        font-family: "Quicksand";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
+
+    .footer {
+      font-family: "Quicksand";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    &--mobile {
+      width: 100%;
+    }
+
+    &--desktop {
+      width: 49%;
+    }
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2% 0%;
+    max-width: 350px;
+    width: 90vw;
+    height: fit-content;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1.13447px solid #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0px 2.26893px 2.26893px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6.23957px);
+    border-radius: 10px;
+
+    &__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 100%;
+        max-width: 300px;
+        // height: 100%;
+      }
+    }
+
+    &__form {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 24px 0px 8px 0px;
+
+      form .mat-form-field {
+        display: block;
+        width: 100%;
+        min-width: 300px;
+      }
+
+      input {
+        color: #000 !important;
+      }
+
+      ::ng-deep .mat-form-field-flex {
+        background: rgba(255, 255, 255, 0.8) !important;
+      }
+    }
+
+    // &__buttons {
+    //   width: 100%;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   flex-direction: column;
+    //   margin: 0px 0%;
+
+    //   &--login {
+    //     background-color: #ffc800;
+    //     font-style: normal;
+    //     font-weight: bold;
+    //     font-size: 14px;
+    //     width: 300px;
+    //     margin: 10px 0px;
+    //   }
+
+    //   &--register {
+    //     background-color: #ff7800;
+    //     font-style: normal;
+    //     font-weight: bold;
+    //     font-size: 14px;
+    //     width: 300px;
+    //     margin: 10px 0px;
+    //   }
+    // }
+  }
+}

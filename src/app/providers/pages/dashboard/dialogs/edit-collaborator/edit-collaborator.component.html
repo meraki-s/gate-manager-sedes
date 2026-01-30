@@ -1,0 +1,866 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">edit</mat-icon>
+  <p class="dialog-header__title">Editar Colaborador</p>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"
+></mat-progress-bar>
+
+<mat-dialog-content class="container">
+  <div *ngIf="loading$ | async">
+    <span class="container-text-info"
+      >*Consultando inducción, ficha sintomatológica y LOTO</span
+    >
+  </div>
+
+  <form [formGroup]="collaboratorForm" autocomplete="off">
+    <div class="form-header">
+      <p class="form-header__title">Datos personales</p>
+      <p class="form-header__subtitle">
+        Datos básicos del personal de su empresa.
+      </p>
+    </div>
+
+    <div class="form-block">
+      <mat-form-field appearance="fill" class="container--input">
+        <mat-label>Nombre</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Nombre"
+          id="name"
+          formControlName="name"
+        />
+        <mat-error *ngIf="collaboratorForm.controls['name'].errors">
+          Campo <strong>requerido.</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="container--input">
+        <mat-label>Apellido</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Apellido"
+          id="lastname"
+          formControlName="lastname"
+        />
+        <mat-error *ngIf="collaboratorForm.controls['lastname'].errors">
+          Campo <strong>requerido.</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-block">
+      <mat-form-field appearance="fill" class="container--input">
+        <mat-label>DNI</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="DNI"
+          id="dni"
+          required
+          formControlName="dni"
+        />
+        <mat-error *ngIf="collaboratorForm.controls['dni'].errors">
+          Campo <strong>requerido.</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="container--input">
+        <mat-label>Cargo</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Cargo"
+          id="jobTitle"
+          formControlName="jobTitle"
+        />
+        <mat-error *ngIf="collaboratorForm.controls['jobTitle'].errors">
+          Campo <strong>requerido.</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- <div *ngIf="!deviceXs">
+      <div fxLayout="column" fxLayoutAlign="start start">
+        <h3 class="titulop">Documentos asociados</h3>
+        <p class="textp">
+          Estos datos nos ayudarán a validar los docuemntos requeridos para el
+          ingreso del colaborador.
+        </p>
+      </div>
+      <div class="files-container">
+        <div class="uploadFile">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <div>
+              <h3 class="uploadFile--title" style="padding: 13px">
+                Examen Médico
+              </h3>
+            </div>
+            <button mat-icon-button (click)="uploadFileExamen.click()">
+              <mat-icon mat-icon-button>file_upload</mat-icon>
+            </button>
+          </div>
+          <input
+            #uploadFileExamen
+            class="file-input"
+            type="file"
+            accept="application/pdf"
+            (change)="onDropExamen($event.target)"
+          />
+
+          <div *ngIf="filesExamen.length">
+            <app-upload-files
+              *ngFor="let file of filesExamen"
+              [file]="file | async"
+              [pathStorage]="pathStorageExamen"
+              (onNewImage)="addNewImageExamen($event)"
+            >
+            </app-upload-files>
+          </div>
+          <span class="hint">Opcional</span>
+          <mat-form-field appearance="fill">
+            <mat-label>Vigencia</mat-label>
+            <input
+              matInput
+              [matDatepicker]="medicalExamination"
+              formControlName="medicalExaminationDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="medicalExamination"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #medicalExamination></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="uploadFile">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <h3 class="uploadFile--title" style="padding: 13px">
+              Carnet de vacunación*
+            </h3>
+            <button mat-icon-button (click)="uploadFileVaccination.click()">
+              <mat-icon mat-icon-button>file_upload</mat-icon>
+            </button>
+          </div>
+
+          <input
+            #uploadFileVaccination
+            class="file-input"
+            type="file"
+            (change)="onDropVaccination($event.target)"
+            formControlName="vaccinationCardFile"
+          />
+          <div *ngIf="filesVaccination.length">
+            <app-upload-files
+              *ngFor="let file of filesVaccination"
+              [file]="file | async"
+              [pathStorage]="pathStorageVaccination"
+              (onNewImage)="addNewImageVaccination($event)"
+            >
+            </app-upload-files>
+          </div>
+          <span class="hint">Opcional</span>
+          <mat-error
+            class="error-image"
+            *ngIf="collaboratorForm.controls['vaccinationCardFile'].errors"
+          >
+            Campo <strong>requerido.</strong>
+          </mat-error>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Primera dosis</mat-label>
+            <input
+              matInput
+              [matDatepicker]="firstDose"
+              formControlName="firstDoseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="firstDose"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #firstDose></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['firstDoseDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Segunda dosis</mat-label>
+            <input
+              matInput
+              [matDatepicker]="secondDose"
+              formControlName="secondDoseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="secondDose"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #secondDose></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['secondDoseDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Tercera dosis</mat-label>
+            <input
+              matInput
+              [matDatepicker]="thirdDose"
+              formControlName="thirdDoseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="thirdDose"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #thirdDose></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['thirdDoseDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="deviceXs">
+      <div fxLayout="column" fxLayoutAlign="start start">
+        <h3 class="titulop">Documentos asociados</h3>
+        <p class="textp">
+          Estos datos nos ayudarán a validar los docuemntos requeridos para el
+          ingreso del colaborador.
+        </p>
+      </div>
+      <div class="files-container">
+        <div class="uploadFile--mobile">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <h3 class="uploadFile--title" style="padding: 13px">
+              Examen Médico
+            </h3>
+            <button mat-icon-button (click)="uploadFileExamen.click()">
+              <mat-icon mat-icon-button>file_upload</mat-icon>
+            </button>
+          </div>
+
+          <input
+            #uploadFileExamen
+            class="file-input"
+            type="file"
+            (change)="onDropExamen($event.target)"
+            formControlName="medicalExaminationFile"
+          />
+          <div *ngIf="filesExamen.length">
+            <app-upload-files
+              *ngFor="let file of filesExamen"
+              [file]="file | async"
+              [pathStorage]="pathStorageExamen"
+              (onNewImage)="addNewImageExamen($event)"
+            >
+            </app-upload-files>
+          </div>
+          <span class="hint">Opcional</span>
+          <mat-error
+            class="error-image"
+            *ngIf="collaboratorForm.controls['medicalExaminationFile'].errors"
+          >
+            Campo <strong>requerido.</strong>
+          </mat-error>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Vigencia</mat-label>
+            <input
+              matInput
+              [matDatepicker]="medicalExamination"
+              formControlName="medicalExaminationDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="medicalExamination"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #medicalExamination></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['medicalExaminationDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="uploadFile--mobile">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <h3 class="uploadFile--title" style="padding: 13px">
+              Carnet de vacunación*
+            </h3>
+            <button mat-icon-button (click)="uploadFileVaccination.click()">
+              <mat-icon mat-icon-button>file_upload</mat-icon>
+            </button>
+          </div>
+
+          <input
+            #uploadFileVaccination
+            class="file-input"
+            type="file"
+            (change)="onDropVaccination($event.target)"
+            formControlName="vaccinationCardFile"
+          />
+          <div *ngIf="filesVaccination.length">
+            <app-upload-files
+              *ngFor="let file of filesVaccination"
+              [file]="file | async"
+              [pathStorage]="pathStorageVaccination"
+              (onNewImage)="addNewImageVaccination($event)"
+            >
+            </app-upload-files>
+          </div>
+          <span class="hint">Requerido</span>
+          <mat-error
+            class="error-image"
+            *ngIf="collaboratorForm.controls['vaccinationCardFile'].errors"
+          >
+            Campo <strong>requerido.</strong>
+          </mat-error>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Primera dosis</mat-label>
+            <input
+              matInput
+              [matDatepicker]="firstDose"
+              formControlName="firstDoseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="firstDose"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #firstDose></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['firstDoseDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Segunda dosis</mat-label>
+            <input
+              matInput
+              [matDatepicker]="secondDose"
+              formControlName="secondDoseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="secondDose"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #secondDose></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['secondDoseDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Tercera dosis</mat-label>
+            <input
+              matInput
+              [matDatepicker]="thirdDose"
+              formControlName="thirdDoseDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="thirdDose"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #thirdDose></mat-datepicker>
+            <mat-error
+              *ngIf="collaboratorForm.controls['thirdDoseDate'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div> -->
+    <br />
+  </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button
+    mat-stroked-button
+    color="warn"
+    mat-dialog-close
+    [disabled]="loading$ | async"
+  >
+    Cancelar
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      (loading$ | async) ||
+      (loadingVaccination$ | async) ||
+      (loadingExamination$ | async)
+    "
+    (click)="save()"
+    style="color: white"
+  >
+    Guardar
+  </button>
+</mat-dialog-actions>
+
+<!-- <div class="container">
+  <div fxLayout="column" fxLayoutAlign="start start">
+    <mat-toolbar-row class="toolbar" fxLayoutAlign="space-between center">
+      <div class="menu-spacer" fxLayout="row" fxLayoutAlign="center center">
+        <mat-icon class="mat-icon">assignment_ind</mat-icon>
+        <span>Registro Colaborador</span>
+      </div>
+
+      <button mat-icon-button mat-dialog-close class="btnClose">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
+
+    <div
+      fxLayout="column"
+      fxLayoutAlign="start start"
+      style="padding: 20px; background-color: #f8f8f8; width: 100%"
+    >
+      <div *ngIf="loading$ | async" class="ms-info-container">
+        <span class="ms-info-text"
+          >*Consultando inducción, ficha sintomatológica y LOTO</span
+        >
+      </div>
+      <mat-dialog-content style="margin: 0 -16px">
+        <form [formGroup]="collaboratorForm" autocomplete="off">
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <h3 class="titulop">Datos personales</h3>
+            <p class="textp">Datos básicos del personal de su empresa.</p>
+          </div>
+
+          <div
+            fxLayout="row-wrap"
+            fxLayout.sm="column"
+            fxLayout.xs="column"
+            fxLayoutGap.lg="20px"
+            fxLayoutGap.md="20px"
+          >
+            <mat-form-field appearance="fill" class="container--input">
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Nombre"
+                id="name"
+                formControlName="name"
+              />
+              <mat-error *ngIf="collaboratorForm.controls['name'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="container--input">
+              <mat-label>Apellido</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Apellido"
+                id="lastname"
+                formControlName="lastname"
+              />
+              <mat-error *ngIf="collaboratorForm.controls['lastname'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div
+            fxLayout="row-wrap"
+            fxLayout.sm="column"
+            fxLayout.xs="column"
+            fxLayoutGap.lg="20px"
+            fxLayoutGap.md="20px"
+          >
+            <mat-form-field appearance="fill" class="container--input">
+              <mat-label>DNI</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="DNI"
+                id="dni"
+                required
+                formControlName="dni"
+              />
+              <mat-error *ngIf="collaboratorForm.controls['dni'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="container--input">
+              <mat-label>Cargo</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Cargo"
+                id="jobTitle"
+                formControlName="jobTitle"
+              />
+              <mat-error *ngIf="collaboratorForm.controls['jobTitle'].errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <br />
+
+          <div *ngIf="!deviceXs">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <h3 class="titulop">Documentos asociados</h3>
+              <p class="textp">
+                Estos datos nos ayudarán a validar los docuemntos requeridos
+                para el ingreso del colaborador.
+              </p>
+            </div>
+            <div class="files-container">
+              <div class="uploadFile">
+                <div fxLayout="row" fxLayoutAlign="start start">
+                  <div>
+                    <h3 class="uploadFile--title" style="padding: 13px">
+                      Examen Médico
+                    </h3>
+                  </div>
+                  <button mat-icon-button (click)="uploadFileExamen.click()">
+                    <mat-icon mat-icon-button>file_upload</mat-icon>
+                  </button>
+                </div>
+                <input
+                  #uploadFileExamen
+                  class="file-input"
+                  type="file"
+                  accept="application/pdf"
+                  (change)="onDropExamen($event.target)"
+                />
+
+                <div *ngIf="filesExamen.length">
+                  <app-upload-files
+                    *ngFor="let file of filesExamen"
+                    [file]="file | async"
+                    [pathStorage]="pathStorageExamen"
+                    (onNewImage)="addNewImageExamen($event)"
+                  >
+                  </app-upload-files>
+                </div>
+                <span class="hint">Opcional</span>
+                <mat-form-field appearance="fill">
+                  <mat-label>Vigencia</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="medicalExamination"
+                    formControlName="medicalExaminationDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="medicalExamination"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #medicalExamination></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="uploadFile">
+                <div fxLayout="row" fxLayoutAlign="start start">
+                  <h3 class="uploadFile--title" style="padding: 13px">
+                    Carnet de vacunación*
+                  </h3>
+                  <button
+                    mat-icon-button
+                    (click)="uploadFileVaccination.click()"
+                  >
+                    <mat-icon mat-icon-button>file_upload</mat-icon>
+                  </button>
+                </div>
+
+                <input
+                  #uploadFileVaccination
+                  class="file-input"
+                  type="file"
+                  (change)="onDropVaccination($event.target)"
+                  formControlName="vaccinationCardFile"
+                />
+                <div *ngIf="filesVaccination.length">
+                  <app-upload-files
+                    *ngFor="let file of filesVaccination"
+                    [file]="file | async"
+                    [pathStorage]="pathStorageVaccination"
+                    (onNewImage)="addNewImageVaccination($event)"
+                  >
+                  </app-upload-files>
+                </div>
+                <span class="hint">Opcional</span>
+                <mat-error
+                  class="error-image"
+                  *ngIf="
+                    collaboratorForm.controls['vaccinationCardFile'].errors
+                  "
+                >
+                  Campo <strong>requerido.</strong>
+                </mat-error>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Primera dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="firstDose"
+                    formControlName="firstDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="firstDose"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #firstDose></mat-datepicker>
+                  <mat-error
+                    *ngIf="collaboratorForm.controls['firstDoseDate'].errors"
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Segunda dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="secondDose"
+                    formControlName="secondDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="secondDose"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #secondDose></mat-datepicker>
+                  <mat-error
+                    *ngIf="collaboratorForm.controls['secondDoseDate'].errors"
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Tercera dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="thirdDose"
+                    formControlName="thirdDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="thirdDose"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #thirdDose></mat-datepicker>
+                  <mat-error
+                    *ngIf="collaboratorForm.controls['thirdDoseDate'].errors"
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="deviceXs">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <h3 class="titulop">Documentos asociados</h3>
+              <p class="textp">
+                Estos datos nos ayudarán a validar los docuemntos requeridos
+                para el ingreso del colaborador.
+              </p>
+            </div>
+            <div class="files-container">
+              <div class="uploadFile--mobile">
+                <div fxLayout="row" fxLayoutAlign="start start">
+                  <h3 class="uploadFile--title" style="padding: 13px">
+                    Examen Médico
+                  </h3>
+                  <button mat-icon-button (click)="uploadFileExamen.click()">
+                    <mat-icon mat-icon-button>file_upload</mat-icon>
+                  </button>
+                </div>
+
+                <input
+                  #uploadFileExamen
+                  class="file-input"
+                  type="file"
+                  (change)="onDropExamen($event.target)"
+                  formControlName="medicalExaminationFile"
+                />
+                <div *ngIf="filesExamen.length">
+                  <app-upload-files
+                    *ngFor="let file of filesExamen"
+                    [file]="file | async"
+                    [pathStorage]="pathStorageExamen"
+                    (onNewImage)="addNewImageExamen($event)"
+                  >
+                  </app-upload-files>
+                </div>
+                <span class="hint">Opcional</span>
+                <mat-error
+                  class="error-image"
+                  *ngIf="
+                    collaboratorForm.controls['medicalExaminationFile'].errors
+                  "
+                >
+                  Campo <strong>requerido.</strong>
+                </mat-error>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Vigencia</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="medicalExamination"
+                    formControlName="medicalExaminationDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="medicalExamination"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #medicalExamination></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      collaboratorForm.controls['medicalExaminationDate'].errors
+                    "
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="uploadFile--mobile">
+                <div fxLayout="row" fxLayoutAlign="start start">
+                  <h3 class="uploadFile--title" style="padding: 13px">
+                    Carnet de vacunación*
+                  </h3>
+                  <button
+                    mat-icon-button
+                    (click)="uploadFileVaccination.click()"
+                  >
+                    <mat-icon mat-icon-button>file_upload</mat-icon>
+                  </button>
+                </div>
+
+                <input
+                  #uploadFileVaccination
+                  class="file-input"
+                  type="file"
+                  (change)="onDropVaccination($event.target)"
+                  formControlName="vaccinationCardFile"
+                />
+                <div *ngIf="filesVaccination.length">
+                  <app-upload-files
+                    *ngFor="let file of filesVaccination"
+                    [file]="file | async"
+                    [pathStorage]="pathStorageVaccination"
+                    (onNewImage)="addNewImageVaccination($event)"
+                  >
+                  </app-upload-files>
+                </div>
+                <span class="hint">Requerido</span>
+                <mat-error
+                  class="error-image"
+                  *ngIf="
+                    collaboratorForm.controls['vaccinationCardFile'].errors
+                  "
+                >
+                  Campo <strong>requerido.</strong>
+                </mat-error>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Primera dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="firstDose"
+                    formControlName="firstDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="firstDose"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #firstDose></mat-datepicker>
+                  <mat-error
+                    *ngIf="collaboratorForm.controls['firstDoseDate'].errors"
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Segunda dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="secondDose"
+                    formControlName="secondDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="secondDose"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #secondDose></mat-datepicker>
+                  <mat-error
+                    *ngIf="collaboratorForm.controls['secondDoseDate'].errors"
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Tercera dosis</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="thirdDose"
+                    formControlName="thirdDoseDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="thirdDose"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #thirdDose></mat-datepicker>
+                  <mat-error
+                    *ngIf="collaboratorForm.controls['thirdDoseDate'].errors"
+                  >
+                    Campo <strong>requerido.</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <br />
+          <button
+            mat-stroked-button
+            class="btn-reject"
+            mat-dialog-close
+            [disabled]="loading$ | async"
+          >
+            Cancelar
+          </button>
+          <button
+            mat-stroked-button
+            class="container--btn"
+            mat-button
+            type="button"
+            [disabled]="
+              (loading$ | async) ||
+              (loadingVaccination$ | async) ||
+              (loadingExamination$ | async)
+            "
+            (click)="register()"
+          >
+            Registrar
+          </button>
+        </form>
+      </mat-dialog-content>
+    </div>
+  </div>
+</div> -->
