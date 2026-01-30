@@ -83,7 +83,12 @@
     <div class="table-header">
       <!-- <h3>Usuarios</h3> -->
       <span class="fill"></span>
-      <button mat-stroked-button color="primary" (click)="downloadXlsx(users)">
+      <button
+        mat-raised-button
+        color="primary"
+        style="color: white"
+        (click)="downloadXlsx(users)"
+      >
         <mat-icon>download</mat-icon>
         Descargar
       </button>
@@ -248,7 +253,11 @@
           *matCellDef="let element; let i = index"
           class="table__cell"
         >
-          <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            (click)="$event.stopPropagation()"
+          >
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">

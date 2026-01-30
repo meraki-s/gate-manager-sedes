@@ -24,7 +24,7 @@ export class CertificatesValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/certificatesDocumentsValidate`,
+            `/db/ferreyros/providers/${user?.providerId}/certificatesDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -37,7 +37,7 @@ export class CertificatesValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/certificatesDocumentsValidate`,
+        `/db/ferreyros/providers/${id}/certificatesDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -63,7 +63,7 @@ export class CertificatesValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsCertificatesDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/certificatesDocumentsValidate/`
+                  `/db/ferreyros/providers/${user.providerId}/certificatesDocumentsValidate/`
                 )
                 .doc();
 
@@ -107,7 +107,7 @@ export class CertificatesValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsCertificatesDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/certificatesDocumentsValidate/${idFromDelete}`
+          `/db/ferreyros/providers/${user.providerId}/certificatesDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsCertificatesDocRef);
         return of(batch);

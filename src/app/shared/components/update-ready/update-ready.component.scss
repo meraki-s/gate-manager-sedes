@@ -1,15 +1,13 @@
-.update-head {
+.dialog-header {
+  min-width: auto;
+}
+
+.container {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
-.title-login {
-  font-family: Raleway;
-  font-weight: bold;
-  font-size: 1.05em;
-}
+
 .update-button {
   width: 100%;
   display: flex;
@@ -19,12 +17,13 @@
   margin: 24px 0px;
 }
 
-.div-bottom {
-  margin-left: -24px;
-  margin-top: -50px;
-  margin-bottom: -24px;
-  border-bottom: 30px solid #5da92f;
-  width: calc(100% + 48px);
+.dialog-info {
+  font-family: "Quicksand";
+  font-size: 14px;
+  font-weight: 600;
+  background-color: aliceblue;
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 
 .version {
@@ -37,8 +36,6 @@
   border: 1px dashed lightslategrey;
 }
 
-@media (max-width: 340px) {
-  .title-login {
-    font-size: 0.9em;
-  }
+.color-bar {
+  border-bottom: solid 8px #ffc000;
 }

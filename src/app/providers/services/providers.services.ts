@@ -92,11 +92,11 @@ export class ProviderService {
           sctrDate: form.sctrDate,
           // covidFile: covidFile,
           // covidDate: form.covidDate,
-          vaccinationCardFile: vaccinationCardFile,
-          firstDoseDate: form.firstDoseDate,
-          secondDoseDate: form.secondDoseDate,
-          thirdDoseDate: form.thirdDoseDate,
-          doseStatus: 'vaccinated',
+          // vaccinationCardFile: vaccinationCardFile,
+          // firstDoseDate: form.firstDoseDate,
+          // secondDoseDate: form.secondDoseDate,
+          // thirdDoseDate: form.thirdDoseDate,
+          // doseStatus: 'vaccinated',
           status: 'approved',
           createdBy: shortUser,
           createdAt:
@@ -106,7 +106,7 @@ export class ProviderService {
           accessStatus: 'waiting',
           companyName: user.companyName,
           companyRuc: user.companyRuc,
-          covidStatus: 'approved',
+          // covidStatus: 'approved',
           sctrStatus: 'approved',
         };
         batch.set(providerDocRef, data);
@@ -191,7 +191,7 @@ export class ProviderService {
    */
   registerCollaborator(
     form: Collaborator,
-    medicalExaminationFile: UploadFile
+    // medicalExaminationFile: UploadFile
   ): Observable<firebase.default.firestore.WriteBatch> {
     return this.authSevice.user$.pipe(
       take(1),
@@ -218,18 +218,18 @@ export class ProviderService {
           lastname: form.lastname,
           dni: form.dni,
           jobTitle: form.jobTitle,
-          medicalExaminationDate: form.medicalExaminationDate,
-          medicalExaminationFile: medicalExaminationFile,
-          medicalExaminationStatus: 'approved',
+          // medicalExaminationDate: form.medicalExaminationDate,
+          // medicalExaminationFile: medicalExaminationFile,
+          // medicalExaminationStatus: 'approved',
           sctrFile: form.sctrFile,
           sctrDate: form.sctrDate,
           sctrStatus: 'unassigned',
           svlFile: form.svlFile,
           svlDate: form.svlDate,
           svlStatus: 'unassigned',
-          swornDeclarationFile: form.swornDeclarationFile,
-          swornDeclarationDate: form.swornDeclarationDate,
-          swornDeclarationStatus: 'unassigned',
+          // swornDeclarationFile: form.swornDeclarationFile,
+          // swornDeclarationDate: form.swornDeclarationDate,
+          // swornDeclarationStatus: 'unassigned',
           createdBy: shortUser,
           createdAt: new Date() as Date & firebase.default.firestore.Timestamp,
         };
@@ -248,38 +248,38 @@ export class ProviderService {
    * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
    * @memberof ProviderService
    */
-  deleteFileCovid(
-    covidId: string
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    return this.authSevice.user$.pipe(
-      take(1),
-      switchMap((user) => {
-        // create batch
-        const batch = this.afs.firestore.batch();
+  // deleteFileCovid(
+  //   covidId: string
+  // ): Observable<firebase.default.firestore.WriteBatch> {
+  //   return this.authSevice.user$.pipe(
+  //     take(1),
+  //     switchMap((user) => {
+  //       // create batch
+  //       const batch = this.afs.firestore.batch();
 
-        // check if user is defined
-        if (!user) return of(batch);
+  //       // check if user is defined
+  //       if (!user) return of(batch);
 
-        // create reference for document in evaluation entries collection
-        const sctDocRef = this.afs.firestore.doc(
-          `db/ferreyros/providers/${user.providerId}/visits/${covidId}`
-        );
+  //       // create reference for document in evaluation entries collection
+  //       const sctDocRef = this.afs.firestore.doc(
+  //         `db/ferreyros/providers/${user.providerId}/visits/${covidId}`
+  //       );
 
-        // Structuring the data model
-        const data: Partial<RegisterVisit> = {
-          covidFile: {
-            fileURL: '',
-            name: '',
-            type: '',
-          },
-        };
+  //       // Structuring the data model
+  //       const data: Partial<RegisterVisit> = {
+  //         covidFile: {
+  //           fileURL: '',
+  //           name: '',
+  //           type: '',
+  //         },
+  //       };
 
-        batch.update(sctDocRef, data);
+  //       batch.update(sctDocRef, data);
 
-        return of(batch);
-      })
-    );
-  }
+  //       return of(batch);
+  //     })
+  //   );
+  // }
 
   /**
    * Delete SCTR file from visit
@@ -363,7 +363,7 @@ export class ProviderService {
           visitDate: form.visitDate,
           invitedBy: form.invitedBy,
           reasonVisit: form.reasonVisit,
-          covidDate: form.covidDate,
+          // covidDate: form.covidDate,
           // covidFile: fileCOVID,
           sctrDate: form.sctrDate,
           sctrFile: fileSCTR,

@@ -31,7 +31,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
       charge: new FormControl('', Validators.required),
       phone: new FormControl('', Validators.required),
       role: new FormControl('', Validators.required),
-      location: new FormControl('', Validators.required),
+      // location: new FormControl('', Validators.required),
     },
     {
       validators: this.samePasswords('password', 'password2'),

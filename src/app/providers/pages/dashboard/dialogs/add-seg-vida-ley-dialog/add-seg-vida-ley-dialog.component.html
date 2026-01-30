@@ -1,8 +1,8 @@
-<div class="ms-dialog-header">
-  <mat-icon class="ms-dialog-header__icon">description</mat-icon>
-  <h3 class="ms-dialog-header__title">Registro Seguro Vida Ley</h3>
-
-  <button mat-icon-button mat-dialog-close class="ms-dialog-header__close">
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">description</mat-icon>
+  <p class="dialog-header__title">Nuevo Seguro Vida Ley</p>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close class="dialog-header__close">
     <mat-icon>close_black</mat-icon>
   </button>
 </div>
@@ -112,7 +112,7 @@
         [displayWith]="showEntryCollaborator"
       >
         <mat-option *ngFor="let item of collaborators" [value]="item">
-          {{ item.lastname }}, {{ item.name }} 
+          {{ item.lastname }}, {{ item.name }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -143,12 +143,18 @@
       </mat-card-content>
     </div>
   </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" mat-dialog-close>Cancelar</button>
   <button
-    mat-stroked-button
-    class="ms-dialog-body__btn-register"
+    mat-raised-button
+    color="primary"
+    style="color: white"
     (click)="save()"
     [disabled]="loading$ | async"
   >
     Registrar
   </button>
-</mat-dialog-content>
+</mat-dialog-actions>

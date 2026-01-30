@@ -184,23 +184,23 @@ export class SettingsComponent implements OnInit, OnDestroy {
           'SVL estado',
           'SVL vigencia',
           'SVL archivo',
-          'DJ estado',
-          'DJ vigencia',
-          'DJ archivo',
-          'E.Med. estado',
-          'E.Med. vigencia',
-          'E.Med. archivo',
+          // 'DJ estado',
+          // 'DJ vigencia',
+          // 'DJ archivo',
+          // 'E.Med. estado',
+          // 'E.Med. vigencia',
+          // 'E.Med. archivo',
           'Ind. estado',
           'Ind. vigencia',
-          'F.Sim. estado',
-          'F.Sim. vigencia',
+          // 'F.Sim. estado',
+          // 'F.Sim. vigencia',
           'LOTO estado',
           'LOTO vigencia',
-          'Vac estado',
-          'Vac1 vigencia',
-          'Vac2 vigencia',
-          'Vac3 vigencia',
-          'Vac archivo',
+          // 'Vac estado',
+          // 'Vac1 vigencia',
+          // 'Vac2 vigencia',
+          // 'Vac3 vigencia',
+          // 'Vac archivo',
           'Fecha creación',
           'Creado por',
         ];
@@ -228,51 +228,51 @@ export class SettingsComponent implements OnInit, OnDestroy {
               ? new Date(collaborator.svlDate.toMillis())
               : '---',
             collaborator.svlFile ? collaborator.svlFile.fileURL : '---',
-            collaborator.swornDeclarationStatus
-              ? collaborator.swornDeclarationStatus
-              : '---',
-            collaborator.swornDeclarationDate
-              ? new Date(collaborator.swornDeclarationDate.toMillis())
-              : '---',
-            collaborator.swornDeclarationFile
-              ? collaborator.swornDeclarationFile.fileURL
-              : '---',
-            collaborator.medicalExaminationStatus
-              ? collaborator.medicalExaminationStatus
-              : '---',
-            collaborator.medicalExaminationDate
-              ? new Date(collaborator.medicalExaminationDate.toMillis())
-              : '---',
-            collaborator.medicalExaminationFile
-              ? collaborator.medicalExaminationFile.fileURL
-              : '---',
+            // collaborator.swornDeclarationStatus
+            //   ? collaborator.swornDeclarationStatus
+            //   : '---',
+            // collaborator.swornDeclarationDate
+            //   ? new Date(collaborator.swornDeclarationDate.toMillis())
+            //   : '---',
+            // collaborator.swornDeclarationFile
+            //   ? collaborator.swornDeclarationFile.fileURL
+            //   : '---',
+            // collaborator.medicalExaminationStatus
+            //   ? collaborator.medicalExaminationStatus
+            //   : '---',
+            // collaborator.medicalExaminationDate
+            //   ? new Date(collaborator.medicalExaminationDate.toMillis())
+            //   : '---',
+            // collaborator.medicalExaminationFile
+            //   ? collaborator.medicalExaminationFile.fileURL
+            //   : '---',
             collaborator.inductionStatus ? collaborator.inductionStatus : '---',
             collaborator.inductionDate
               ? new Date(collaborator.inductionDate.toMillis())
               : '---',
-            collaborator.symptomatologyStatus
-              ? collaborator.symptomatologyStatus
-              : '---',
-            collaborator.symptomatologyDate
-              ? new Date(collaborator.symptomatologyDate.toMillis())
-              : '---',
+            // collaborator.symptomatologyStatus
+            //   ? collaborator.symptomatologyStatus
+            //   : '---',
+            // collaborator.symptomatologyDate
+            //   ? new Date(collaborator.symptomatologyDate.toMillis())
+            //   : '---',
             collaborator.lotoStatus ? collaborator.lotoStatus : '---',
             collaborator.lotoDate
               ? new Date(collaborator.lotoDate.toMillis())
               : '---',
-            collaborator.doseStatus ? collaborator.doseStatus : '---',
-            collaborator.firstDoseDate
-              ? new Date(collaborator.firstDoseDate.toMillis())
-              : '---',
-            collaborator.secondDoseDate
-              ? new Date(collaborator.secondDoseDate.toMillis())
-              : '---',
-            collaborator.thirdDoseDate
-              ? new Date(collaborator.thirdDoseDate.toMillis())
-              : '---',
-            collaborator.vaccinationCardFile
-              ? collaborator.vaccinationCardFile.fileURL
-              : '---',
+            // collaborator.doseStatus ? collaborator.doseStatus : '---',
+            // collaborator.firstDoseDate
+            //   ? new Date(collaborator.firstDoseDate.toMillis())
+            //   : '---',
+            // collaborator.secondDoseDate
+            //   ? new Date(collaborator.secondDoseDate.toMillis())
+            //   : '---',
+            // collaborator.thirdDoseDate
+            //   ? new Date(collaborator.thirdDoseDate.toMillis())
+            //   : '---',
+            // collaborator.vaccinationCardFile
+            //   ? collaborator.vaccinationCardFile.fileURL
+            //   : '---',
             collaborator.createdAt
               ? new Date(collaborator.createdAt.toMillis())
               : '---',

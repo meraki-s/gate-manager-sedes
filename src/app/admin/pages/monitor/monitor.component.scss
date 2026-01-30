@@ -43,11 +43,19 @@
       display: flex;
       flex-direction: row;
       align-items: baseline;
-      justify-content: flex-start;
+      justify-content: space-between;
       margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+
+      button {
+        width: 110px;
+        color: white;
+        font-size: 12px;
+      }
 
       &__company-name {
-        min-width: 150px;
+        min-width: 200px;
+        max-width: 200px;
       }
 
       &__text {
@@ -58,6 +66,7 @@
         &--company {
           // width: 100%;
           min-width: 150px;
+          max-width: 150px;
           font-weight: bold;
         }
 
@@ -97,6 +106,7 @@
       margin-bottom: 1rem;
 
       .result__title {
+        font-family: Quicksand;
         font-weight: bold;
         margin: 0px;
         margin-right: 1rem;

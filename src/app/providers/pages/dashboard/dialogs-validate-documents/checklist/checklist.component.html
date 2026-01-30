@@ -1,1 +1,259 @@
-<p>checklist works!</p>
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">description</mat-icon>
+  <span class="dialog-header__title">Check List</span>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"
+></mat-progress-bar>
+<mat-dialog-content>
+  <div class="content-header">
+    <div class="info">
+      💡Estos datos nos ayudarán a validar la información <br />
+      requerida para el ingreso a la planta
+    </div>
+    <button
+      mat-button
+      color="primary"
+      (click)="addControl()"
+      [disabled]="dataForm.invalid"
+    >
+      <mat-icon>note_add</mat-icon>
+      Nuevo documento
+    </button>
+  </div>
+  <form [formGroup]="dataForm" autocomplete="off">
+    <div formArrayName="archive">
+      <div
+        class="entry-container entry-container--green"
+        *ngFor="let item of archive.controls; let i = index"
+      >
+        <div class="form-container">
+          <div [formGroupName]="i" class="form">
+            <div class="form-actions">
+              <div>
+                Adjunte un documento
+                <span
+                  *ngIf="archive.controls[i].get('file')?.errors?.['required']"
+                  class="form-actions--required"
+                  >(*)</span
+                >
+              </div>
+              <input
+                #uploadFile
+                [id]="i"
+                type="file"
+                (change)="startUpload($event, i)"
+                accept="application/pdf"
+                formControlName="file"
+              />
+              <button
+                mat-icon-button
+                color="primary"
+                type="button"
+                (click)="openFileArchive(i)"
+                [disabled]="archive.controls[i].get('id')?.value !== null"
+              >
+                <mat-icon>file_upload</mat-icon>
+              </button>
+            </div>
+            <div
+              class="link"
+              *ngIf="archive.controls[i].get('uploadPercent')?.value"
+            >
+              <div *ngIf="archive.controls[i].get('fileURL')?.value">
+                <a
+                  [href]="archive.controls[i].get('fileURL')?.value"
+                  target="_blank"
+                >
+                  <span>{{ archive.controls[i].get("name")?.value }} </span>
+                </a>
+              </div>
+            </div>
+            <mat-form-field appearance="fill">
+              <mat-label>Vigencia</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="validityDate"
+                readonly
+                [min]="start_date"
+                (dateInput)="addEventDate($event, i)"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker
+                #picker
+                [disabled]="archive.controls[i].get('id')?.value !== null"
+              >
+              </mat-datepicker>
+              <mat-error
+                *ngIf="archive.controls[i].get('validityDate')?.hasError"
+              >
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-divider></mat-divider>
+          <!-- <div class="locations" *ngIf="locations$ | async as locations">
+              <div class="locations__header">
+                <span>Seleccione la sede</span>
+                <mat-checkbox
+                  [checked]="locationModel.selected.length > 0"
+                  [indeterminate]="
+                    locationModel.selected.length > 0 &&
+                    locationModel.selected.length < locations.length
+                  "
+                  (change)="setAllLocations($event.checked, locations)"
+                >
+                  Todas
+                </mat-checkbox>
+              </div>
+              <div class="checkbox-container">
+                <mat-checkbox
+                  *ngFor="let location of locations"
+                  [checked]="locationModel.isSelected(location)"
+                  (change)="setLocation(location)"
+                >
+                  {{ location.name }}
+                </mat-checkbox>
+              </div>
+            </div> -->
+        </div>
+
+        <div class="indicators">
+          <button mat-icon-button type="button" disabled>
+            <mat-icon> check_circle </mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            [disabled]="
+              archive.controls[i].get('fileURL')?.value ? false : true
+            "
+            (click)="openVizorPdf(i)"
+          >
+            <mat-icon
+              [ngClass]="{
+                icon: archive.controls[i].get('fileURL')?.value ? true : false
+              }"
+            >
+              visibility
+            </mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="delete(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div>
+    <div
+      class="entry-container"
+      *ngFor="let item of validateDocuments$ | async; let i = index"
+    >
+      <div class="form-container">
+        <div class="form">
+          <div class="form-actions">
+            <div>Nombre de Archivo*</div>
+            <input [id]="i" type="file" accept="application/pdf" value="" />
+            <button mat-icon-button type="button" [disabled]="item.id !== null">
+              <mat-icon>file_upload</mat-icon>
+            </button>
+            <div></div>
+          </div>
+          <div class="link" *ngIf="item.uploadPercent">
+            <div *ngIf="item.fileURL">
+              <a [href]="item.fileURL" target="_blank">
+                <span class="file__name">{{ item.name }} </span>
+              </a>
+            </div>
+          </div>
+          <mat-form-field appearance="fill">
+            <mat-label>Vigencia</mat-label>
+            <input
+              matInput
+              [value]="insertDateMateInput(item) | date : 'dd/MM/yyyy'"
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
+            <mat-datepicker [disabled]="item.id !== null"> </mat-datepicker>
+          </mat-form-field>
+          <mat-error *ngIf="validityDate(item)">
+            <strong> Documento vencido</strong>
+          </mat-error>
+        </div>
+        <mat-divider></mat-divider>
+        <!-- <div class="locations">
+            <div class="locations__header">
+              <span>Aplica para las siguientes sedes</span>
+            </div>
+            <div class="checkbox-container">
+              <mat-checkbox
+                *ngFor="let location of item.locations"
+                disabled="true"
+                [checked]="true"
+              >
+                {{ location.name }}
+              </mat-checkbox>
+            </div>
+          </div> -->
+      </div>
+      <div class="indicators">
+        <button
+          mat-icon-button
+          type="button"
+          disabled
+          *ngIf="item.status === 'pending'"
+        >
+          <mat-icon> rate_review </mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          disabled
+          *ngIf="item.status === 'approved'"
+        >
+          <mat-icon> check_circle </mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          disabled
+          *ngIf="item.status === 'rejected'"
+        >
+          <mat-icon> cancel </mat-icon>
+        </button>
+        <button mat-icon-button type="button" (click)="openVizorPdf(i, item)">
+          <mat-icon class="icon"> visibility </mat-icon>
+        </button>
+        <button mat-icon-button type="button" (click)="delete(i, item)">
+          <mat-icon class="icon">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" (click)="closeDialog()">
+    Cancelar
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    class="action"
+    (click)="save()"
+    [disabled]="loading$ | async"
+  >
+    Guardar
+  </button>
+</mat-dialog-actions>

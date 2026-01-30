@@ -20,6 +20,14 @@
       padding: 1rem;
       width: auto;
     }
+
+    &--mobile {
+      display: none;
+    }
+
+    &--desktop {
+      display: block;
+    }
   }
 
   .login-container {
@@ -27,7 +35,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 49%;
+
     padding: 1rem 1rem;
 
     .header {
@@ -106,6 +114,7 @@
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
+        cursor: pointer;
       }
     }
 
@@ -114,6 +123,14 @@
       font-style: normal;
       font-weight: 400;
       font-size: 13px;
+    }
+
+    &--mobile {
+      width: 100%;
+    }
+
+    &--desktop {
+      width: 49%;
     }
   }
 

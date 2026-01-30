@@ -1,0 +1,37 @@
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">key</mat-icon>
+  <span class="dialog-header__title">Reestablecer contraseña</span>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+  <div class="info">
+    💡Ingrese el correo de la cuenta que desea reestablecer <br />
+    💡Considera que el correo enviado solo durará 10 minutos
+  </div>
+
+  <form autocomplete="off">
+    <mat-form-field appearance="outline">
+      <input matInput type="text" placeholder="Correo" [formControl]="email" />
+      <mat-hint>Se reestablecerá la contraseña del correo ingresado</mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" mat-dialog-close>Cerrar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    style="color: white"
+    (click)="send()"
+    [disabled]="!email.valid"
+  >
+    Solicitar
+  </button>
+</mat-dialog-actions>

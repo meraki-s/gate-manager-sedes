@@ -8,6 +8,8 @@ import { GeneralConfig } from '../models/general-config.model';
 import { User } from '../models/user.model';
 
 import * as firebase from 'firebase/compat/app';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +19,14 @@ export class AuthService {
 
   uiConfig: UiConfig = new UiConfig();
 
-  version: string = '0.0.1';
+  version: string = '2.0.1';
 
-  constructor(private afAuth: AngularFireAuth, public afs: AngularFirestore) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    public afs: AngularFirestore,
+    private router: Router,
+    private snackbar: MatSnackBar
+  ) {
     this.user$ = this.afAuth.authState.pipe(
       switchMap((user) => {
         if (!user) return of(null);
@@ -41,7 +48,7 @@ export class AuthService {
 
   getGeneralConfigDoc(): Observable<GeneralConfig | undefined> {
     return this.afs
-      .doc<GeneralConfig>('/configuration/generalConfig')
+      .doc<GeneralConfig>('/db/generalConfig')
       .valueChanges()
       .pipe(shareReplay(1));
   }
@@ -79,6 +86,22 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
+    this.router.navigate(['/']);
     return await this.afAuth.signOut();
+  }
+
+  sendResetPassword(email: string): void {
+    this.afAuth
+      .sendPasswordResetEmail(email)
+      .then((res) => {
+        this.snackbar.open('📨 Mensaje enviado', 'Aceptar', {
+          duration: 6000,
+        });
+      })
+      .catch((err) => {
+        this.snackbar.open('🚩 Parece que hubo un error', 'Aceptar', {
+          duration: 6000,
+        });
+      });
   }
 }

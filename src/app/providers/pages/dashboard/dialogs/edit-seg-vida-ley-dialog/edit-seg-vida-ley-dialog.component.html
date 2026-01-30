@@ -1,9 +1,9 @@
-<div class="ms-dialog-header">
-  <mat-icon class="ms-dialog-header__icon">edit</mat-icon>
-  <h3 class="ms-dialog-header__title">Editar Seguro Vida Ley</h3>
-
-  <button mat-icon-button mat-dialog-close class="ms-dialog-header__close">
-    <mat-icon>close_black</mat-icon>
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">edit</mat-icon>
+  <p class="dialog-header__title">Editar Seguro Vida Ley</p>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="dialog-header__close">close_black</mat-icon>
   </button>
 </div>
 <mat-divider></mat-divider>
@@ -80,8 +80,8 @@
         <span class="files__name">{{ image.name }} </span>
       </a>
       <button
-        class="files__delete"
         mat-icon-button
+        color="warn"
         (click)="deleteFileSVL(image.fileURL)"
       >
         <mat-icon>delete</mat-icon>
@@ -157,18 +157,14 @@
     </mat-card-content>
   </div>
 </mat-dialog-content>
+
+<mat-divider></mat-divider>
 <mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" mat-dialog-close>Cancelar</button>
   <button
-    mat-stroked-button
-    class="ms-dialog-body__btn-cancel"
-    color="warn"
-    mat-dialog-close
-  >
-    Cancelar
-  </button>
-  <button
-    mat-stroked-button
-    class="ms-dialog-body__btn-register"
+    mat-raised-button
+    color="primary"
+    style="color: white"
     (click)="save()"
     [disabled]="(loading$ | async) || missCollaborator()"
   >

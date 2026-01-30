@@ -10,6 +10,7 @@ import { ValidateDocumentsModel } from 'src/app/providers/models/validate-docume
 import { environment } from 'src/environments/environment';
 import { ProviderSearch } from '../models/providerSearch.model';
 import { LoggerService } from './logger.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,8 @@ export class SearchService {
     private afs: AngularFirestore,
     private http: HttpClient,
     private loggerService: LoggerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackbar: MatSnackBar
   ) {}
 
   /**
@@ -43,11 +45,11 @@ export class SearchService {
         if (providerList.length > 0) {
           const provider = providerList[0];
 
-          const covid$: Observable<ValidateDocumentsModel[]> = this.afs
-            .collection<ValidateDocumentsModel>(
-              `db/ferreyros/providers/${provider.id}/covidDocumentsValidate`
-            )
-            .valueChanges();
+          // const covid$: Observable<ValidateDocumentsModel[]> = this.afs
+          //   .collection<ValidateDocumentsModel>(
+          //     `db/ferreyros/providers/${provider.id}/covidDocumentsValidate`
+          //   )
+          //   .valueChanges();
           const iperc$: Observable<ValidateDocumentsModel[]> = this.afs
             .collection<ValidateDocumentsModel>(
               `db/ferreyros/providers/${provider.id}/ipercDocumentsValidate`
@@ -58,19 +60,40 @@ export class SearchService {
               `db/ferreyros/providers/${provider.id}/atsDocumentsValidate`
             )
             .valueChanges();
-          const loto$: Observable<ValidateDocumentsModel[]> = this.afs
+          const emergency$: Observable<ValidateDocumentsModel[]> = this.afs
             .collection<ValidateDocumentsModel>(
-              `db/ferreyros/providers/${provider.id}/lotoDocumentsValidate`
+              `db/ferreyros/providers/${provider.id}/emergencyDocumentsValidate`
             )
             .valueChanges();
-          const procedures$: Observable<ValidateDocumentsModel[]> = this.afs
+          // const loto$: Observable<ValidateDocumentsModel[]> = this.afs
+          //   .collection<ValidateDocumentsModel>(
+          //     `db/ferreyros/providers/${provider.id}/lotoDocumentsValidate`
+          //   )
+          //   .valueChanges();
+          // const procedures$: Observable<ValidateDocumentsModel[]> = this.afs
+          //   .collection<ValidateDocumentsModel>(
+          //     `db/ferreyros/providers/${provider.id}/proceduresDocumentsValidate`
+          //   )
+          //   .valueChanges();
+          
+          const pets$: Observable<ValidateDocumentsModel[]> = this.afs
             .collection<ValidateDocumentsModel>(
-              `db/ferreyros/providers/${provider.id}/proceduresDocumentsValidate`
+              `db/ferreyros/providers/${provider.id}/petsDocumentsValidate`
+            )
+            .valueChanges();
+          const certificates$: Observable<ValidateDocumentsModel[]> = this.afs
+            .collection<ValidateDocumentsModel>(
+              `db/ferreyros/providers/${provider.id}/certificatesDocumentsValidate`
             )
             .valueChanges();
           const msds$: Observable<ValidateDocumentsModel[]> = this.afs
             .collection<ValidateDocumentsModel>(
               `db/ferreyros/providers/${provider.id}/msdsDocumentsValidate`
+            )
+            .valueChanges();
+          const checklist$: Observable<ValidateDocumentsModel[]> = this.afs
+            .collection<ValidateDocumentsModel>(
+              `db/ferreyros/providers/${provider.id}/checklistDocumentsValidate`
             )
             .valueChanges();
           const collaborators$: Observable<Collaborator[]> = this.afs
@@ -79,16 +102,17 @@ export class SearchService {
             )
             .valueChanges();
 
-          const providerSearch$: Observable<ProviderSearch> = combineLatest([
-            covid$,
+          const providerSearch$: Observable<ProviderSearch> = combineLatest([           
             iperc$,
             ats$,
-            loto$,
-            procedures$,
+            emergency$,
+            pets$,
+            certificates$,
             msds$,
+            checklist$,
             collaborators$,
           ]).pipe(
-            map(([covid, iperc, ats, loto, procedures, msds, collabs]) => {
+            map(([iperc, ats, emergency, pets, certificates, msds, checklist, collabs]) => {
               const providerData: ProviderSearch = {
                 providerId: provider.id,
                 companyName: provider.companyName,
@@ -100,12 +124,13 @@ export class SearchService {
                 status: provider.status,
                 blockedBy: provider.blockedBy,
                 blockDescription: provider.blockDescription,
-                covidPlanFiles: covid as ValidateDocumentsModel[],
                 ipercFiles: iperc as ValidateDocumentsModel[],
                 atsFiles: ats as ValidateDocumentsModel[],
-                lotoFiles: loto as ValidateDocumentsModel[],
-                proceduresFiles: procedures as ValidateDocumentsModel[],
+                emergencyFiles: emergency as ValidateDocumentsModel[],
+                petsFiles: pets as ValidateDocumentsModel[],
+                certificatesFiles: certificates as ValidateDocumentsModel[],
                 msdsFiles: msds as ValidateDocumentsModel[],
+                checklistFiles: checklist as ValidateDocumentsModel[],
                 collaborators: collabs as Collaborator[],
               };
 
@@ -310,10 +335,10 @@ export class SearchService {
           inductionDate:
             (new Date(data['inductionValidity']) as Date &
               firebase.default.firestore.Timestamp) ?? null,
-          symptomatologyStatus: data['symptomatologyStatus'] ?? 'unassigned',
-          symptomatologyDate:
-            (new Date(data['symptomatologyValidity']) as Date &
-              firebase.default.firestore.Timestamp) ?? null,
+          // symptomatologyStatus: data['symptomatologyStatus'] ?? 'unassigned',
+          // symptomatologyDate:
+          //   (new Date(data['symptomatologyValidity']) as Date &
+          //     firebase.default.firestore.Timestamp) ?? null,
         };
 
         batch.update(collaboratorDocRef, driveData);
@@ -332,8 +357,8 @@ export class SearchService {
         const driveData: Partial<Collaborator> = {
           inductionStatus: 'unassigned',
           inductionDate: null,
-          symptomatologyStatus: 'unassigned',
-          symptomatologyDate: null,
+          // symptomatologyStatus: 'unassigned',
+          // symptomatologyDate: null,
           lotoStatus: 'unassigned',
           lotoDate: null,
         };
@@ -357,37 +382,37 @@ export class SearchService {
    * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
    * @memberof SearchService
    */
-  approveMedicalExamination(
-    collaboratorId: string,
-    collaboratorName: string,
-    collaboratorDNI: string,
-    providerId: string,
-    providerName: string,
-    providerRUC: number
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
+  // approveMedicalExamination(
+  //   collaboratorId: string,
+  //   collaboratorName: string,
+  //   collaboratorDNI: string,
+  //   providerId: string,
+  //   providerName: string,
+  //   providerRUC: number
+  // ): Observable<firebase.default.firestore.WriteBatch> {
+  //   // create batch
+  //   const batch = this.afs.firestore.batch();
 
-    const collaboratorDocRef = this.afs.firestore.doc(
-      `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
-    );
+  //   const collaboratorDocRef = this.afs.firestore.doc(
+  //     `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
+  //   );
 
-    const driveData: Partial<Collaborator> = {
-      medicalExaminationStatus: 'approved',
-    };
+  //   const driveData: Partial<Collaborator> = {
+  //     medicalExaminationStatus: 'approved',
+  //   };
 
-    batch.update(collaboratorDocRef, driveData);
+  //   batch.update(collaboratorDocRef, driveData);
 
-    this.loggerService.saveActivity(
-      providerName,
-      providerRUC,
-      `Aprobación de examen médico`,
-      collaboratorName,
-      collaboratorDNI
-    );
+  //   this.loggerService.saveActivity(
+  //     providerName,
+  //     providerRUC,
+  //     `Aprobación de examen médico`,
+  //     collaboratorName,
+  //     collaboratorDNI
+  //   );
 
-    return of(batch);
-  }
+  //   return of(batch);
+  // }
 
   /**
    * reject collaborator medical examination
@@ -401,37 +426,37 @@ export class SearchService {
    * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
    * @memberof SearchService
    */
-  rejectMedicalExamination(
-    collaboratorId: string,
-    collaboratorName: string,
-    collaboratorDNI: string,
-    providerId: string,
-    providerName: string,
-    providerRUC: number
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
+  // rejectMedicalExamination(
+  //   collaboratorId: string,
+  //   collaboratorName: string,
+  //   collaboratorDNI: string,
+  //   providerId: string,
+  //   providerName: string,
+  //   providerRUC: number
+  // ): Observable<firebase.default.firestore.WriteBatch> {
+  //   // create batch
+  //   const batch = this.afs.firestore.batch();
 
-    const collaboratorDocRef = this.afs.firestore.doc(
-      `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
-    );
+  //   const collaboratorDocRef = this.afs.firestore.doc(
+  //     `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
+  //   );
 
-    const driveData: Partial<Collaborator> = {
-      medicalExaminationStatus: 'rejected',
-    };
+  //   const driveData: Partial<Collaborator> = {
+  //     medicalExaminationStatus: 'rejected',
+  //   };
 
-    batch.update(collaboratorDocRef, driveData);
+  //   batch.update(collaboratorDocRef, driveData);
 
-    this.loggerService.saveActivity(
-      providerName,
-      providerRUC,
-      `Rechazo de examen médico`,
-      collaboratorName,
-      collaboratorDNI
-    );
+  //   this.loggerService.saveActivity(
+  //     providerName,
+  //     providerRUC,
+  //     `Rechazo de examen médico`,
+  //     collaboratorName,
+  //     collaboratorDNI
+  //   );
 
-    return of(batch);
-  }
+  //   return of(batch);
+  // }
 
   /**
    * approve collaborator vaccination card
@@ -445,37 +470,37 @@ export class SearchService {
    * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
    * @memberof SearchService
    */
-  approveVaccinationCard(
-    collaboratorId: string,
-    collaboratorName: string,
-    collaboratorDNI: string,
-    providerId: string,
-    providerName: string,
-    providerRUC: number
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
+  // approveVaccinationCard(
+  //   collaboratorId: string,
+  //   collaboratorName: string,
+  //   collaboratorDNI: string,
+  //   providerId: string,
+  //   providerName: string,
+  //   providerRUC: number
+  // ): Observable<firebase.default.firestore.WriteBatch> {
+  //   // create batch
+  //   const batch = this.afs.firestore.batch();
 
-    const collaboratorDocRef = this.afs.firestore.doc(
-      `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
-    );
+  //   const collaboratorDocRef = this.afs.firestore.doc(
+  //     `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
+  //   );
 
-    const driveData: Partial<Collaborator> = {
-      doseStatus: 'vaccinated',
-    };
+  //   const driveData: Partial<Collaborator> = {
+  //     doseStatus: 'vaccinated',
+  //   };
 
-    batch.update(collaboratorDocRef, driveData);
+  //   batch.update(collaboratorDocRef, driveData);
 
-    this.loggerService.saveActivity(
-      providerName,
-      providerRUC,
-      `Aprobación de carnet de vacunación`,
-      collaboratorName,
-      collaboratorDNI
-    );
+  //   this.loggerService.saveActivity(
+  //     providerName,
+  //     providerRUC,
+  //     `Aprobación de carnet de vacunación`,
+  //     collaboratorName,
+  //     collaboratorDNI
+  //   );
 
-    return of(batch);
-  }
+  //   return of(batch);
+  // }
 
   /**
    * reject collaborator vaccination card
@@ -489,35 +514,57 @@ export class SearchService {
    * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
    * @memberof SearchService
    */
-  rejectVaccinationCard(
+  // rejectVaccinationCard(
+  //   collaboratorId: string,
+  //   collaboratorName: string,
+  //   collaboratorDNI: string,
+  //   providerId: string,
+  //   providerName: string,
+  //   providerRUC: number
+  // ): Observable<firebase.default.firestore.WriteBatch> {
+  //   // create batch
+  //   const batch = this.afs.firestore.batch();
+
+  //   const collaboratorDocRef = this.afs.firestore.doc(
+  //     `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
+  //   );
+
+  //   // const data: Partial<Collaborator> = {
+  //   //   doseStatus: 'not-fully-vaccinated',
+  //   // };
+
+  //   // batch.update(collaboratorDocRef, data);
+
+  //   this.loggerService.saveActivity(
+  //     providerName,
+  //     providerRUC,
+  //     `Rechazo de carnet de vacunación`,
+  //     collaboratorName,
+  //     collaboratorDNI
+  //   );
+
+  //   return of(batch);
+  // }
+
+  deleteCollaboratorFromAdmin(
     collaboratorId: string,
-    collaboratorName: string,
-    collaboratorDNI: string,
-    providerId: string,
-    providerName: string,
-    providerRUC: number
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-
-    const collaboratorDocRef = this.afs.firestore.doc(
-      `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
-    );
-
-    const data: Partial<Collaborator> = {
-      doseStatus: 'not-fully-vaccinated',
-    };
-
-    batch.update(collaboratorDocRef, data);
-
-    this.loggerService.saveActivity(
-      providerName,
-      providerRUC,
-      `Rechazo de carnet de vacunación`,
-      collaboratorName,
-      collaboratorDNI
-    );
-
-    return of(batch);
+    providerId: string
+  ): void {
+    this.afs
+      .doc(
+        `db/ferreyros/providers/${providerId}/collaborators/${collaboratorId}`
+      )
+      .delete()
+      .then((res) => {
+        this.snackbar.open('✅ Colaborador eliminado', 'Aceptar', {
+          duration: 6000,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.snackbar.open('🚩 Parece que hubo un error', 'Aceptar', {
+          duration: 6000,
+        });
+      });
   }
 }

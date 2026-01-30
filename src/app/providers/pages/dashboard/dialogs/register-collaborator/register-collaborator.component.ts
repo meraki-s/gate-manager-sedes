@@ -86,13 +86,6 @@ export class RegisterCollaboratorComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // this.mediaSub = this.mediaObserver.media$.subscribe(
-    //   (result: MediaChange) => {
-    //     this.deviceXs = result.mqAlias === 'xs' ? true : false;
-    //     this.deviceSm = result.mqAlias === 'sm' ? true : false;
-    //   }
-    // );
-
     this.pathStorageExamen = `gateManager/examenFile/`;
   }
 
@@ -119,19 +112,6 @@ export class RegisterCollaboratorComponent implements OnInit, OnDestroy {
       }
     }
 
-    // check if vaccination file is provided
-    // if (this.imagesUploadVaccination.length === 0) {
-    //   this.snackbar.open(
-    //     '🚨 Debe cargar una imágen/pdf de su carnet de vacunación',
-    //     'Aceptar',
-    //     {
-    //       duration: 6000,
-    //     }
-    //   );
-    //   this.loading.next(false);
-    //   return;
-    // }
-
     this.imagesUploadExamen.forEach((el: any) => {
       if (el != '') {
         this.docExamen = el;
@@ -154,9 +134,9 @@ export class RegisterCollaboratorComponent implements OnInit, OnDestroy {
       } else {
         this.dashboardService
           .registerCollaborator(
-            this.collaboratorForm.value,
-            this.docExamen,
-            this.docVaccination
+            this.collaboratorForm.value
+            // this.docExamen,
+            // this.docVaccination
           )
           .pipe(take(1))
           .subscribe((res) => {

@@ -1,46 +1,17 @@
 // Dialog style
-.ms-dialog-header {
-  display: flex;
-  align-items: stretch;
-  margin-bottom: 10px;
-  overflow-x: hidden;
-  &__icon {
-    color: rgba(0, 0, 0, 0.6);
-    align-self: center;
-    margin-right: 12px;
-  }
-  &__title {
-    color: #2b2b2b;
-    align-self: center;
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    color: #2b2b2b;
-    margin: 0px !important;
-  }
-  &__close {
-    height: 25px !important;
-    width: 25px !important;
-    line-height: 25px !important;
-  }
-  &__close:nth-last-child(n) {
-    margin-left: auto;
-  }
-}
-
 .ms-dialog-body {
-  margin-top: 20px;
   &__title {
     font-size: 12px;
-    font-family: Roboto;
+    font-family: Quicksand;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 600;
     font-size: 14px;
     line-height: 14px;
     color: rgba(0, 0, 0, 0.8);
     margin: 0px 0px 8px 0px;
   }
   &__text {
-    font-family: Roboto;
+    font-family: Quicksand;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
@@ -73,7 +44,7 @@
       margin-right: 10px;
     }
     &--title {
-      font-family: Roboto;
+      font-family: Quicksand;
       font-style: normal;
       font-weight: bold;
       font-size: 12px;
@@ -83,7 +54,7 @@
       margin: 0px 0px 0px 15px;
     }
     &--link {
-      font-family: Roboto;
+      font-family: Quicksand;
       font-style: normal;
       font-weight: normal;
       font-size: 12px;
@@ -92,7 +63,7 @@
       margin: 0px 0px 0px 15px;
     }
     &--error {
-      font-family: Roboto;
+      font-family: Quicksand;
       font-style: normal;
       font-weight: normal;
       font-size: 10px;
@@ -113,6 +84,7 @@
     display: flex;
     flex-direction: row;
     margin-left: 20px;
+    align-items: center;
     &__link {
       text-decoration: none;
       margin-right: 50px;
@@ -120,18 +92,13 @@
     &__name {
       font-size: 1em;
     }
-    .mat-icon {
-      color: #ed1919;
-      font-size: 1.7em;
-      margin-top: -15px;
-    }
   }
   &__header {
     margin: 10px 20px;
     display: flex;
     justify-content: space-between;
     &--title {
-      font-family: Roboto;
+      font-family: Quicksand;
       font-style: normal;
       font-weight: bold;
       font-size: 18px;
@@ -163,7 +130,7 @@
 
       p {
         font-size: 0.7rem;
-        color: rgba(255,255,255, 0.9);
+        color: rgba(255, 255, 255, 0.9);
         padding: 4px;
         background-color: #ea4c4c;
         border-radius: 4px;
@@ -185,7 +152,7 @@
       align-items: center;
       justify-content: space-between;
       margin: 10px;
-      font-family: Roboto;
+      font-family: Quicksand;
       font-style: normal;
       font-weight: normal;
       font-size: 12px;
@@ -199,16 +166,4 @@
       background-color: #fb94947b;
     }
   }
-  &__btn-register {
-    // width: 150px;
-    // height: 35px;
-    background: #ffc000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 5px;
-    margin: 8px 12px;
-  }
-}
-
-.mat-dialog-actions {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }

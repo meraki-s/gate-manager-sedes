@@ -200,14 +200,14 @@
                 *ngFor="let file of document['files']"
                 class="chip"
                 matTooltip="V: {{
-                  file.validityDate.seconds * 1000 | date: 'dd/MM/yy'
+                  file.validityDate.seconds * 1000 | date : 'dd/MM/yy'
                 }}
                 "
                 (click)="openPdfViewer(file)"
               >
                 <span class="chip__name">{{
                   file.name.length > 30
-                    ? "..." + (file.name | slice: -27)
+                    ? "..." + (file.name | slice : -27)
                     : file.name
                 }}</span>
               </div>
@@ -315,14 +315,24 @@
               </span>
             </div>
             <span class="fill" *ngIf="!isMobile"></span>
-            <button
-              mat-button
-              color="primary"
-              class="collaborator-card__header__button"
-              (click)="syncDrive(item, i)"
-            >
-              sync drive
-            </button>
+            <div class="buttons">
+              <button
+                mat-button
+                color="primary"
+                class="collaborator-card__header__button"
+                (click)="syncDrive(item, i)"
+              >
+                Actualizar
+              </button>
+              <button
+                mat-button
+                color="warn"
+                class="collaborator-card__header__button"
+                (click)="deleteCollaborator(item, providerSearch.providerId)"
+              >
+                Eliminar
+              </button>
+            </div>
           </div>
 
           <div class="collaborator-card__documents">
@@ -330,7 +340,16 @@
               class="document-item document-item--actionable"
               (click)="openPdfViewer(item.sctrFile)"
             >
-              <div class="document-item__title">SCTR</div>
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                SCTR
+              </div>
               <mat-icon
                 class="document-item__icon"
                 [ngClass]="{
@@ -363,11 +382,21 @@
                 {{ item.sctrStatus === "expired" ? "alarm" : "" }}</mat-icon
               >
             </div>
+
             <div
               class="document-item document-item--actionable"
               (click)="openPdfViewer(item.svlFile)"
             >
-              <div class="document-item__title">SVL</div>
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                SVL
+              </div>
               <mat-icon
                 class="document-item__icon"
                 [ngClass]="{
@@ -400,7 +429,7 @@
                 {{ item.svlStatus === "expired" ? "alarm" : "" }}</mat-icon
               >
             </div>
-            <div
+            <!-- <div
               class="document-item document-item--actionable"
               (click)="openPdfViewer(item.swornDeclarationFile)"
             >
@@ -446,9 +475,18 @@
                   item.swornDeclarationStatus === "expired" ? "alarm" : ""
                 }}</mat-icon
               >
-            </div>
+            </div> -->
             <div class="document-item">
-              <div class="document-item__title">Inducción</div>
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                Inducción
+              </div>
               <mat-icon
                 class="document-item__icon"
                 [ngClass]="{
@@ -529,7 +567,16 @@
             </div> -->
 
             <div class="document-item">
-              <div class="document-item__title">LOTO</div>
+              <div
+                class="document-item__title"
+                [matTooltip]="
+                  '' + (item.sctrDate?.toMillis() | date) === 'null'
+                    ? 'Sin fecha'
+                    : '' + (item.sctrDate?.toMillis() | date)
+                "
+              >
+                LOTO
+              </div>
               <mat-icon
                 *ngIf="item.lotoStatus === 'approved'"
                 class="document-item__icon document-item__icon--approved"
@@ -558,7 +605,7 @@
               >
             </div>
 
-            <div
+            <!-- <div
               class="document-item document-item--actionable"
               [matMenuTriggerFor]="menuExamination"
             >
@@ -611,7 +658,6 @@
                 }}</mat-icon
               >
             </div>
-
             <mat-menu #menuExamination="matMenu">
               <button
                 mat-menu-item
@@ -669,7 +715,7 @@
               <button mat-menu-item (click)="rejectVaccinationCard(item)">
                 Rechazar
               </button>
-            </mat-menu>
+            </mat-menu> -->
           </div>
         </div>
       </ng-container>

@@ -3,8 +3,8 @@
     <mat-icon>menu</mat-icon>
   </button>
 
-  <img src="../../../../assets/img/ferrycorp-logo.png" alt="logo" width="100" />
-  <mat-form-field appearance="outline">
+  <img src="../../../../assets/img/ferreyros-logo-medium.png" alt="logo" width="100" />
+  <!-- <mat-form-field appearance="outline">
     <mat-label style="font-size: 12px">Sede</mat-label>
     <mat-select placeholder="Seleccione una sede" [formControl]="locationSelectorControl">
       <mat-option
@@ -14,7 +14,7 @@
         >{{ location.name }}</mat-option
       >
     </mat-select>
-  </mat-form-field>
+  </mat-form-field> -->
   <span class="version">v {{ version }} r</span>
   <span class="menu-spacer"></span>
   <span>
@@ -26,6 +26,7 @@
       #menuUser="matMenu"
       style="font-size: 14px; font-family: 'Quicksand'"
     >
+      <button mat-menu-item (click)="passwordRecovery()">Recuperar contraseña</button>
       <button mat-menu-item (click)="logout()">Cerrar sesión</button>
     </mat-menu>
   </span>
@@ -46,7 +47,6 @@
         *ngFor="let m of menu"
         mat-list-item
         [routerLink]="[m.routerLink]"
-        (click)="drawer.toggle()"
         (click)="selectMenu(m)"
       >
         <div class="navigate-page">

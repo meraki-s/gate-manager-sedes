@@ -34,6 +34,9 @@ import { CovidComponent } from './pages/dashboard/dialogs-validate-documents/cov
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localeEsPe from '@angular/common/locales/es-PE';
+import { CertificatesComponent } from './pages/dashboard/dialogs-validate-documents/certificates/certificates.component';
+import { ChecklistComponent } from './pages/dashboard/dialogs-validate-documents/checklist/checklist.component';
+import { EquipmentsComponent } from './pages/dashboard/dialogs-validate-documents/equipments/equipments.component';
 
 registerLocaleData(localeEsPe, 'es-PE');
 @NgModule({
@@ -62,7 +65,10 @@ registerLocaleData(localeEsPe, 'es-PE');
     EmergencyComponent,
     MsdsComponent,
     PetsComponent,
-    CovidComponent
+    CovidComponent,
+    CertificatesComponent,
+    ChecklistComponent,
+    EquipmentsComponent,
   ],
   imports: [
     CommonModule,

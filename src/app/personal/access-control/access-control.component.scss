@@ -1,15 +1,11 @@
 .container {
   background: #f8f8f8;
-}
-
-.containerSpinner {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.flex-container {
   display: flex;
+  flex-direction: row;
+  gap: 1rem;
   justify-content: start;
   align-items: start;
+  $quick-font: "Quicksand", sans-serif;
 
   &--desktop {
     padding: 2rem;
@@ -39,24 +35,231 @@
 
     .access-card {
       border-radius: 5px 5px;
-      background-color: snow;
+      background-color: azure;
 
       .scan-container {
         display: flex;
         flex-direction: column;
         justify-content: start;
-        align-items: center;
+        align-items: start;
         padding: 1rem;
+        background-color: azure;
+        gap: 1rem;
 
         .company-card {
-          width: 100%;
-          background: #ffffff;
-          margin-bottom: 30px;
-          border: 2px solid rgba(0, 0, 0, 0.3);
-          box-sizing: border-box;
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 10px;
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.3);
           border-radius: 5px;
-          padding: 20px;
+          padding: 22px;
+
+          &--fontSpan {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+          }
+
+          &--fontTitle {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.7);
+          }
+
+          &--statusProviderReg {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            background-color: #399bf1;
+            padding: 4px 8px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: #fff;
+          }
+          &--statusProviderEna {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: bolder;
+            font-size: 14px;
+            line-height: 16px;
+            background-color: #27ae60;
+            padding: 2px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: #fff;
+          }
+          &--statusProviderRej {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: bolder;
+            font-size: 14px;
+            line-height: 16px;
+            background-color: #eb5757;
+            padding: 2px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: #fff;
+          }
+        }
+
+        .collaborator-card {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          gap: 10px;
+          background: white;
+          border: 1px solid rgba(0, 0, 0, 0.3);
+          border-radius: 5px;
+          padding: 22px;
+          width: -webkit-fill-available;
+
+          &__header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+          }
+
+          &--fontSpan {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+          }
+
+          &--fontTitle {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.7);
+          }
+
+          &--statusProviderReg {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            background-color: #399bf1;
+            padding: 4px 8px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: #fff;
+          }
+          &--statusProviderEna {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: bolder;
+            font-size: 14px;
+            line-height: 16px;
+            background-color: #27ae60;
+            padding: 2px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: #fff;
+          }
+          &--statusProviderRej {
+            font-family: $quick-font;
+            font-style: normal;
+            font-weight: bolder;
+            font-size: 14px;
+            line-height: 16px;
+            background-color: #eb5757;
+            padding: 2px;
+            border-radius: 5px;
+            margin-left: 10px;
+            color: #fff;
+          }
+
+          .indicator-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+
+            .document {
+              display: flex;
+              flex-direction: row;
+              gap: 10px;
+              align-items: center;
+
+              &__iconApprove {
+                color: #27ae60;
+              }
+              &__iconPending {
+                color: #e5e5e5;
+              }
+              &__iconRejected {
+                color: #eb5757;
+              }
+              &__iconExpired {
+                color: #eb5757;
+              }
+              &__iconUnassigned {
+                color: #9b51e0;
+              }
+              &__iconUndefined {
+                color: #ffc000;
+              }
+
+              .caption {
+                &__title {
+                  font-family: $quick-font;
+                  font-weight: bold;
+                  font-size: 14px;
+                  margin: 0px;
+                }
+
+                &__subtitle {
+                  font-family: $quick-font;
+                  font-size: 10px;
+                }
+              }
+            }
+
+            .file {
+              display: flex;
+              flex-direction: row;
+              gap: 10px;
+              align-items: center;
+              width: 145px;
+
+              &__current {
+                background-color: #27ae60;
+                color: #ffffff;
+                font-family: $quick-font;
+                font-size: 14px;
+                text-align: center;
+                width: 50px;
+                border-radius: 5px;
+                padding: 4px 8px;
+              }
+              &__deciduous {
+                color: #ffffff;
+                font-family: $quick-font;
+                font-size: 14px;
+                background-color: #eb5757;
+                width: 50px;
+                border-radius: 5px;
+                padding: 4px 8px;
+              }
+              &__file {
+                cursor: pointer;
+                color: #2f80ed;
+                font-size: 14px;
+                text-decoration-line: underline;
+                font-family: $quick-font;
+                font-style: normal;
+                font-weight: normal;
+              }
+            }
+          }
         }
 
         .search-header {
@@ -75,6 +278,18 @@
             font-weight: 900;
           }
         }
+
+        .title {
+          font-family: Quicksand;
+          font-size: 1rem;
+          font-weight: 600;
+          margin: 0px;
+        }
+      }
+
+      .request-button {
+        color: white;
+        width: 100%;
       }
 
       .default {
@@ -105,6 +320,10 @@
       }
     }
   }
+}
+
+.containerSpinner {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .spinner {
@@ -143,7 +362,7 @@
     margin-left: 25px;
   }
   &__title {
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
@@ -166,7 +385,7 @@
     margin-top: 70px;
   }
   &__titleImg {
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
@@ -178,7 +397,6 @@
     flex-direction: row;
     align-items: center;
     &--title {
-      font-family: Roboto;
       font-style: normal;
       font-weight: bold;
       font-size: 18px;
@@ -316,57 +534,7 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
   padding: 20px;
-  &--fontSpan {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-  }
-  &--fontTitle {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 16px;
-    color: rgba(0, 0, 0, 0.7);
-  }
-  &--statusProviderReg {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: bolder;
-    font-size: 14px;
-    line-height: 16px;
-    background-color: #399bf1;
-    padding: 2px;
-    border-radius: 5px;
-    margin-left: 10px;
-    color: #fff;
-  }
-  &--statusProviderEna {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: bolder;
-    font-size: 14px;
-    line-height: 16px;
-    background-color: #27ae60;
-    padding: 2px;
-    border-radius: 5px;
-    margin-left: 10px;
-    color: #fff;
-  }
-  &--statusProviderRej {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: bolder;
-    font-size: 14px;
-    line-height: 16px;
-    background-color: #eb5757;
-    padding: 2px;
-    border-radius: 5px;
-    margin-left: 10px;
-    color: #fff;
-  }
+  font-family: "Quicksand", sans-serif;
 }
 
 .cardsVisit {
@@ -411,7 +579,7 @@
   }
   &__fontBtn {
     color: #ffffff;
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-size: 10px;
     background-color: #27ae60;
     position: static;
@@ -421,7 +589,7 @@
   }
   &__fontBtn--rejected {
     color: #ffffff;
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-size: 10px;
     background-color: #eb5757;
     position: static;
@@ -430,7 +598,7 @@
     border-radius: 5px;
   }
   &__fontSpan {
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -470,7 +638,7 @@
     color: #ffc000;
   }
   &__titleDoc {
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
@@ -478,7 +646,7 @@
     padding: 10px;
   }
   &__spanDoc {
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     color: rgba(0, 0, 0, 0.4);
     font-style: normal;
     font-weight: normal;
@@ -489,7 +657,7 @@
   }
   &__fontCurrent {
     color: #ffffff;
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-size: 14px;
     background-color: #27ae60;
     position: static;
@@ -502,7 +670,7 @@
   }
   &__fontDeciduous {
     color: #ffffff;
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-size: 14px;
     background-color: #eb5757;
     position: static;
@@ -519,7 +687,7 @@
     font-size: 14px;
     line-height: 16px;
     text-decoration-line: underline;
-    font-family: "Roboto", sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-style: normal;
     font-weight: 500;
   }

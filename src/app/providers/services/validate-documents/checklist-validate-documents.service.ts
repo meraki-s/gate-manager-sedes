@@ -24,7 +24,7 @@ export class ChecklistValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/checklistDocumentsValidate`,
+            `/db/ferreyros/providers/${user?.providerId}/checklistDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -37,7 +37,7 @@ export class ChecklistValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/checklistDocumentsValidate`,
+        `/db/ferreyros/providers/${id}/checklistDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -63,7 +63,7 @@ export class ChecklistValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsChecklistDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/checklistDocumentsValidate/`
+                  `/db/ferreyros/providers/${user.providerId}/checklistDocumentsValidate/`
                 )
                 .doc();
 
@@ -107,7 +107,7 @@ export class ChecklistValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsChecklistDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/checklistDocumentsValidate/${idFromDelete}`
+          `/db/ferreyros/providers/${user.providerId}/checklistDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsChecklistDocRef);
         return of(batch);

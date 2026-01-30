@@ -23,7 +23,7 @@ export class EmergencyValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/emergencyDocumentsValidate`,
+            `/db/ferreyros/providers/${user?.providerId}/emergencyDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -36,7 +36,7 @@ export class EmergencyValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/emergencyDocumentsValidate`,
+        `/db/ferreyros/providers/${id}/emergencyDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -62,7 +62,7 @@ export class EmergencyValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsEmergencyDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/emergencyDocumentsValidate/`
+                  `/db/ferreyros/providers/${user.providerId}/emergencyDocumentsValidate/`
                 )
                 .doc();
 
@@ -106,7 +106,7 @@ export class EmergencyValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsEmergencyDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/emergencyDocumentsValidate/${idFromDelete}`
+          `/db/ferreyros/providers/${user.providerId}/emergencyDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsEmergencyDocRef);
         return of(batch);

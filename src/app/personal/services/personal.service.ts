@@ -190,31 +190,31 @@ export class PersonalService {
                     dni: collaborator[0].dni,
                     phone: provider.phoneUser,
                     collaboratorId: collaborator[0].id,
-                    medicalExaminationStatus:
-                      collaborator[0].medicalExaminationStatus!,
-                    medicalExaminationFile:
-                      collaborator[0].medicalExaminationFile!,
-                    medicalExaminationDate:
-                      collaborator[0].medicalExaminationDate!,
-                    vaccinationCardFile: collaborator[0].vaccinationCardFile,
-                    firstDoseDate: collaborator[0].firstDoseDate,
-                    secondDoseDate: collaborator[0].secondDoseDate,
-                    thirdDoseDate: collaborator[0].thirdDoseDate,
-                    doseStatus: collaborator[0].doseStatus,
+                    // medicalExaminationStatus:
+                    //   collaborator[0].medicalExaminationStatus!,
+                    // medicalExaminationFile:
+                    //   collaborator[0].medicalExaminationFile!,
+                    // medicalExaminationDate:
+                    //   collaborator[0].medicalExaminationDate!,
+                    // vaccinationCardFile: collaborator[0].vaccinationCardFile,
+                    // firstDoseDate: collaborator[0].firstDoseDate,
+                    // secondDoseDate: collaborator[0].secondDoseDate,
+                    // thirdDoseDate: collaborator[0].thirdDoseDate,
+                    // doseStatus: collaborator[0].doseStatus,
                     sctrFile: collaborator[0].sctrFile,
                     sctrDate: collaborator[0].sctrDate,
                     sctrStatus: collaborator[0].sctrStatus,
                     svlFile: collaborator[0].svlFile,
                     svlDate: collaborator[0].svlDate,
                     svlStatus: collaborator[0].svlStatus,
-                    swornDeclarationFile: collaborator[0].swornDeclarationFile,
-                    swornDeclarationDate: collaborator[0].swornDeclarationDate,
-                    swornDeclarationStatus:
-                      collaborator[0].swornDeclarationStatus,
+                    // swornDeclarationFile: collaborator[0].swornDeclarationFile,
+                    // swornDeclarationDate: collaborator[0].swornDeclarationDate,
+                    // swornDeclarationStatus:
+                    //   collaborator[0].swornDeclarationStatus,
                     inductionStatus: collaborator[0].inductionStatus,
                     inductionDate: collaborator[0].inductionDate,
-                    symptomatologyDate: collaborator[0].symptomatologyDate,
-                    symptomatologyStatus: collaborator[0].symptomatologyStatus,
+                    // symptomatologyDate: collaborator[0].symptomatologyDate,
+                    // symptomatologyStatus: collaborator[0].symptomatologyStatus,
                     authorizedBy: collaborator[0].authorizedBy,
                     entryDeparture: collaborator[0].entryDeparture,
                   };

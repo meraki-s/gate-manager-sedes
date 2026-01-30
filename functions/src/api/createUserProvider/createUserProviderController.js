@@ -38,7 +38,7 @@ const createUserProviderController = async (req, res) => {
       providerId: provider.providerId ? provider.providerId : createUser.uid,
     });
 
-    await db.doc(`providers/${createUser.uid}`).set({
+    await db.doc(`/db/ferreyros/providers/${createUser.uid}`).set({
       companyName: provider.companyName,
       companyRuc: provider.companyRuc,
       companyAddress: provider.companyAddress,

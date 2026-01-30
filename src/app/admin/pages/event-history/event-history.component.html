@@ -63,7 +63,13 @@
     <div class="table-header">
       <h3>Historial</h3>
       <span class="fill"></span>
-      <button mat-raised-button color="primary" (click)="downloadXlsx(events)">
+      <button
+        mat-raised-button
+        color="primary"
+        style="color: white"
+        (click)="downloadXlsx(events)"
+      >
+        <mat-icon>download</mat-icon>
         Descargar
       </button>
     </div>
@@ -84,11 +90,11 @@
         </th>
         <td mat-cell *matCellDef="let element" class="table__cell">
           <span
-            >{{ element.createdAt.seconds * 1000 | date: "dd/MM/yy" }}
+            >{{ element.createdAt.seconds * 1000 | date : "dd/MM/yy" }}
           </span>
           <br />
           <span class="date-hours">
-            {{ element.createdAt.seconds * 1000 | date: "hh:mm:ss" }}
+            {{ element.createdAt.seconds * 1000 | date : "hh:mm:ss" }}
           </span>
         </td>
       </ng-container>

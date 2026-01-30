@@ -5,8 +5,10 @@ import { AuthService } from '../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterComponent } from '../register/register.component';
 import { take } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RecoveryComponent } from './dialogs/recovery/recovery.component';
+import { Platform, PlatformModule } from '@angular/cdk/platform';
 
 @Component({
   selector: 'app-login',
@@ -22,12 +24,18 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   });
 
+  isMobile = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar
-  ) {}
+    private snackbar: MatSnackBar,
+    private platform: Platform
+  ) {
+    this.isMobile = this.platform.ANDROID || this.platform.IOS;
+    console.log(this.platform);
+  }
 
   ngOnInit(): void {}
 
@@ -83,6 +91,6 @@ export class LoginComponent implements OnInit {
   }
 
   passwordRecovery(): void {
-    //
+    this.dialog.open(RecoveryComponent);
   }
 }

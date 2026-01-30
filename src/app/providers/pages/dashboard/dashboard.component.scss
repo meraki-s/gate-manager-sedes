@@ -9,6 +9,9 @@
 
 .wrapper {
   padding: 24px 38px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 
   .archives {
     display: inline-flex;
@@ -47,6 +50,7 @@
       display: flex;
       flex-direction: row;
       gap: 1rem;
+      flex-wrap: wrap;
 
       .folder {
         width: 100px;
@@ -174,7 +178,7 @@
     // margin: 1rem;
 
     &--desktop {
-      width: 50%;
+      width: 480px;
       margin: 0 1rem;
     }
 
@@ -232,8 +236,15 @@
 .cards {
   margin-bottom: 30px;
 
+  button {
+    font-family: "Raleway";
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+  }
+
   &__header {
-    margin: 10px 20px 10px 20px;
+    // margin: 10px 20px 10px 20px;
     display: flex;
     flex-wrap: wrap;
 
@@ -245,6 +256,7 @@
     &--mobile {
       flex-direction: column;
       align-items: start;
+      gap: 10px;
     }
 
     &--title {
@@ -255,6 +267,7 @@
       line-height: 21px;
       color: rgba(0, 0, 0, 0.7);
       white-space: nowrap;
+      margin: 0px 12px 0px 0px;
 
       &--desktop {
         margin-right: 1rem;
@@ -266,14 +279,47 @@
     }
 
     &--input {
-      font-size: 13px;
-
+      font-size: 12px;
       &--desktop {
-        // margin: 0px;
+        max-width: 210px;
       }
 
       &--mobile {
         width: 100%;
+      }
+    }
+
+    .search {
+      background-color: white;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+      }
+
+      ::ng-deep .mdc-text-field--outlined .mdc-notched-outline {
+        height: 30px;
+      }
+
+      ::ng-deep
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+        .mat-mdc-form-field-infix {
+        padding: 4px 0px 0px 0px;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        height: 30px;
+      }
+
+      ::ng-deep .mat-mdc-form-field-flex {
+        height: 30px;
+      }
+
+      &--mobile {
+        width: 100%;
+      }
+
+      &--desktop {
+        width: 200px;
       }
     }
 
@@ -307,15 +353,18 @@
       // margin-left: auto;
     }
   }
+
   &__divider {
     margin: 10px 20px 10px 20px;
   }
+
   &__body {
-    margin: 20px 20px 10px 20px;
+    // margin: 20px 20px 10px 20px;
     // height: 100%;
     max-height: 400px;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
+
     .card {
       width: 490px;
       height: 50px;
@@ -355,16 +404,58 @@
         margin-left: auto;
       }
     }
+
+    .group-document {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-family: "Quicksand";
+      // transition: ease-in-out 500ms;
+
+      .counter-tag {
+        background-color: #dae6f7;
+        color: #2b2b2b;
+        padding: 2px 12px;
+        border-radius: 16px;
+        font-size: 0.7rem;
+      }
+    }
+
+    .group-document:hover {
+      border-radius: 5px;
+      border: 1px solid lightsteelblue;
+      background-color: white;
+    }
+  }
+
+  .empty-container {
+    background: linear-gradient(45deg, #8bc34a, #ffeb3b);
+    color: white;
+    font-size: 1rem;
+    font-family: Quicksand;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
   }
 }
 
 .cards2 {
   margin-bottom: 30px;
 
+  button {
+    font-family: "Raleway";
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+  }
+
   &__header {
     margin: 10px 20px 10px 20px;
     display: flex;
     flex-wrap: wrap;
+    gap: 0.5rem;
 
     &--desktop {
       flex-direction: row;
@@ -384,6 +475,7 @@
       line-height: 21px;
       color: rgba(0, 0, 0, 0.7);
       white-space: nowrap;
+      margin: 0px 12px 0px 0px;
 
       &--desktop {
         margin-right: 1rem;
@@ -393,6 +485,7 @@
         margin: 0.5rem 0px;
       }
     }
+
     &--input {
       font-size: 13px;
 
@@ -404,6 +497,41 @@
         width: 100%;
       }
     }
+
+    .search {
+      background-color: white;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+      }
+
+      ::ng-deep .mdc-text-field--outlined .mdc-notched-outline {
+        height: 30px;
+      }
+
+      ::ng-deep
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+        .mat-mdc-form-field-infix {
+        padding: 4px 0px 0px 0px;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        height: 30px;
+      }
+
+      ::ng-deep .mat-mdc-form-field-flex {
+        height: 30px;
+      }
+
+      &--mobile {
+        width: 100%;
+      }
+
+      &--desktop {
+        width: 200px;
+      }
+    }
+
     &--btn-add {
       display: flex;
       flex-direction: row;

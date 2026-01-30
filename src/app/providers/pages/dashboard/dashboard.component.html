@@ -19,7 +19,9 @@
           }"
           (click)="openModalValidateDocuments('iperc')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numIpercDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">IPERC</div>
         </div>
         <div
@@ -32,7 +34,9 @@
           }"
           (click)="openModalValidateDocuments('ats')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numAtsDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">ATS</div>
         </div>
         <div
@@ -45,7 +49,9 @@
           }"
           (click)="openModalValidateDocuments('emergency')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numEmergencyDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">Plan Emerg.</div>
         </div>
         <div
@@ -58,7 +64,9 @@
           }"
           (click)="openModalValidateDocuments('pets')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numPetsDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">PETS</div>
         </div>
         <div
@@ -71,7 +79,9 @@
           }"
           (click)="openModalValidateDocuments('certificates')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numCertificatesDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">Certificados</div>
         </div>
         <div
@@ -84,7 +94,9 @@
           }"
           (click)="openModalValidateDocuments('msds')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numMsdsDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">MSDS</div>
         </div>
         <div
@@ -97,10 +109,12 @@
           }"
           (click)="openModalValidateDocuments('checklist')"
         >
-          <div class="counter">03 Documentos</div>
+          <div class="counter">
+            {{ numChecklistDocs | number : "2.0-0" }} Documentos
+          </div>
           <div class="title">Check List</div>
         </div>
-        <div
+        <!-- <div
           class="folder"
           [ngClass]="{
             'folder--empty':
@@ -112,7 +126,7 @@
         >
           <div class="counter">03 Documentos</div>
           <div class="title">Op. Equipos</div>
-        </div>
+        </div> -->
       </div>
       <ng-template #docsLoader>
         <mat-progress-bar
@@ -138,14 +152,14 @@
           isMobile ? 'wrapper__body--mobile' : 'wrapper__body--desktop'
         "
       >
-        <mat-card class="cards">
+        <div class="cards">
           <div
             class="cards__header"
             [ngClass]="
               isMobile ? 'cards__header--mobile' : 'cards__header--desktop'
             "
           >
-            <h3
+            <p
               class="cards__header--title"
               [ngClass]="
                 isMobile
@@ -154,16 +168,17 @@
               "
             >
               SCTR
-            </h3>
+            </p>
             <mat-form-field
-              appearance="fill"
-              class="cards__header--input"
+              class="cards__header--input search"
               [ngClass]="
                 isMobile
                   ? 'cards__header--input--mobile'
                   : 'cards__header--input--desktop'
               "
+              appearance="outline"
             >
+              <mat-icon matPrefix> filter_list</mat-icon>
               <input
                 matInput
                 type="text"
@@ -174,8 +189,8 @@
             </mat-form-field>
             <span class="fill"></span>
             <button
-              mat-button
-              class="cards__header--btn-add"
+              mat-raised-button
+              color="primary"
               [ngClass]="
                 isMobile
                   ? 'cards__header--btn-add--mobile'
@@ -183,69 +198,81 @@
               "
               (click)="addSCTR()"
             >
-              <mat-icon class="cards__header--icon">add</mat-icon>
-              <span>Agregar nuevo</span>
+              <mat-icon>add</mat-icon>
+              <span>Nuevo</span>
             </button>
           </div>
           <hr class="cards__divider" />
           <div class="cards__body" *ngIf="sctr$ | async as arraySctr">
             <!--  (item.editedAt['seconds'] * 1000 | date : 'dd/MM/yy') -->
-
-            <div class="card" *ngFor="let item of arraySctr">
-              <div *ngIf="!deviceXs" class="card__codigo">
-                Codigo :<span class="card__codigo--text">{{ item.code }}</span>
-              </div>
-              <div *ngIf="!deviceXs" class="card__validity">
-                Vigencia:<span class="card__validity--text">{{
-                  item.validityDate.seconds * 1000 | date : "dd/MM/yy"
-                }}</span>
-              </div>
-              <div *ngIf="!deviceXs" class="card__collaborator">
-                Colaboradores :<span class="card__collaborator--text">{{
-                  item.collaborators.length
-                }}</span>
-              </div>
-
-              <div *ngIf="deviceXs">
-                <div class="card__codigo">
+            <ng-container *ngIf="arraySctr.length > 0; else empty">
+              <div class="group-document" *ngFor="let item of arraySctr">
+                <div *ngIf="!deviceXs" class="card__codigo">
                   Codigo :<span class="card__codigo--text">{{
                     item.code
                   }}</span>
                 </div>
-                <div class="card__validity">
+                <span class="fill"></span>
+                <div *ngIf="!deviceXs" class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
                     item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                   }}</span>
                 </div>
-                <div class="card__collaborator">
-                  Colaboradores :<span class="card__collaborator--text">{{
-                    item.collaborators.length
-                  }}</span>
+                <div *ngIf="!deviceXs" class="counter-tag">
+                  <strong>{{
+                    item.collaborators.length | number : "2."
+                  }}</strong>
+                  Colaboradores
                 </div>
-              </div>
 
-              <button class="card__menu" mat-button [matMenuTriggerFor]="menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="openVizorPdf(item.sctrFile)">
-                  Ver documento
+                <div *ngIf="deviceXs">
+                  <div class="card__codigo">
+                    Codigo :<span class="card__codigo--text">{{
+                      item.code
+                    }}</span>
+                  </div>
+                  <div class="card__validity">
+                    Vigencia:<span class="card__validity--text">{{
+                      item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                    }}</span>
+                  </div>
+                  <div *ngIf="!deviceXs" class="counter-tag">
+                    <strong>{{
+                      item.collaborators.length | number : "2."
+                    }}</strong>
+                    Colaboradores
+                  </div>
+                </div>
+
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon style="color: #48aa43">more_vert</mat-icon>
                 </button>
-                <button mat-menu-item (click)="editSCTR(item)">Editar</button>
-                <button mat-menu-item (click)="deleteSCTR(item)">Borrar</button>
-              </mat-menu>
-            </div>
-          </div>
-        </mat-card>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="openVizorPdf(item.sctrFile)">
+                    Ver documento
+                  </button>
+                  <button mat-menu-item (click)="editSCTR(item)">Editar</button>
+                  <button mat-menu-item (click)="deleteSCTR(item)">
+                    Borrar
+                  </button>
+                </mat-menu>
+              </div>
+            </ng-container>
 
-        <mat-card class="cards">
+            <ng-template #empty>
+              <div class="empty-container">Agregar nuevo SCTR</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="cards">
           <div
             class="cards__header"
             [ngClass]="
               isMobile ? 'cards__header--mobile' : 'cards__header--desktop'
             "
           >
-            <h3
+            <p
               class="cards__header--title"
               [ngClass]="
                 isMobile
@@ -254,16 +281,17 @@
               "
             >
               Seguro VL
-            </h3>
+            </p>
             <mat-form-field
-              appearance="fill"
-              class="cards__header--input"
+              appearance="outline"
+              class="cards__header--input search"
               [ngClass]="
                 isMobile
                   ? 'cards__header--input--mobile'
                   : 'cards__header--input--desktop'
               "
             >
+              <mat-icon matPrefix>filter_list</mat-icon>
               <input
                 matInput
                 type="text"
@@ -274,8 +302,8 @@
             </mat-form-field>
             <span class="fill"></span>
             <button
-              mat-button
-              class="cards__header--btn-add"
+              mat-raised-button
+              color="primary"
               [ngClass]="
                 isMobile
                   ? 'cards__header--btn-add--mobile'
@@ -283,60 +311,74 @@
               "
               (click)="addSegVidaLey()"
             >
-              <mat-icon class="cards__header--icon">add</mat-icon>
-              Agregar nuevo
+              <mat-icon>add</mat-icon>
+              Nuevo
             </button>
           </div>
           <hr class="cards__divider" />
           <div class="cards__body" *ngIf="seguroVL$ | async as arraySeguroVL">
-            <div class="card" *ngFor="let item of arraySeguroVL">
-              <div *ngIf="deviceXs">
-                <div class="card__codigo">
+            <ng-container *ngIf="arraySeguroVL.length > 0; else empty">
+              <div class="group-document" *ngFor="let item of arraySeguroVL">
+                <div *ngIf="deviceXs">
+                  <div class="card__codigo">
+                    Codigo :<span class="card__codigo--text">{{
+                      item.code
+                    }}</span>
+                  </div>
+                  <span class="fill"></span>
+                  <div class="card__validity">
+                    Vigencia:<span class="card__validity--text">{{
+                      item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                    }}</span>
+                  </div>
+                  <div *ngIf="!deviceXs" class="counter-tag">
+                    <strong>{{
+                      item.collaborators.length | number : "2."
+                    }}</strong>
+                    Colaboradores
+                  </div>
+                </div>
+                <div *ngIf="!deviceXs" class="card__codigo">
                   Codigo :<span class="card__codigo--text">{{
                     item.code
                   }}</span>
                 </div>
-                <div class="card__validity">
+                <span class="fill"></span>
+                <div *ngIf="!deviceXs" class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
                     item.validityDate.seconds * 1000 | date : "dd/MM/yy"
                   }}</span>
                 </div>
-                <div class="card__collaborator" ngStyle.xs="margin-left:15px">
-                  Colaboradores :<span class="card__collaborator--text">{{
-                    item.collaborators.length
-                  }}</span>
+                <div *ngIf="!deviceXs" class="counter-tag">
+                  <strong>{{
+                    item.collaborators.length | number : "2."
+                  }}</strong>
+                  Colaboradores
                 </div>
-              </div>
-              <div *ngIf="!deviceXs" class="card__codigo">
-                Codigo :<span class="card__codigo--text">{{ item.code }}</span>
-              </div>
-              <div *ngIf="!deviceXs" class="card__validity">
-                Vigencia:<span class="card__validity--text">{{
-                  item.validityDate.seconds * 1000 | date : "dd/MM/yy"
-                }}</span>
-              </div>
-              <div class="card__collaborator" *ngIf="!deviceXs">
-                Colaboradores :<span class="card__collaborator--text">{{
-                  item.collaborators.length
-                }}</span>
-              </div>
-              <button class="card__menu" mat-button [matMenuTriggerFor]="menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="openVizorPdf(item.svlFile)">
-                  Ver documento
-                </button>
-                <button mat-menu-item (click)="editSegVidaLey(item)">
-                  Editar
-                </button>
-                <button mat-menu-item (click)="deleteSVL(item)">Borrar</button>
-              </mat-menu>
-            </div>
-          </div>
-        </mat-card>
 
-        <mat-card class="cards">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon style="color: #48aa43">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="openVizorPdf(item.svlFile)">
+                    Ver documento
+                  </button>
+                  <button mat-menu-item (click)="editSegVidaLey(item)">
+                    Editar
+                  </button>
+                  <button mat-menu-item (click)="deleteSVL(item)">
+                    Borrar
+                  </button>
+                </mat-menu>
+              </div>
+            </ng-container>
+            <ng-template #empty>
+              <div class="empty-container">Agregar nuevo Seguro Vida Ley</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- <mat-card class="cards">
           <div
             class="cards__header"
             [ngClass]="
@@ -382,7 +424,7 @@
               (click)="addSwornDeclaration()"
             >
               <mat-icon class="cards__header--icon">add</mat-icon>
-              Agregar nuevo
+              Agregar
             </button>
           </div>
           <hr class="cards__divider" />
@@ -446,8 +488,9 @@
               </mat-menu>
             </div>
           </div>
-        </mat-card>
+        </mat-card> -->
       </div>
+
       <div
         class="wrapper__body"
         [ngClass]="
@@ -461,7 +504,7 @@
               isMobile ? 'cards2__header--mobile' : 'cards2__header--desktop'
             "
           >
-            <h3
+            <p
               class="cards2__header--title"
               [ngClass]="
                 isMobile
@@ -470,16 +513,17 @@
               "
             >
               Colaboradores
-            </h3>
+            </p>
             <mat-form-field
-              appearance="fill"
-              class="cards2__header--input"
+              appearance="outline"
+              class="cards2__header--input search"
               [ngClass]="
                 isMobile
                   ? 'cards2__header--input--mobile'
                   : 'cards2__header--input--desktop'
               "
             >
+              <mat-icon matPrefix>filter_list</mat-icon>
               <input
                 matInput
                 type="text"
@@ -490,17 +534,12 @@
             </mat-form-field>
             <span class="fill"></span>
             <button
-              mat-button
-              class="cards2__header--btn-add"
-              [ngClass]="
-                isMobile
-                  ? 'cards2__header--btn-add--mobile'
-                  : 'cards2__header--btn-add--desktop'
-              "
+              mat-raised-button
+              color="primary"
               (click)="addCollaborator()"
             >
-              <mat-icon class="cards__header--icon">add</mat-icon>
-              Agregar nuevo
+              <mat-icon>add</mat-icon>
+              Nuevo
             </button>
           </div>
           <mat-progress-bar
@@ -550,38 +589,39 @@
                 <div *ngIf="!deviceXs" class="card2__dni">
                   DNI :<span class="card2__dni--text">{{ item.dni }}</span>
                 </div>
+                <div class="fill"></div>
                 <button
-                  class="card2__menu"
-                  mat-button
+                  mat-icon-button
+                  color="primary"
                   [matMenuTriggerFor]="menu"
                 >
-                  <mat-icon>more_vert</mat-icon>
+                  <mat-icon style="color: #48aa43">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                  <button
+                  <!-- <button
                     mat-menu-item
                     (click)="openVizorPdf(item.medicalExaminationFile!)"
                   >
                     Ver documento examen médico
-                  </button>
-                  <button
+                  </button> -->
+                  <!-- <button
                     mat-menu-item
                     (click)="openVizorPdf(item.vaccinationCardFile!)"
                   >
                     Ver carnet de vacunación
-                  </button>
+                  </button> -->
                   <button mat-menu-item (click)="openVizorPdf(item.sctrFile!)">
                     Ver SCTR
                   </button>
                   <button mat-menu-item (click)="openVizorPdf(item.svlFile!)">
                     Ver Seguro vida ley
                   </button>
-                  <button
+                  <!-- <button
                     mat-menu-item
                     (click)="openVizorPdf(item.swornDeclarationFile!)"
                   >
                     Ver Declaración jurada
-                  </button>
+                  </button> -->
                   <button
                     mat-menu-item
                     (click)="checkDrives(item.id, item.dni)"
@@ -599,7 +639,16 @@
 
               <div class="documents-container">
                 <div class="documents-container__item">
-                  <div class="documents-container__item--text">SCTR</div>
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="
+                      '' + (item.sctrDate?.toMillis() | date) === 'null'
+                        ? 'Sin fecha'
+                        : '' + (item.sctrDate?.toMillis() | date)
+                    "
+                  >
+                    SCTR
+                  </div>
                   <mat-icon
                     *ngIf="item.sctrStatus === 'approved'"
                     class="documents-container__item--icon-approved"
@@ -634,7 +683,12 @@
                   >
                 </div>
                 <div class="documents-container__item">
-                  <div class="documents-container__item--text">Seguro VLC</div>
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="'' + (item.svlDate?.toMillis() | date)"
+                  >
+                    SVL
+                  </div>
                   <mat-icon
                     *ngIf="item.svlStatus === 'approved'"
                     class="documents-container__item--icon-approved"
@@ -668,7 +722,8 @@
                     alarm</mat-icon
                   >
                 </div>
-                <div class="documents-container__item">
+
+                <!-- <div class="documents-container__item">
                   <div class="documents-container__item--text">D. Jurada</div>
                   <mat-icon
                     *ngIf="item.swornDeclarationStatus === 'approved'"
@@ -699,9 +754,19 @@
                   >
                     alarm</mat-icon
                   >
-                </div>
+                </div> -->
+
                 <div class="documents-container__item">
-                  <div class="documents-container__item--text">Induccion</div>
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="
+                      '' + (item.sctrDate?.toMillis() | date) === 'null'
+                        ? 'Sin fecha'
+                        : '' + (item.sctrDate?.toMillis() | date)
+                    "
+                  >
+                    Induccion
+                  </div>
                   <mat-icon
                     *ngIf="item.inductionStatus === 'approved'"
                     class="documents-container__item--icon-approved"
@@ -730,40 +795,13 @@
                   >
                 </div>
 
-                <!-- <div class="documents-container__item">
-                  <div class="documents-container__item--text">
-                    F. Sintomatológica
-                  </div>
-                  <mat-icon
-                    *ngIf="item.symptomatologyStatus === 'approved'"
-                    class="documents-container__item--icon-approved"
-                    matTooltip="Aprobado"
-                    >check</mat-icon
-                  >
-                  <mat-icon
-                    *ngIf="item.symptomatologyStatus === 'rejected'"
-                    class="documents-container__item--icon-rejection"
-                    matTooltip="Rechazado"
-                    >cancel</mat-icon
-                  >
-                  <mat-icon
-                    *ngIf="item.symptomatologyStatus === 'unassigned'"
-                    class="documents-container__item--icon-unassigned"
-                    matTooltip="Sin asignar"
-                  >
-                    help</mat-icon
-                  >
-                  <mat-icon
-                    *ngIf="item.symptomatologyStatus === 'expired'"
-                    class="documents-container__item--icon-expired"
-                    matTooltip="Expirado"
-                  >
-                    alarm</mat-icon
-                  >
-                </div> -->
-
                 <div class="documents-container__item">
-                  <div class="documents-container__item--text">LOTO</div>
+                  <div
+                    class="documents-container__item--text"
+                    [matTooltip]="'' + (item.lotoDate?.toMillis() | date)"
+                  >
+                    LOTO
+                  </div>
                   <mat-icon
                     *ngIf="item.lotoStatus === 'approved'"
                     class="documents-container__item--icon-approved"
@@ -792,7 +830,7 @@
                   >
                 </div>
 
-                <div class="documents-container__item">
+                <!-- <div class="documents-container__item">
                   <div class="documents-container__item--text">E. Médico</div>
                   <mat-icon
                     *ngIf="item.medicalExaminationStatus === 'rejected'"
@@ -827,12 +865,12 @@
                   >
                     alarm</mat-icon
                   >
-                </div>
-                <div class="documents-container__item">
+                </div> -->
+
+                <!-- <div class="documents-container__item">
                   <div class="documents-container__item--text">
                     C. Vacunación
                   </div>
-                  <!-- vaccines -->
                   <mat-icon
                     *ngIf="item.doseStatus === 'unassigned'"
                     class="documents-container__item--icon-pending"
@@ -858,7 +896,7 @@
                     matTooltip="Sin carnet"
                     >cancel</mat-icon
                   >
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

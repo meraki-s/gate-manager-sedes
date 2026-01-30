@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
 import { AuthService } from '../auth/services/auth.service';
-import { UpdateReadyComponent } from '../shared/components/update-ready/update-ready.component';
 import { Menu } from '../shared/models/menu.interface';
 
 @Component({
@@ -62,11 +59,11 @@ export class AdminComponent implements OnInit {
         nameNavigate: 'Usuarios',
         icon: 'manage_accounts',
       },
-      {
-        routerLink: '/admin/locations',
-        nameNavigate: 'Sedes',
-        icon: 'domain',
-      },
+      // {
+      //   routerLink: '/admin/locations',
+      //   nameNavigate: 'Sedes',
+      //   icon: 'domain',
+      // },
       {
         routerLink: '/admin/settings',
         nameNavigate: 'Configuración',

@@ -10,7 +10,7 @@ export interface ValidateDocumentsModel {
   name: string;
   type: string;
   uploadPercent: string;
-  locations: Location[];
+  // locations: Location[];
   createdAt: Date & firebase.default.firestore.Timestamp;
   createdBy: ShortUser;
   updatedAt: Date & firebase.default.firestore.Timestamp;

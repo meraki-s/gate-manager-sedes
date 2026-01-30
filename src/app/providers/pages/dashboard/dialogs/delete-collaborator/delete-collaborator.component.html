@@ -1,8 +1,8 @@
-<div class="ms-dialog-header">
-  <mat-icon class="ms-dialog-header__icon">delete</mat-icon>
-  <h3 class="ms-dialog-header__title">Borrar Colaborador</h3>
-
-  <button mat-icon-button mat-dialog-close class="ms-dialog-header__close">
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">delete</mat-icon>
+  <p class="dialog-header__title">Borrar Colaborador</p>
+  <span class="fill"></span>
+  <button mat-icon-button mat-dialog-close class="dialog-header__close">
     <mat-icon>close_black</mat-icon>
   </button>
 </div>
@@ -19,17 +19,12 @@
   </div>
 </mat-dialog-content>
 
+<mat-divider></mat-divider>
 <mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancelar</button>
   <button
-    mat-stroked-button
-    mat-dialog-close
-    class="ms-dialog-body__btn-cancel"
-  >
-    Cancelar
-  </button>
-  <button
-    mat-stroked-button
-    class="ms-dialog-body__btn-register"
+    mat-raised-button
+    color="warn"
     (click)="save()"
     [disabled]="loading$ | async"
   >

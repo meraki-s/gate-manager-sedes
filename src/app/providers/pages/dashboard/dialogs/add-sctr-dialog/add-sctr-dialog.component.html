@@ -1,12 +1,8 @@
-<div class="ms-dialog-header">
-  <mat-icon class="ms-dialog-header__icon">local_police</mat-icon>
-  <h3 class="ms-dialog-header__title">Registro SCTR</h3>
-
-  <button
-    mat-icon-button
-    class="ms-dialog-header__close"
-    (click)="closeDialog()"
-  >
+<div class="dialog-header">
+  <mat-icon class="dialog-header__icon">local_police</mat-icon>
+  <p class="dialog-header__title">Nuevo SCTR</p>
+  <span class="fill"></span>
+  <button mat-icon-button class="dialog-header__close" (click)="closeDialog()">
     <mat-icon>close_black</mat-icon>
   </button>
 </div>
@@ -108,7 +104,7 @@
           [displayWith]="showEntryCollaborator"
         >
           <mat-option *ngFor="let item of collaborators" [value]="item">
-            {{ item.lastname }}, {{ item.name }} 
+            {{ item.lastname }}, {{ item.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -119,32 +115,34 @@
       *ngIf="loading$ | async"
     ></mat-progress-bar>
     <mat-card-content class="ms-dialog-body__body--body">
-      <div>
-        <div
-          role="list"
-          *ngFor="let item of listCollaboratorArray; let i = index"
-        >
-          <div class="ms-dialog-body__body--item-list">
-            <span>{{ item.lastname }} {{ item.name }}</span>
-            <span>
-              <button
-                mat-icon-button
-                aria-label="deletelistWarehouse"
-                (click)="deleteCollaborator(i)"
-              >
-                <mat-icon class="delete-color">delete</mat-icon>
-              </button>
-            </span>
-          </div>
+      <div
+        role="list"
+        *ngFor="let item of listCollaboratorArray; let i = index"
+      >
+        <div class="ms-dialog-body__body--item-list">
+          <span>{{ item.lastname }} {{ item.name }}</span>
+          <span>
+            <button
+              mat-icon-button
+              aria-label="deletelistWarehouse"
+              (click)="deleteCollaborator(i)"
+            >
+              <mat-icon class="delete-color">delete</mat-icon>
+            </button>
+          </span>
         </div>
       </div>
     </mat-card-content>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions align="start">
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="warn" mat-dialog-close>Cancelar</button>
   <button
-    mat-stroked-button
-    class="ms-dialog-body__btn-register"
+    mat-raised-button
+    color="primary"
+    style="color: white"
     (click)="save()"
     [disabled]="loading$ | async"
   >

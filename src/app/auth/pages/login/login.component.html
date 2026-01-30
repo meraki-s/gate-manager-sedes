@@ -1,5 +1,11 @@
 <div class="container">
-  <div class="background-image">
+  <div
+    class="background-image"
+    [ngClass]="{
+      'background-image--mobile': isMobile,
+      'background-image--desktop': !isMobile
+    }"
+  >
     <div class="header">
       <a href="https://meraki-s.com" target="_blank">
         <img
@@ -16,12 +22,18 @@
       </a>
     </div>
   </div>
-  <div class="login-container">
+  <div
+    class="login-container"
+    [ngClass]="{
+      'login-container--mobile': isMobile,
+      'login-container--desktop': !isMobile
+    }"
+  >
     <div class="header">
       <span class="fill"></span>
       <a href="https://www.ferreycorp.com.pe/" target="_blank">
         <img
-          src="../../../../assets/img/ferrycorp-logo.png"
+          src="../../../../assets/img/ferreyros-logo-medium.png"
           alt=""
           width="100"
         />
@@ -73,12 +85,12 @@
           Registrarse
         </button>
       </div>
-      <div (click)="passwordRecovery()" class="recovery">
+      <div (click)="passwordRecovery()" class="recovery" matRipple>
         <span>¿Olvidaste tu contraseña?</span>
       </div>
     </div>
     <div class="footer">
-      <span>© COPYRIGHT © FERRYCORP 2023. TODOS LOS DERECHOS RESERVADOS.</span>
+      <span>© COPYRIGHT © FERREYROS 2023. TODOS LOS DERECHOS RESERVADOS.</span>
     </div>
   </div>
 </div>

@@ -23,7 +23,7 @@ export class PetsValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/petsDocumentsValidate`,
+            `/db/ferreyros/providers/${user?.providerId}/petsDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -36,7 +36,7 @@ export class PetsValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/petsDocumentsValidate`,
+        `/db/ferreyros/providers/${id}/petsDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -62,7 +62,7 @@ export class PetsValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsPetsDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/petsDocumentsValidate/`
+                  `/db/ferreyros/providers/${user.providerId}/petsDocumentsValidate/`
                 )
                 .doc();
 
@@ -106,7 +106,7 @@ export class PetsValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsPetsDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/petsDocumentsValidate/${idFromDelete}`
+          `/db/ferreyros/providers/${user.providerId}/petsDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsPetsDocRef);
         return of(batch);

@@ -7,12 +7,14 @@ import { MaterialModule } from 'src/app/shared/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RegisterComponent } from '../register/register.component';
+import { RecoveryComponent } from './dialogs/recovery/recovery.component';
 // import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
+    RecoveryComponent,
     // RegisterComponent
   ],
   imports: [
@@ -21,7 +23,7 @@ import { RegisterComponent } from '../register/register.component';
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    MaterialModule
+    MaterialModule,
   ]
 })
 export class LoginModule { }

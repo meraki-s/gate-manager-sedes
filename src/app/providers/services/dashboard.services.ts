@@ -9,7 +9,6 @@ import { SCTR, SVL } from '../models/dashboard.model';
 import { Collaborator, UploadFile } from '../models/register-collaborator';
 
 import * as firebase from 'firebase/compat/app';
-import { runTransaction } from 'firebase/firestore';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Provider } from 'src/app/auth/models/provider.model';
@@ -48,7 +47,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctrDocRef = this.afs.firestore
-          .collection(`providers/${user.providerId}/sctrList`)
+          .collection(`db/ferreyros/providers/${user.providerId}/sctrList`)
           .doc();
 
         const shortUser: ShortUser = {
@@ -74,7 +73,7 @@ export class DashboardService {
         collaboratorList.forEach((collaborator) => {
           const collaboratorDocRef = this.afs.firestore
             .collection(
-              `providers/${user.providerId}/collaborators`
+              `db/ferreyros/providers/${user.providerId}/collaborators`
             )
             .doc(collaborator.id);
 
@@ -106,7 +105,7 @@ export class DashboardService {
 
         return this.afs
           .collection<SVL>(
-            `providers/${user.providerId}/svlList`,
+            `db/ferreyros/providers/${user.providerId}/svlList`,
             (ref) => ref.orderBy('createdAt', 'desc')
           )
           .valueChanges();
@@ -124,7 +123,7 @@ export class DashboardService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const svlDocRef = this.afs.firestore
-      .collection(`providers/${user.providerId}/svlList`)
+      .collection(`db/ferreyros/providers/${user.providerId}/svlList`)
       .doc();
 
     const data: Partial<SVL> = {
@@ -144,7 +143,7 @@ export class DashboardService {
     // correlate svl with collaborators
     collaboratorList.forEach((collaborator) => {
       const collaboratorDocRef = this.afs.firestore
-        .collection(`providers/${user.providerId}/collaborators`)
+        .collection(`db/ferreyros/providers/${user.providerId}/collaborators`)
         .doc(collaborator.id);
 
       batch.update(collaboratorDocRef, {
@@ -180,7 +179,7 @@ export class DashboardService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const svlDocRef = this.afs.firestore.doc(
-      `providers/${user.providerId}/svlList/${svlId}`
+      `db/ferreyros/providers/${user.providerId}/svlList/${svlId}`
     );
 
     const data: Partial<SVL> = {
@@ -197,7 +196,7 @@ export class DashboardService {
     // correlate svl with collaborators
     collaboratorList.forEach((collaborator) => {
       const collaboratorDocRef = this.afs.firestore
-        .collection(`providers/${user.providerId}/collaborators`)
+        .collection(`db/ferreyros/providers/${user.providerId}/collaborators`)
         .doc(collaborator.id);
 
       batch.update(collaboratorDocRef, {
@@ -225,7 +224,7 @@ export class DashboardService {
     // create batch
     const batch = this.afs.firestore.batch();
     const docRef = this.afs.firestore.doc(
-      `providers/${providerId}/svlList/${svlId}`
+      `db/ferreyros/providers/${providerId}/svlList/${svlId}`
     );
     //
     batch.delete(docRef);
@@ -258,7 +257,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctrDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/sctrList/${sctrId}`
+          `db/ferreyros/providers/${user.providerId}/sctrList/${sctrId}`
         );
 
         const shortUser: ShortUser = {
@@ -281,7 +280,7 @@ export class DashboardService {
         collaboratorList.forEach((collaborator) => {
           const collaboratorDocRef = this.afs.firestore
             .collection(
-              `providers/${user.providerId}/collaborators`
+              `db/ferreyros/providers/${user.providerId}/collaborators`
             )
             .doc(collaborator.id);
 
@@ -312,7 +311,7 @@ export class DashboardService {
     // create batch
     const batch = this.afs.firestore.batch();
     const docRef = this.afs.firestore.doc(
-      `providers/${providerId}/sctrList/${sctrId}`
+      `db/ferreyros/providers/${providerId}/sctrList/${sctrId}`
     );
     //
     batch.delete(docRef);
@@ -333,7 +332,7 @@ export class DashboardService {
 
         return this.afs
           .collection<SCTR>(
-            `/providers/${user.providerId}/sctrList`,
+            `/db/ferreyros/providers/${user.providerId}/sctrList`,
             (ref) => ref.orderBy('createdAt', 'desc')
           )
           .valueChanges();
@@ -355,7 +354,7 @@ export class DashboardService {
 
         return this.afs
           .collection<Collaborator>(
-            `providers/${user.providerId}/collaborators`,
+            `db/ferreyros/providers/${user.providerId}/collaborators`,
             (ref) => ref.orderBy('lastname', 'asc')
           )
           .valueChanges();
@@ -382,13 +381,13 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const docRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/collaborators/${collaboratorId}`
+          `db/ferreyros/providers/${user.providerId}/collaborators/${collaboratorId}`
         );
 
         batch.delete(docRef);
 
         const providerRef = this.afs.firestore.doc(
-          `providers/${user.providerId}`
+          `db/ferreyros/providers/${user.providerId}`
         );
 
         providerRef.firestore.runTransaction(async (transaction) => {
@@ -429,7 +428,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/sctrList/${sctrId}`
+          `db/ferreyros/providers/${user.providerId}/sctrList/${sctrId}`
         );
         // Structuring the data model
         const data: any = {
@@ -456,7 +455,7 @@ export class DashboardService {
 
         // create reference for document in evaluation entries collection
         const sctDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/svlList/${entryId}`
+          `db/ferreyros/providers/${user.providerId}/svlList/${entryId}`
         );
         // Structuring the data model
         const data: any = {
@@ -480,8 +479,8 @@ export class DashboardService {
    */
   registerCollaborator(
     form: Collaborator,
-    medicalExaminationFile: UploadFile,
-    vaccinationCardFile: UploadFile
+    // medicalExaminationFile: UploadFile,
+    // vaccinationCardFile: UploadFile
   ): Observable<{
     batch: firebase.default.firestore.WriteBatch;
     collaboratorId: string;
@@ -498,7 +497,7 @@ export class DashboardService {
 
         // create reference for document in {doc} entries collection
         const collaboratorDocRef = this.afs.firestore
-          .collection(`providers/${user.providerId}/collaborators`)
+          .collection(`db/ferreyros/providers/${user.providerId}/collaborators`)
           .doc();
 
         const shortUser: ShortUser = {
@@ -515,27 +514,27 @@ export class DashboardService {
           lastname: form.lastname,
           dni: dni,
           jobTitle: form.jobTitle,
-          medicalExaminationDate: form.medicalExaminationDate
-            ? form.medicalExaminationDate
-            : null,
-          medicalExaminationFile: medicalExaminationFile
-            ? medicalExaminationFile
-            : null,
-          medicalExaminationStatus: medicalExaminationFile
-            ? 'pending'
-            : 'unassigned',
-          vaccinationCardFile: vaccinationCardFile ?? null,
-          firstDoseDate: form.firstDoseDate ?? null,
-          secondDoseDate: form.secondDoseDate ?? null,
-          thirdDoseDate: form.thirdDoseDate ?? null,
-          doseStatus: vaccinationCardFile ? 'vaccinated' : 'unassigned',
+          // medicalExaminationDate: form.medicalExaminationDate
+          //   ? form.medicalExaminationDate
+          //   : null,
+          // medicalExaminationFile: medicalExaminationFile
+          //   ? medicalExaminationFile
+          //   : null,
+          // medicalExaminationStatus: medicalExaminationFile
+          //   ? 'pending'
+          //   : 'unassigned',
+          // vaccinationCardFile: vaccinationCardFile ?? null,
+          // firstDoseDate: form.firstDoseDate ?? null,
+          // secondDoseDate: form.secondDoseDate ?? null,
+          // thirdDoseDate: form.thirdDoseDate ?? null,
+          // doseStatus: vaccinationCardFile ? 'vaccinated' : 'unassigned',
           createdBy: shortUser,
           createdAt:
             firebase.default.firestore.FieldValue.serverTimestamp() as Date &
               firebase.default.firestore.Timestamp,
           sctrStatus: 'unassigned',
           svlStatus: 'unassigned',
-          swornDeclarationStatus: 'unassigned',
+          // swornDeclarationStatus: 'unassigned',
           providerId: user.providerId,
           entryDeparture: 'outside',
           companyName: user.companyName,
@@ -545,7 +544,7 @@ export class DashboardService {
         batch.set(collaboratorDocRef, data);
 
         const providerRef = this.afs.firestore.doc(
-          `providers/${user.providerId}`
+          `db/ferreyros/providers/${user.providerId}`
         );
 
         providerRef.firestore.runTransaction(async (transaction) => {
@@ -578,8 +577,8 @@ export class DashboardService {
   updateCollaborator(
     collaboratorId: string,
     form: Collaborator,
-    medicalExaminationFile: UploadFile | null,
-    vaccinationCardFile: UploadFile | null
+    // medicalExaminationFile: UploadFile | null,
+    // vaccinationCardFile: UploadFile | null
   ): Observable<firebase.default.firestore.WriteBatch> {
     return this.authService.user$.pipe(
       take(1),
@@ -590,7 +589,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `providers/${user?.providerId}/collaborators/${collaboratorId}`
+          `db/ferreyros/providers/${user?.providerId}/collaborators/${collaboratorId}`
         );
 
         const shortUser: ShortUser = {
@@ -603,20 +602,20 @@ export class DashboardService {
           lastname: form.lastname,
           jobTitle: form.jobTitle,
           dni: form.dni,
-          medicalExaminationDate: form.medicalExaminationDate
-            ? form.medicalExaminationDate
-            : null,
-          medicalExaminationFile: medicalExaminationFile
-            ? medicalExaminationFile
-            : null,
-          medicalExaminationStatus: medicalExaminationFile
-            ? 'pending'
-            : 'unassigned',
-          firstDoseDate: form.firstDoseDate ?? null,
-          secondDoseDate: form.secondDoseDate ?? null,
-          thirdDoseDate: form.thirdDoseDate ?? null,
-          vaccinationCardFile: vaccinationCardFile ?? null,
-          doseStatus: vaccinationCardFile ? 'vaccinated' : 'unassigned',
+          // medicalExaminationDate: form.medicalExaminationDate
+          //   ? form.medicalExaminationDate
+          //   : null,
+          // medicalExaminationFile: medicalExaminationFile
+          //   ? medicalExaminationFile
+          //   : null,
+          // medicalExaminationStatus: medicalExaminationFile
+          //   ? 'pending'
+          //   : 'unassigned',
+          // firstDoseDate: form.firstDoseDate ?? null,
+          // secondDoseDate: form.secondDoseDate ?? null,
+          // thirdDoseDate: form.thirdDoseDate ?? null,
+          // vaccinationCardFile: vaccinationCardFile ?? null,
+          // doseStatus: vaccinationCardFile ? 'vaccinated' : 'unassigned',
           editedBy: shortUser,
           editedAt: new Date() as Date & firebase.default.firestore.Timestamp,
         };
@@ -641,7 +640,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `providers/${user?.providerId}/collaborators/${collaboratorId}`
+          `db/ferreyros/providers/${user?.providerId}/collaborators/${collaboratorId}`
         );
 
         return this.http.get(environment.queryDriveURL + `/${dni}`).pipe(
@@ -654,11 +653,11 @@ export class DashboardService {
               inductionDate:
                 (new Date(data['inductionValidity']) as Date &
                   firebase.default.firestore.Timestamp) ?? null,
-              symptomatologyStatus:
-                data['symptomatologyStatus'] ?? 'unassigned',
-              symptomatologyDate:
-                (new Date(data['symptomatologyValidity']) as Date &
-                  firebase.default.firestore.Timestamp) ?? null,
+              // symptomatologyStatus:
+              //   data['symptomatologyStatus'] ?? 'unassigned',
+              // symptomatologyDate:
+              //   (new Date(data['symptomatologyValidity']) as Date &
+              //     firebase.default.firestore.Timestamp) ?? null,
               lotoStatus: data['lotoStatus'] ?? 'unassigned',
               lotoDate:
                 (new Date(data['lotoValidity']) as Date &
@@ -673,8 +672,8 @@ export class DashboardService {
             const driveData: Partial<Collaborator> = {
               inductionStatus: 'unassigned',
               inductionDate: null,
-              symptomatologyStatus: 'unassigned',
-              symptomatologyDate: null,
+              // symptomatologyStatus: 'unassigned',
+              // symptomatologyDate: null,
               lotoStatus: 'unassigned',
               lotoDate: null,
             };
@@ -699,7 +698,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/collaborators/${collaboratorId}`
+          `db/ferreyros/providers/${user.providerId}/collaborators/${collaboratorId}`
         );
 
         const data: any = {
@@ -726,7 +725,7 @@ export class DashboardService {
         if (!user) return of(batch);
 
         const collaboratorDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/collaborators/${collaboratorId}`
+          `db/ferreyros/providers/${user.providerId}/collaborators/${collaboratorId}`
         );
 
         const data: any = {
@@ -744,7 +743,7 @@ export class DashboardService {
 
   getProvider(providerId: string): Observable<Provider | null> {
     return this.afs
-      .doc<Provider>(`providers/${providerId}`)
+      .doc<Provider>(`db/ferreyros/providers/${providerId}`)
       .valueChanges()
       .pipe(
         map((provider) => {
@@ -767,7 +766,7 @@ export class DashboardService {
         collaborators.map((element) => {
           const collaboratorRef = this.afs
             .collection(
-              `providers/${user?.providerId}/collaborators`
+              `db/ferreyros/providers/${user?.providerId}/collaborators`
             )
             .doc(element.id);
 

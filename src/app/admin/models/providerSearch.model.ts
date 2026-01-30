@@ -10,12 +10,13 @@ export interface ProviderSearch {
   manager: string;
   salesRepresentative: string;
   status: string;
-  covidPlanFiles: ValidateDocumentsModel[];
   ipercFiles: ValidateDocumentsModel[];
   atsFiles: ValidateDocumentsModel[];
-  lotoFiles: ValidateDocumentsModel[];
-  proceduresFiles: ValidateDocumentsModel[];
+  emergencyFiles: ValidateDocumentsModel[];
+  petsFiles: ValidateDocumentsModel[];
+  certificatesFiles: ValidateDocumentsModel[];
   msdsFiles: ValidateDocumentsModel[];
+  checklistFiles: ValidateDocumentsModel[];
   collaborators: Collaborator[];
   blockedBy?: string;
   blockDescription?: string;

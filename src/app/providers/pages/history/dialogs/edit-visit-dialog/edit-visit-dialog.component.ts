@@ -119,36 +119,36 @@ export class EditVisitDialogComponent implements OnInit {
     }, 300);
   }
 
-  deleteFileCovid(fileURL: string) {
-    try {
-      //this.loading.next(true);
-      if (this.data) {
-        this.providerService
-          .deleteFileCovid(this.data.id)
-          .pipe(take(1))
-          .subscribe((res) => {
-            res
-              .commit()
-              .then(() => {
-                this.providerService.deleteFileStorage(fileURL);
-                this.snackbar.open('✅ Se elimino correctamente', 'Aceptar', {
-                  duration: 5000,
-                });
-                //this.loading.next(false);
-                this.imagesCOVID = '';
-              })
-              .catch((err) => {
-                //this.loading.next(false);
-                this.snackbar.open('🚨 Hubo un error al agregar!', 'Aceptar', {
-                  duration: 5000,
-                });
-              });
-          });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // deleteFileCovid(fileURL: string) {
+  //   try {
+  //     //this.loading.next(true);
+  //     if (this.data) {
+  //       this.providerService
+  //         .deleteFileCovid(this.data.id)
+  //         .pipe(take(1))
+  //         .subscribe((res) => {
+  //           res
+  //             .commit()
+  //             .then(() => {
+  //               this.providerService.deleteFileStorage(fileURL);
+  //               this.snackbar.open('✅ Se elimino correctamente', 'Aceptar', {
+  //                 duration: 5000,
+  //               });
+  //               //this.loading.next(false);
+  //               this.imagesCOVID = '';
+  //             })
+  //             .catch((err) => {
+  //               //this.loading.next(false);
+  //               this.snackbar.open('🚨 Hubo un error al agregar!', 'Aceptar', {
+  //                 duration: 5000,
+  //               });
+  //             });
+  //         });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   deleteFileSCTR(fileURL: string) {
     try {

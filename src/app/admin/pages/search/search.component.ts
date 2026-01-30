@@ -25,6 +25,7 @@ import { VisorPdfComponent } from 'src/app/shared/components/visor-pdf/visor-pdf
 import { ProviderSearch } from '../../models/providerSearch.model';
 import { SearchService } from '../../services/search.service';
 import { RejectedDescriptionComponent } from './dialogs/rejected-description/rejected-description.component';
+import { DeleteCollaboratorComponent } from './dialogs/delete-collaborator/delete-collaborator.component';
 
 @Component({
   selector: 'app-search',
@@ -72,11 +73,6 @@ export class SearchComponent implements OnInit {
   filteredCollaborators$!: Observable<Collaborator[]>;
   documents = [
     {
-      name: 'Plan COVID',
-      collection: 'covidDocumentsValidate',
-      files: new Array<ValidateDocumentsModel>(),
-    },
-    {
       name: 'IPERC',
       collection: 'ipercDocumentsValidate',
       files: new Array<ValidateDocumentsModel>(),
@@ -89,17 +85,27 @@ export class SearchComponent implements OnInit {
     },
     {
       name: 'Plan de emergencia',
-      collection: 'lotoDocumentsValidate',
+      collection: 'emergencyDocumentsValidate',
       files: new Array<ValidateDocumentsModel>(),
     },
     {
       name: 'PETS',
-      collection: 'proceduresDocumentsValidate',
+      collection: 'petsDocumentsValidate',
+      files: new Array<ValidateDocumentsModel>(),
+    },
+    {
+      name: 'Certificados',
+      collection: 'certificatesDocumentsValidate',
       files: new Array<ValidateDocumentsModel>(),
     },
     {
       name: 'MSDS',
       collection: 'msdsDocumentsValidate',
+      files: new Array<ValidateDocumentsModel>(),
+    },
+    {
+      name: 'Checklist',
+      collection: 'checklistDocumentsValidate',
       files: new Array<ValidateDocumentsModel>(),
     },
   ];
@@ -173,10 +179,10 @@ export class SearchComponent implements OnInit {
                 const svlValidity = collaborator.svlDate
                   ? collaborator.svlDate.toMillis()
                   : null;
-                const swornDeclarationValidity =
-                  collaborator.swornDeclarationDate
-                    ? collaborator.swornDeclarationDate.toMillis()
-                    : null;
+                // const swornDeclarationValidity =
+                //   collaborator.swornDeclarationDate
+                //     ? collaborator.swornDeclarationDate.toMillis()
+                //     : null;
                 const now = Date.now();
 
                 if (sctrValidity && sctrValidity < now) {
@@ -187,12 +193,12 @@ export class SearchComponent implements OnInit {
                   collaborator.svlStatus = 'expired';
                 }
 
-                if (
-                  swornDeclarationValidity &&
-                  swornDeclarationValidity < now
-                ) {
-                  collaborator.swornDeclarationStatus = 'expired';
-                }
+                // if (
+                //   swornDeclarationValidity &&
+                //   swornDeclarationValidity < now
+                // ) {
+                //   collaborator.swornDeclarationStatus = 'expired';
+                // }
 
                 return collaborator;
               });
@@ -288,10 +294,10 @@ export class SearchComponent implements OnInit {
       this.documents[index].files = [];
     });
 
-    //#region covid
-    this.documents[0].files = provider.covidPlanFiles;
+    //#region iperc
+    this.documents[0].files = provider.ipercFiles;
     // check if there is a file with pending status
-    provider.covidPlanFiles.some((file) => {
+    provider.ipercFiles.some((file) => {
       if (file.status === 'pending') {
         this.documents[0].status = 'pending';
         return false;
@@ -300,28 +306,7 @@ export class SearchComponent implements OnInit {
     });
 
     // check if there is a file with approved status otherwise set to rejected
-    this.documents[0].status = provider.covidPlanFiles.every(
-      (file) => file.status === 'approved'
-    )
-      ? 'approved'
-      : provider.covidPlanFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
-    //#endregion
-
-    //#region iperc
-    this.documents[1].files = provider.ipercFiles;
-    // check if there is a file with pending status
-    provider.ipercFiles.some((file) => {
-      if (file.status === 'pending') {
-        this.documents[1].status = 'pending';
-        return false;
-      }
-      return true;
-    });
-
-    // check if there is a file with approved status otherwise set to rejected
-    this.documents[1].status = provider.ipercFiles.every(
+    this.documents[0].status = provider.ipercFiles.every(
       (file) => file.status === 'approved'
     )
       ? 'approved'
@@ -331,18 +316,18 @@ export class SearchComponent implements OnInit {
     //#endregion
 
     //#region ats
-    this.documents[2].files = provider.atsFiles;
+    this.documents[1].files = provider.atsFiles;
     // check if there is a file with pending status
     provider.atsFiles.some((file) => {
       if (file.status === 'pending') {
-        this.documents[2].status = 'pending';
+        this.documents[1].status = 'pending';
         return false;
       }
       return true;
     });
 
     // check if there is a file with approved status otherwise set to rejected
-    this.documents[2].status = provider.atsFiles.every(
+    this.documents[1].status = provider.atsFiles.every(
       (file) => file.status === 'approved'
     )
       ? 'approved'
@@ -351,10 +336,31 @@ export class SearchComponent implements OnInit {
       : 'pending';
     //#endregion
 
-    //#region loto
-    this.documents[3].files = provider.lotoFiles;
+    //#region emergency
+    this.documents[2].files = provider.emergencyFiles;
     // check if there is a file with pending status
-    provider.lotoFiles.some((file) => {
+    provider.emergencyFiles.some((file) => {
+      if (file.status === 'pending') {
+        this.documents[2].status = 'pending';
+        return false;
+      }
+      return true;
+    });
+
+    // check if there is a file with approved status otherwise set to rejected
+    this.documents[2].status = provider.emergencyFiles.every(
+      (file) => file.status === 'approved'
+    )
+      ? 'approved'
+      : provider.emergencyFiles.every((file) => file.status === 'rejected')
+      ? 'rejected'
+      : 'pending';
+    //#endregion
+
+    //#region pets
+    this.documents[3].files = provider.petsFiles;
+    // check if there is a file with pending status
+    provider.petsFiles.some((file) => {
       if (file.status === 'pending') {
         this.documents[3].status = 'pending';
         return false;
@@ -363,19 +369,19 @@ export class SearchComponent implements OnInit {
     });
 
     // check if there is a file with approved status otherwise set to rejected
-    this.documents[3].status = provider.lotoFiles.every(
+    this.documents[3].status = provider.petsFiles.every(
       (file) => file.status === 'approved'
     )
       ? 'approved'
-      : provider.lotoFiles.every((file) => file.status === 'rejected')
+      : provider.petsFiles.every((file) => file.status === 'rejected')
       ? 'rejected'
       : 'pending';
     //#endregion
 
     //#region procedures
-    this.documents[4].files = provider.proceduresFiles;
+    this.documents[4].files = provider.certificatesFiles;
     // check if there is a file with pending status
-    provider.proceduresFiles.some((file) => {
+    provider.certificatesFiles.some((file) => {
       if (file.status === 'pending') {
         this.documents[4].status = 'pending';
         return false;
@@ -384,11 +390,11 @@ export class SearchComponent implements OnInit {
     });
 
     // check if there is a file with approved status otherwise set to rejected
-    this.documents[4].status = provider.proceduresFiles.every(
+    this.documents[4].status = provider.certificatesFiles.every(
       (file) => file.status === 'approved'
     )
       ? 'approved'
-      : provider.proceduresFiles.every((file) => file.status === 'rejected')
+      : provider.certificatesFiles.every((file) => file.status === 'rejected')
       ? 'rejected'
       : 'pending';
     //#endregion
@@ -410,6 +416,27 @@ export class SearchComponent implements OnInit {
     )
       ? 'approved'
       : provider.msdsFiles.every((file) => file.status === 'rejected')
+      ? 'rejected'
+      : 'pending';
+    //#endregion
+
+    //#region checklist
+    this.documents[6].files = provider.checklistFiles;
+    // check if there is a file with pending status
+    provider.checklistFiles.some((file) => {
+      if (file.status === 'pending') {
+        this.documents[6].status = 'pending';
+        return false;
+      }
+      return true;
+    });
+
+    // check if there is a file with approved status otherwise set to rejected
+    this.documents[6].status = provider.checklistFiles.every(
+      (file) => file.status === 'approved'
+    )
+      ? 'approved'
+      : provider.checklistFiles.every((file) => file.status === 'rejected')
       ? 'rejected'
       : 'pending';
     //#endregion
@@ -593,14 +620,14 @@ export class SearchComponent implements OnInit {
                 .driveData.inductionDate
                 ? res.driveData.inductionDate
                 : (new Date(0) as Date & firebase.default.firestore.Timestamp);
-              this.providerSearch!.collaborators[index].symptomatologyStatus =
-                res.driveData.symptomatologyStatus
-                  ? res.driveData.symptomatologyStatus
-                  : 'unassigned';
-              this.providerSearch!.collaborators[index].symptomatologyDate = res
-                .driveData.symptomatologyDate
-                ? res.driveData.symptomatologyDate
-                : (new Date(0) as Date & firebase.default.firestore.Timestamp);
+              // this.providerSearch!.collaborators[index].symptomatologyStatus =
+              //   res.driveData.symptomatologyStatus
+              //     ? res.driveData.symptomatologyStatus
+              //     : 'unassigned';
+              // this.providerSearch!.collaborators[index].symptomatologyDate = res
+              //   .driveData.symptomatologyDate
+              //   ? res.driveData.symptomatologyDate
+              //   : (new Date(0) as Date & firebase.default.firestore.Timestamp);
               this.syncingDrive.next(false);
               this.snackbar.open('✅ Drive sincronizado', 'Cerrar', {
                 duration: 5000,
@@ -616,173 +643,181 @@ export class SearchComponent implements OnInit {
       });
   }
 
-  approveMedicalExamination(collaborator: Collaborator): void {
-    this.loadingMedicalExamination.next(true);
-    this.searchService
-      .approveMedicalExamination(
-        collaborator.id,
-        collaborator.name + ' ' + collaborator.lastname,
-        collaborator.dni,
-        this.providerSearch!.providerId,
-        this.providerSearch!.companyName,
-        this.providerSearch!.companyRuc
-      )
-      .pipe(take(1))
-      .subscribe((batch) => {
-        if (batch) {
-          batch
-            .commit()
-            .then(() => {
-              const index = this.providerSearch!.collaborators.findIndex(
-                (col) => col.id === collaborator.id
-              );
-              this.providerSearch!.collaborators[
-                index
-              ].medicalExaminationStatus = 'approved';
-              this.loadingMedicalExamination.next(false);
-              this.snackbar.open('✅ Examen médico aprobado', 'Cerrar', {
-                duration: 5000,
-              });
-            })
-            .catch(() => {
-              this.loadingMedicalExamination.next(false);
-              this.snackbar.open(
-                '😞 Error al aprobar examen médico',
-                'Cerrar',
-                {
-                  duration: 5000,
-                }
-              );
-            });
-        }
-      });
+  deleteCollaborator(collaborator: Collaborator, providerId: string): void {
+    console.log(collaborator, providerId);
+
+    this.dialog.open(DeleteCollaboratorComponent, {
+      data: { collaborator: collaborator, providerId: providerId },
+    });
   }
 
-  rejectMedicalExamination(collaborator: Collaborator): void {
-    this.loadingMedicalExamination.next(true);
-    this.searchService
-      .rejectMedicalExamination(
-        collaborator.id,
-        collaborator.name + ' ' + collaborator.lastname,
-        collaborator.dni,
-        this.providerSearch!.providerId,
-        this.providerSearch!.companyName,
-        this.providerSearch!.companyRuc
-      )
-      .pipe(take(1))
-      .subscribe((batch) => {
-        if (batch) {
-          batch
-            .commit()
-            .then(() => {
-              const index = this.providerSearch!.collaborators.findIndex(
-                (col) => col.id === collaborator.id
-              );
-              this.providerSearch!.collaborators[
-                index
-              ].medicalExaminationStatus = 'rejected';
-              this.loadingMedicalExamination.next(false);
-              this.snackbar.open('❌ Examen médico rechazado', 'Cerrar', {
-                duration: 5000,
-              });
-            })
-            .catch(() => {
-              this.loadingMedicalExamination.next(false);
-              this.snackbar.open(
-                '😞 Error al rechazar examen médico',
-                'Cerrar',
-                {
-                  duration: 5000,
-                }
-              );
-            });
-        }
-      });
-  }
+  // approveMedicalExamination(collaborator: Collaborator): void {
+  //   this.loadingMedicalExamination.next(true);
+  //   this.searchService
+  //     .approveMedicalExamination(
+  //       collaborator.id,
+  //       collaborator.name + ' ' + collaborator.lastname,
+  //       collaborator.dni,
+  //       this.providerSearch!.providerId,
+  //       this.providerSearch!.companyName,
+  //       this.providerSearch!.companyRuc
+  //     )
+  //     .pipe(take(1))
+  //     .subscribe((batch) => {
+  //       if (batch) {
+  //         batch
+  //           .commit()
+  //           .then(() => {
+  //             const index = this.providerSearch!.collaborators.findIndex(
+  //               (col) => col.id === collaborator.id
+  //             );
+  //             this.providerSearch!.collaborators[
+  //               index
+  //             ].medicalExaminationStatus = 'approved';
+  //             this.loadingMedicalExamination.next(false);
+  //             this.snackbar.open('✅ Examen médico aprobado', 'Cerrar', {
+  //               duration: 5000,
+  //             });
+  //           })
+  //           .catch(() => {
+  //             this.loadingMedicalExamination.next(false);
+  //             this.snackbar.open(
+  //               '😞 Error al aprobar examen médico',
+  //               'Cerrar',
+  //               {
+  //                 duration: 5000,
+  //               }
+  //             );
+  //           });
+  //       }
+  //     });
+  // }
 
-  approveVaccinationCard(collaborator: Collaborator): void {
-    this.loadingVaccinationCard.next(true);
-    this.searchService
-      .approveVaccinationCard(
-        collaborator.id,
-        collaborator.name + ' ' + collaborator.lastname,
-        collaborator.dni,
-        this.providerSearch!.providerId,
-        this.providerSearch!.companyName,
-        this.providerSearch!.companyRuc
-      )
-      .pipe(take(1))
-      .subscribe((batch) => {
-        if (batch) {
-          batch
-            .commit()
-            .then(() => {
-              const index = this.providerSearch!.collaborators.findIndex(
-                (col) => col.id === collaborator.id
-              );
-              this.providerSearch!.collaborators[index].doseStatus =
-                'vaccinated';
-              this.loadingVaccinationCard.next(false);
-              this.snackbar.open('✅ Carnet de vacunación aprobado', 'Cerrar', {
-                duration: 5000,
-              });
-            })
-            .catch(() => {
-              this.loadingVaccinationCard.next(false);
-              this.snackbar.open(
-                '😞 Error al aprobar carnet de vacunación',
-                'Cerrar',
-                {
-                  duration: 5000,
-                }
-              );
-            });
-        }
-      });
-  }
+  // rejectMedicalExamination(collaborator: Collaborator): void {
+  //   this.loadingMedicalExamination.next(true);
+  //   this.searchService
+  //     .rejectMedicalExamination(
+  //       collaborator.id,
+  //       collaborator.name + ' ' + collaborator.lastname,
+  //       collaborator.dni,
+  //       this.providerSearch!.providerId,
+  //       this.providerSearch!.companyName,
+  //       this.providerSearch!.companyRuc
+  //     )
+  //     .pipe(take(1))
+  //     .subscribe((batch) => {
+  //       if (batch) {
+  //         batch
+  //           .commit()
+  //           .then(() => {
+  //             const index = this.providerSearch!.collaborators.findIndex(
+  //               (col) => col.id === collaborator.id
+  //             );
+  //             this.providerSearch!.collaborators[
+  //               index
+  //             ].medicalExaminationStatus = 'rejected';
+  //             this.loadingMedicalExamination.next(false);
+  //             this.snackbar.open('❌ Examen médico rechazado', 'Cerrar', {
+  //               duration: 5000,
+  //             });
+  //           })
+  //           .catch(() => {
+  //             this.loadingMedicalExamination.next(false);
+  //             this.snackbar.open(
+  //               '😞 Error al rechazar examen médico',
+  //               'Cerrar',
+  //               {
+  //                 duration: 5000,
+  //               }
+  //             );
+  //           });
+  //       }
+  //     });
+  // }
 
-  rejectVaccinationCard(collaborator: Collaborator): void {
-    this.loadingVaccinationCard.next(true);
-    this.searchService
-      .rejectVaccinationCard(
-        collaborator.id,
-        collaborator.name + ' ' + collaborator.lastname,
-        collaborator.dni,
-        this.providerSearch!.providerId,
-        this.providerSearch!.companyName,
-        this.providerSearch!.companyRuc
-      )
-      .pipe(take(1))
-      .subscribe((batch) => {
-        if (batch) {
-          batch
-            .commit()
-            .then(() => {
-              const index = this.providerSearch!.collaborators.findIndex(
-                (col) => col.id === collaborator.id
-              );
-              this.providerSearch!.collaborators[index].doseStatus =
-                'not-fully-vaccinated';
-              this.loadingVaccinationCard.next(false);
-              this.snackbar.open(
-                '❌ Carnet de vacunación rechazado',
-                'Cerrar',
-                {
-                  duration: 5000,
-                }
-              );
-            })
-            .catch(() => {
-              this.loadingVaccinationCard.next(false);
-              this.snackbar.open(
-                '😞 Error al rechazar carnet de vacunación',
-                'Cerrar',
-                {
-                  duration: 5000,
-                }
-              );
-            });
-        }
-      });
-  }
+  // approveVaccinationCard(collaborator: Collaborator): void {
+  //   this.loadingVaccinationCard.next(true);
+  //   this.searchService
+  //     .approveVaccinationCard(
+  //       collaborator.id,
+  //       collaborator.name + ' ' + collaborator.lastname,
+  //       collaborator.dni,
+  //       this.providerSearch!.providerId,
+  //       this.providerSearch!.companyName,
+  //       this.providerSearch!.companyRuc
+  //     )
+  //     .pipe(take(1))
+  //     .subscribe((batch) => {
+  //       if (batch) {
+  //         batch
+  //           .commit()
+  //           .then(() => {
+  //             const index = this.providerSearch!.collaborators.findIndex(
+  //               (col) => col.id === collaborator.id
+  //             );
+  //             this.providerSearch!.collaborators[index].doseStatus =
+  //               'vaccinated';
+  //             this.loadingVaccinationCard.next(false);
+  //             this.snackbar.open('✅ Carnet de vacunación aprobado', 'Cerrar', {
+  //               duration: 5000,
+  //             });
+  //           })
+  //           .catch(() => {
+  //             this.loadingVaccinationCard.next(false);
+  //             this.snackbar.open(
+  //               '😞 Error al aprobar carnet de vacunación',
+  //               'Cerrar',
+  //               {
+  //                 duration: 5000,
+  //               }
+  //             );
+  //           });
+  //       }
+  //     });
+  // }
+
+  // rejectVaccinationCard(collaborator: Collaborator): void {
+  //   this.loadingVaccinationCard.next(true);
+  //   this.searchService
+  //     .rejectVaccinationCard(
+  //       collaborator.id,
+  //       collaborator.name + ' ' + collaborator.lastname,
+  //       collaborator.dni,
+  //       this.providerSearch!.providerId,
+  //       this.providerSearch!.companyName,
+  //       this.providerSearch!.companyRuc
+  //     )
+  //     .pipe(take(1))
+  //     .subscribe((batch) => {
+  //       if (batch) {
+  //         batch
+  //           .commit()
+  //           .then(() => {
+  //             const index = this.providerSearch!.collaborators.findIndex(
+  //               (col) => col.id === collaborator.id
+  //             );
+  //             // this.providerSearch!.collaborators[index].doseStatus =
+  //             //   'not-fully-vaccinated';
+  //             this.loadingVaccinationCard.next(false);
+  //             this.snackbar.open(
+  //               '❌ Carnet de vacunación rechazado',
+  //               'Cerrar',
+  //               {
+  //                 duration: 5000,
+  //               }
+  //             );
+  //           })
+  //           .catch(() => {
+  //             this.loadingVaccinationCard.next(false);
+  //             this.snackbar.open(
+  //               '😞 Error al rechazar carnet de vacunación',
+  //               'Cerrar',
+  //               {
+  //                 duration: 5000,
+  //               }
+  //             );
+  //           });
+  //       }
+  //     });
+  // }
 }

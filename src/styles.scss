@@ -43,7 +43,10 @@ $gate-manager-theme: mat.define-light-theme(
   )
 );
 @include mat.all-component-themes($gate-manager-theme);
-@import "./assets/css/merki.scss";
+
+.mat-primary-text {
+    color: white !important;
+}
 
 html,
 body {
@@ -67,10 +70,10 @@ body {
 
 mat-form-field {
   font-family: "Quicksand" !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
   mat-label {
     font-family: "Quicksand";
-    font-size: 13px !important;
+    font-size: 12px !important;
   }
 
   ::placeholder {

@@ -24,7 +24,7 @@ export class IpercValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/ipercDocumentsValidate`,
+            `/db/ferreyros/providers/${user?.providerId}/ipercDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -37,7 +37,7 @@ export class IpercValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/ipercDocumentsValidate`,
+        `/db/ferreyros/providers/${id}/ipercDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -45,7 +45,7 @@ export class IpercValidateDocumentsService {
 
   addValidateDocumentsIperc(
     list: ValidateDocumentsModel[],
-    locations: Location[]
+    // locations: Location[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray: firebase.default.firestore.WriteBatch[] = [];
@@ -64,7 +64,7 @@ export class IpercValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsIpercDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/ipercDocumentsValidate/`
+                  `/db/ferreyros/providers/${user.providerId}/ipercDocumentsValidate/`
                 )
                 .doc();
 
@@ -80,7 +80,7 @@ export class IpercValidateDocumentsService {
                 name: list[j].name,
                 type: list[j].type,
                 uploadPercent: list[j].uploadPercent,
-                locations: locations,
+                // locations: locations,
                 createdAt:
                   firebase.default.firestore.FieldValue.serverTimestamp() as Date &
                     firebase.default.firestore.Timestamp,
@@ -109,7 +109,7 @@ export class IpercValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsIpercDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/ipercDocumentsValidate/${idFromDelete}`
+          `/db/ferreyros/providers/${user.providerId}/ipercDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsIpercDocRef);
         return of(batch);

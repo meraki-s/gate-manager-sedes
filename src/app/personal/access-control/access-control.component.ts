@@ -139,15 +139,13 @@ export class AccessControlComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe((collaborator) => {
-          console.log(collaborator);
-
           if (collaborator) {
             this.playFoundAudio();
             this.collaborator = collaborator;
-            this.collaborator.medicalExaminationStatus =
-              this.dateIsValidCollaborator(collaborator.medicalExaminationDate)
-                ? 'approved'
-                : 'pending';
+            // this.collaborator.medicalExaminationStatus =
+            //   this.dateIsValidCollaborator(collaborator.medicalExaminationDate)
+            //     ? 'approved'
+            //     : 'pending';
           } else {
             this.collaborator = null;
             this.playNotFoundAudio();
@@ -317,7 +315,7 @@ export class AccessControlComponent implements OnInit, OnDestroy {
             .commit()
             .then(() => {
               this.playSuccessAudio();
-              this.snackbar.open('✅ SALIDA registrada!', 'Aceptar', {
+              this.snackbar.open('🚩 SALIDA registrada!', 'Aceptar', {
                 duration: 6000,
               });
               this.loading.next(false);
@@ -363,12 +361,12 @@ export class AccessControlComponent implements OnInit, OnDestroy {
       this.dateIsValidCollaborator(
         collaborator.inductionDate ? collaborator.inductionDate : null
       ) &&
-      this.isVaccinated(collaborator) &&
-      this.dateIsValidCollaborator(
-        collaborator.swornDeclarationDate
-          ? collaborator.swornDeclarationDate
-          : null
-      ) &&
+      // this.isVaccinated(collaborator) &&
+      // this.dateIsValidCollaborator(
+      //   collaborator.swornDeclarationDate
+      //     ? collaborator.swornDeclarationDate
+      //     : null
+      // ) &&
       this.dateIsValidCollaborator(
         collaborator.sctrDate ? collaborator.sctrDate : null
       );
@@ -380,17 +378,17 @@ export class AccessControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  isVaccinated(collaborator: scanCollaborator | RegisterVisit): boolean {
-    return true;
-    // now is optional
-    if (
-      collaborator.firstDoseDate &&
-      collaborator.secondDoseDate &&
-      collaborator.thirdDoseDate
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // isVaccinated(collaborator: scanCollaborator | RegisterVisit): boolean {
+  //   return true;
+  //   // now is optional
+  //   if (
+  //     collaborator.firstDoseDate &&
+  //     collaborator.secondDoseDate &&
+  //     collaborator.thirdDoseDate
+  //   ) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }

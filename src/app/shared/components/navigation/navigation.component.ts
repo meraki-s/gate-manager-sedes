@@ -11,6 +11,7 @@ import { UpdateReadyComponent } from '../update-ready/update-ready.component';
 import { FormControl } from '@angular/forms';
 import { LocationService } from 'src/app/admin/services/location.service';
 import { Location } from 'src/app/admin/models/location.model';
+import { RecoveryComponent } from 'src/app/auth/pages/login/dialogs/recovery/recovery.component';
 
 @Component({
   selector: 'app-navigation',
@@ -22,8 +23,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
   selectItem: string | undefined;
   selectItemDefault: string | undefined;
 
-  locations$: Observable<Location[]> = of([]);
-  locationSelectorControl = new FormControl();
+  // locations$: Observable<Location[]> = of([]);
+  // locationSelectorControl = new FormControl();
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
@@ -76,21 +77,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.authService.user$.subscribe((user) => {
         this.user = user;
-        this.locationSelectorControl.setValue(user?.currentLocation);
+        // this.locationSelectorControl.setValue(user?.currentLocation);
       })
     );
 
     this.setNavigationName();
 
-    this.locations$ = this.loactionService.getLocations();
+    // this.locations$ = this.loactionService.getLocations();
 
-    this.subscriptions.add(
-      this.locationSelectorControl.valueChanges.subscribe((value) => {
-        if (value) {
-          this.authService.setCurrentLocation(this.user!.uid, value);
-        }
-      })
-    );
+    // this.subscriptions.add(
+    //   this.locationSelectorControl.valueChanges.subscribe((value) => {
+    //     if (value) {
+    //       this.authService.setCurrentLocation(this.user!.uid, value);
+    //     }
+    //   })
+    // );
   }
 
   ngOnDestroy(): void {
@@ -115,5 +116,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.authService.logout().then(() => {
       this.router.navigate(['/']);
     });
+  }
+
+  passwordRecovery(): void {
+    this.dialog.open(RecoveryComponent);
   }
 }

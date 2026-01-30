@@ -113,10 +113,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     certificatesDocuments: ExitsDocumentValidateModel[];
     msdsDocuments: ExitsDocumentValidateModel[];
     checklistDocuments: ExitsDocumentValidateModel[];
-    equipmentsDocuments: ExitsDocumentValidateModel[];
+    // equipmentsDocuments: ExitsDocumentValidateModel[];
   }>;
 
-  info: string = '🚧 Documentación incompleta';
+  numIpercDocs: number = 0;
+  numAtsDocs: number = 0;
+  numEmergencyDocs: number = 0;
+  numPetsDocs: number = 0;
+  numCertificatesDocs: number = 0;
+  numMsdsDocs: number = 0;
+  numChecklistDocs: number = 0;
+
+  info: string = '❇️ Leyendo documentos ...';
 
   subscriptions = new Subscription();
   isMobile!: boolean;
@@ -214,19 +222,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
           preFilterSearch.map((collaborator) => {
             const sctrValidity = collaborator.sctrDate?.toMillis();
             const svlValidity = collaborator.svlDate?.toMillis();
-            const swornDeclarationValidity =
-              collaborator.swornDeclarationDate?.toMillis();
-            const medicalExaminationValidity =
-              collaborator.medicalExaminationDate?.toMillis();
-            const firstDoseValidity = collaborator.firstDoseDate
-              ? collaborator.firstDoseDate.toMillis()
-              : null;
-            const secondDoseValidity = collaborator.secondDoseDate
-              ? collaborator.secondDoseDate.toMillis()
-              : null;
-            const thirdDoseValidity = collaborator.thirdDoseDate
-              ? collaborator.thirdDoseDate.toMillis()
-              : null;
+            // const swornDeclarationValidity =
+            //   collaborator.swornDeclarationDate?.toMillis();
+            // const medicalExaminationValidity =
+            //   collaborator.medicalExaminationDate?.toMillis();
+            // const firstDoseValidity = collaborator.firstDoseDate
+            //   ? collaborator.firstDoseDate.toMillis()
+            //   : null;
+            // const secondDoseValidity = collaborator.secondDoseDate
+            //   ? collaborator.secondDoseDate.toMillis()
+            //   : null;
+            // const thirdDoseValidity = collaborator.thirdDoseDate
+            //   ? collaborator.thirdDoseDate.toMillis()
+            //   : null;
             const now = Date.now();
 
             if (sctrValidity && sctrValidity < now) {
@@ -237,28 +245,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
               collaborator.svlStatus = 'expired';
             }
 
-            if (swornDeclarationValidity && swornDeclarationValidity < now) {
-              collaborator.swornDeclarationStatus = 'expired';
-            }
+            // if (swornDeclarationValidity && swornDeclarationValidity < now) {
+            //   collaborator.swornDeclarationStatus = 'expired';
+            // }
 
-            if (
-              medicalExaminationValidity &&
-              medicalExaminationValidity < now
-            ) {
-              collaborator.medicalExaminationStatus = 'expired';
-            }
+            // if (
+            //   medicalExaminationValidity &&
+            //   medicalExaminationValidity < now
+            // ) {
+            //   collaborator.medicalExaminationStatus = 'expired';
+            // }
 
-            if (
-              !firstDoseValidity ||
-              !secondDoseValidity ||
-              !thirdDoseValidity
-            ) {
-              collaborator.doseStatus = 'not-fully-vaccinated';
-            }
+            // if (
+            //   !firstDoseValidity ||
+            //   !secondDoseValidity ||
+            //   !thirdDoseValidity
+            // ) {
+            //   collaborator.doseStatus = 'not-fully-vaccinated';
+            // }
 
-            if (!collaborator.vaccinationCardFile) {
-              collaborator.doseStatus = 'rejected';
-            }
+            // if (!collaborator.vaccinationCardFile) {
+            //   collaborator.doseStatus = 'rejected';
+            // }
 
             return collaborator;
           });
@@ -492,6 +500,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsIpercDesc()
             .pipe(
               map((data) => {
+                this.numIpercDocs = data.length;
+
                 return {
                   ipercDocuments: data,
                 };
@@ -563,6 +573,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsAtsDesc()
             .pipe(
               map((data) => {
+                this.numAtsDocs = data.length;
+
                 return {
                   atsDocuments: data,
                 };
@@ -631,6 +643,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsEmergencyDesc()
             .pipe(
               map((data) => {
+                this.numEmergencyDocs = data.length;
+
                 return {
                   emergencyDocuments: data,
                 };
@@ -702,6 +716,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsPetsDesc()
             .pipe(
               map((data) => {
+                this.numPetsDocs = data.length;
+
                 return {
                   petsDocuments: data,
                 };
@@ -773,6 +789,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsCertificatesDesc()
             .pipe(
               map((data) => {
+                this.numCertificatesDocs = data.length;
+
                 return {
                   certificatesDocuments: data,
                 };
@@ -844,6 +862,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsMsdsDesc()
             .pipe(
               map((data) => {
+                this.numMsdsDocs = data.length;
+
                 return {
                   msdsDocuments: data,
                 };
@@ -915,6 +935,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .getAllValidateDocumentsChecklistDesc()
             .pipe(
               map((data) => {
+                this.numChecklistDocs = data.length;
+
                 return {
                   checklistDocuments: data,
                 };
@@ -982,77 +1004,79 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 }
               })
             ), // end pipe Check List
-          this.equipmentsValidateDocumentsService
-            .getAllValidateDocumentsEquipmentsDesc()
-            .pipe(
-              map((data) => {
-                return {
-                  equipmentsDocuments: data,
-                };
-              }),
-              map((docs: ValidateDocumentsModel | any) => {
-                const val = [];
-                for (let [
-                  index,
-                  equipmentsDocuments,
-                ] of docs.equipmentsDocuments.entries()) {
-                  val.push(
-                    JSON.stringify({
-                      status: equipmentsDocuments.status,
-                      validityDate:
-                        this.commonDocumentsValidateService.validityDate(
-                          equipmentsDocuments
-                        ),
-                    })
-                  );
-                }
-                return val;
-              }),
-              map((value) => {
-                if (value.length === 0) {
-                  return this.commonDocumentsValidateService.getExistsNotDocuments();
-                }
-                const existsApprovedDateFalse = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationApprovedDateFalse
-                  );
-                });
-                const existsPendingDateFalse = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationPendingDateFalse
-                  );
-                });
-                const existsApprovedDateTrue = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationApprovedDateTrue
-                  );
-                });
-                const existsPendingDateTrue = value.map((vl) => {
-                  return (
-                    vl ===
-                    this.commonDocumentsValidateService.validations
-                      .validationPendingDateTrue
-                  );
-                });
-                if (existsApprovedDateFalse[0]) {
-                  return this.commonDocumentsValidateService.getExistsApprovedTrue();
-                } else if (existsPendingDateFalse[0]) {
-                  return this.commonDocumentsValidateService.getExistsPendingTrue();
-                } else if (existsApprovedDateTrue[0]) {
-                  return this.commonDocumentsValidateService.getExistsNotDocuments();
-                } else if (existsPendingDateTrue[0]) {
-                  return this.commonDocumentsValidateService.getExistsNotDocuments();
-                } else {
-                  return this.commonDocumentsValidateService.getExistsRejectTrue();
-                }
-              })
-            ), // end pipe MSDS
+          // this.equipmentsValidateDocumentsService
+          //   .getAllValidateDocumentsEquipmentsDesc()
+          //   .pipe(
+          //     map((data) => {
+          //       this.numEquipmentsDocs = data.length;
+
+          //       return {
+          //         equipmentsDocuments: data,
+          //       };
+          //     }),
+          //     map((docs: ValidateDocumentsModel | any) => {
+          //       const val = [];
+          //       for (let [
+          //         index,
+          //         equipmentsDocuments,
+          //       ] of docs.equipmentsDocuments.entries()) {
+          //         val.push(
+          //           JSON.stringify({
+          //             status: equipmentsDocuments.status,
+          //             validityDate:
+          //               this.commonDocumentsValidateService.validityDate(
+          //                 equipmentsDocuments
+          //               ),
+          //           })
+          //         );
+          //       }
+          //       return val;
+          //     }),
+          //     map((value) => {
+          //       if (value.length === 0) {
+          //         return this.commonDocumentsValidateService.getExistsNotDocuments();
+          //       }
+          //       const existsApprovedDateFalse = value.map((vl) => {
+          //         return (
+          //           vl ===
+          //           this.commonDocumentsValidateService.validations
+          //             .validationApprovedDateFalse
+          //         );
+          //       });
+          //       const existsPendingDateFalse = value.map((vl) => {
+          //         return (
+          //           vl ===
+          //           this.commonDocumentsValidateService.validations
+          //             .validationPendingDateFalse
+          //         );
+          //       });
+          //       const existsApprovedDateTrue = value.map((vl) => {
+          //         return (
+          //           vl ===
+          //           this.commonDocumentsValidateService.validations
+          //             .validationApprovedDateTrue
+          //         );
+          //       });
+          //       const existsPendingDateTrue = value.map((vl) => {
+          //         return (
+          //           vl ===
+          //           this.commonDocumentsValidateService.validations
+          //             .validationPendingDateTrue
+          //         );
+          //       });
+          //       if (existsApprovedDateFalse[0]) {
+          //         return this.commonDocumentsValidateService.getExistsApprovedTrue();
+          //       } else if (existsPendingDateFalse[0]) {
+          //         return this.commonDocumentsValidateService.getExistsPendingTrue();
+          //       } else if (existsApprovedDateTrue[0]) {
+          //         return this.commonDocumentsValidateService.getExistsNotDocuments();
+          //       } else if (existsPendingDateTrue[0]) {
+          //         return this.commonDocumentsValidateService.getExistsNotDocuments();
+          //       } else {
+          //         return this.commonDocumentsValidateService.getExistsRejectTrue();
+          //       }
+          //     })
+          //   ), // end pipe MSDS
         ]).pipe(
           map((data) => {
             return {
@@ -1063,8 +1087,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
               certificatesDocuments: data[4],
               msdsDocuments: data[5],
               checklistDocuments: data[6],
-              equipmentsDocuments: data[7],
+              // equipmentsDocuments: data[7],
             };
+          }),
+          tap((data) => {
+            if (
+              data.ipercDocuments[0].exists &&
+              data.atsDocuments[0].exists &&
+              data.emergencyDocuments[0].exists &&
+              data.petsDocuments[0].exists &&
+              data.certificatesDocuments[0].exists &&
+              data.msdsDocuments[0].exists &&
+              data.checklistDocuments[0].exists
+            ) {
+              this.info = '✅ Documentos completos';
+            } else {
+              this.info = '🚧 Documentos incompletos';
+            }
           })
         ); // end combineLastest
       }) // end subscribe user

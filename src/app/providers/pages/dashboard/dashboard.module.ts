@@ -9,9 +9,6 @@ import { EquipmentsComponent } from './dialogs-validate-documents/equipments/equ
 
 @NgModule({
   declarations: [
-    CertificatesComponent,
-    ChecklistComponent,
-    EquipmentsComponent
   ],
   imports: [
     CommonModule,

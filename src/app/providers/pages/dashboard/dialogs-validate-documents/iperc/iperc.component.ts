@@ -50,7 +50,7 @@ export class IpercComponent implements OnInit, OnDestroy {
 
   locations$: Observable<Array<Location>> = of([]);
 
-  locationModel = new SelectionModel<Location>(true, []);
+  // locationModel = new SelectionModel<Location>(true, []);
 
   constructor(
     private storage: AngularFireStorage,
@@ -114,7 +114,7 @@ export class IpercComponent implements OnInit, OnDestroy {
     try {
       this.subscription.add(
         this.ipercValidateDocumentsService
-          .addValidateDocumentsIperc(this.archive.value, this.locationModel.selected)
+          .addValidateDocumentsIperc(this.archive.value)
           .subscribe((batchArray) => {
             if (batchArray.length > 0) {
               this.archive.clear();
@@ -314,18 +314,18 @@ export class IpercComponent implements OnInit, OnDestroy {
     return this.dataForm.get('archive') as FormArray;
   }
 
-  setAllLocations(completed: boolean, locations: Location[]) {
-    if (completed) {
-      this.locationModel.setSelection(...locations);
-      console.log(this.locationModel.selected);
-    } else {
-      this.locationModel.clear();
-      console.log(this.locationModel.selected);
-    }
-  }
+  // setAllLocations(completed: boolean, locations: Location[]) {
+  //   if (completed) {
+  //     this.locationModel.setSelection(...locations);
+  //     console.log(this.locationModel.selected);
+  //   } else {
+  //     this.locationModel.clear();
+  //     console.log(this.locationModel.selected);
+  //   }
+  // }
 
-  setLocation(location: Location) {
-    this.locationModel.toggle(location);
-    console.log(this.locationModel.selected);
-  }
+  // setLocation(location: Location) {
+  //   this.locationModel.toggle(location);
+  //   console.log(this.locationModel.selected);
+  // }
 }

@@ -1,0 +1,117 @@
+.dialog-content {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.content-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #48aa43;
+  padding-left: 12px;
+  gap: 12px;
+
+  .info {
+    padding: 12px 6px;
+    background-color: #2f80ed26;
+    border-radius: 10px;
+    font-family: "Quicksand";
+    font-size: 12px;
+    font-weight: 400;
+    color: #2b2b2b;
+  }
+
+  button {
+    font-family: "Quicksand";
+  }
+}
+
+.entry-container {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: top;
+  font-family: "Quicksand";
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid lightgray;
+  padding: 12px 24px;
+  border-radius: 10px;
+  margin: 12px 0px;
+  transition: ease-in-out 1s;
+
+  &--green {
+    border: 2px solid #48aa43;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+
+    .form {
+      width: 100%;
+
+      .form-actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+
+        &--required {
+          color: #f44336;
+        }
+
+        input {
+          display: none;
+        }
+      }
+
+      .link {
+        margin: 0px 0px 12px 12px;
+      }
+
+      mat-form-field {
+        width: 200px;
+      }
+    }
+
+    .locations {
+      ::ng-deep .mat-mdc-checkbox label {
+        font-family: "Quicksand";
+        font-size: 12px;
+        width: 120px;
+      }
+
+      &__header {
+        background-color: aliceblue;
+        padding: 0px 12px;
+
+        span {
+          // font-family: 'Raleway';
+          font-weight: 900;
+        }
+      }
+    }
+  }
+
+  .indicators {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
+mat-dialog-actions {
+  button {
+    font-family: "Raleway";
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .action {
+    color: white;
+  }
+}

@@ -24,7 +24,7 @@ export class AtsValidateDocumentsService {
       switchMap((user) => {
         return this.afs
           .collection<ValidateDocumentsModel>(
-            `providers/${user?.providerId}/atsDocumentsValidate`,
+            `/db/ferreyros/providers/${user?.providerId}/atsDocumentsValidate`,
             (ref) => ref.orderBy('validityDate', 'desc')
           )
           .valueChanges();
@@ -37,7 +37,7 @@ export class AtsValidateDocumentsService {
   ): Observable<ValidateDocumentsModel[]> {
     return this.afs
       .collection<ValidateDocumentsModel>(
-        `providers/${id}/atsDocumentsValidate`,
+        `/db/ferreyros/providers/${id}/atsDocumentsValidate`,
         (ref) => ref.orderBy('validityDate', 'asc')
       )
       .valueChanges();
@@ -64,7 +64,7 @@ export class AtsValidateDocumentsService {
             if (list[j].id === null) {
               const validateDocumentsAtsDocRef = this.afs.firestore
                 .collection(
-                  `providers/${user.providerId}/atsDocumentsValidate/`
+                  `/db/ferreyros/providers/${user.providerId}/atsDocumentsValidate/`
                 )
                 .doc();
 
@@ -80,7 +80,7 @@ export class AtsValidateDocumentsService {
                 name: list[j].name,
                 type: list[j].type,
                 uploadPercent: list[j].uploadPercent,
-                locations: locations,
+                // locations: locations,
                 createdAt:
                   firebase.default.firestore.FieldValue.serverTimestamp() as Date &
                     firebase.default.firestore.Timestamp,
@@ -110,7 +110,7 @@ export class AtsValidateDocumentsService {
         if (!user) return of(batch);
 
         const validateDocumentsAtsDocRef = this.afs.firestore.doc(
-          `providers/${user.providerId}/atsDocumentsValidate/${idFromDelete}`
+          `/db/ferreyros/providers/${user.providerId}/atsDocumentsValidate/${idFromDelete}`
         );
         batch.delete(validateDocumentsAtsDocRef);
         return of(batch);

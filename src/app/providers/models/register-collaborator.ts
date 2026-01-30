@@ -12,30 +12,30 @@ export interface Collaborator {
     | 'rejected'
     | 'expired'
     | 'unassigned';
-  inductionDate: Date & firebase.default.firestore.Timestamp | null;
+  inductionDate: (Date & firebase.default.firestore.Timestamp) | null;
 
-  symptomatologyStatus:
-    | 'approved'
-    | 'pending'
-    | 'rejected'
-    | 'expired'
-    | 'unassigned';
-  symptomatologyDate: Date & firebase.default.firestore.Timestamp | null;
+  // symptomatologyStatus:
+  //   | 'approved'
+  //   | 'pending'
+  //   | 'rejected'
+  //   | 'expired'
+  //   | 'unassigned';
+  // symptomatologyDate: Date & firebase.default.firestore.Timestamp | null;
   lotoStatus: 'approved' | 'pending' | 'rejected' | 'expired' | 'unassigned';
-  lotoDate: Date & firebase.default.firestore.Timestamp | null;
-  medicalExaminationFile?: UploadFile | null;
-  medicalExaminationDate?: (Date & firebase.default.firestore.Timestamp) | null;
-  medicalExaminationStatus?:
-    | 'approved'
-    | 'pending'
-    | 'rejected'
-    | 'expired'
-    | 'unassigned';
-  vaccinationCardFile: UploadFile | null;
-  firstDoseDate: (Date & firebase.default.firestore.Timestamp) | null;
-  secondDoseDate: (Date & firebase.default.firestore.Timestamp) | null;
-  thirdDoseDate: (Date & firebase.default.firestore.Timestamp) | null;
-  doseStatus: 'vaccinated' | 'not-fully-vaccinated' | 'unassigned' | 'rejected';
+  lotoDate: (Date & firebase.default.firestore.Timestamp) | null;
+  // medicalExaminationFile?: UploadFile | null;
+  // medicalExaminationDate?: (Date & firebase.default.firestore.Timestamp) | null;
+  // medicalExaminationStatus?:
+  //   | 'approved'
+  //   | 'pending'
+  //   | 'rejected'
+  //   | 'expired'
+  //   | 'unassigned';
+  // vaccinationCardFile: UploadFile | null;
+  // firstDoseDate: (Date & firebase.default.firestore.Timestamp) | null;
+  // secondDoseDate: (Date & firebase.default.firestore.Timestamp) | null;
+  // thirdDoseDate: (Date & firebase.default.firestore.Timestamp) | null;
+  // doseStatus: 'vaccinated' | 'not-fully-vaccinated' | 'unassigned' | 'rejected';
   sctrId: string;
   sctrFile?: UploadFile;
   sctrDate?: Date & firebase.default.firestore.Timestamp;
@@ -44,15 +44,15 @@ export interface Collaborator {
   svlFile: UploadFile;
   svlDate?: Date & firebase.default.firestore.Timestamp;
   svlStatus?: 'approved' | 'pending' | 'rejected' | 'expired' | 'unassigned';
-  swornDeclarationId: string;
-  swornDeclarationFile: UploadFile;
-  swornDeclarationDate?: Date & firebase.default.firestore.Timestamp;
-  swornDeclarationStatus?:
-    | 'approved'
-    | 'pending'
-    | 'rejected'
-    | 'expired'
-    | 'unassigned';
+  // swornDeclarationId: string;
+  // swornDeclarationFile: UploadFile;
+  // swornDeclarationDate?: Date & firebase.default.firestore.Timestamp;
+  // swornDeclarationStatus?:
+  //   | 'approved'
+  //   | 'pending'
+  //   | 'rejected'
+  //   | 'expired'
+  //   | 'unassigned';
   createdBy: ShortUser;
   createdAt: Date & firebase.default.firestore.Timestamp;
   editedBy?: ShortUser;
