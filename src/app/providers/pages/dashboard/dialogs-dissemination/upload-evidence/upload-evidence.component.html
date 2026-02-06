@@ -1,0 +1,83 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>
+    {{ isUpdate ? 'Actualizar Evidencia' : 'Subir Evidencia' }}
+  </h2>
+
+  <mat-dialog-content>
+    <div class="document-info">
+      <mat-icon color="primary">description</mat-icon>
+      <div class="document-details">
+        <h3>{{ data.document.name }}</h3>
+        <p *ngIf="data.document.description">{{ data.document.description }}</p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="upload-section">
+      <p class="instruction">
+        {{ isUpdate
+          ? 'Seleccione un nuevo archivo PDF para reemplazar la evidencia actual'
+          : 'Seleccione el archivo PDF con la evidencia requerida'
+        }}
+      </p>
+
+      <!-- File Upload -->
+      <div class="file-upload-area">
+        <input
+          type="file"
+          #fileInput
+          accept="application/pdf"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+        <button
+          type="button"
+          mat-stroked-button
+          color="primary"
+          (click)="fileInput.click()"
+          [disabled]="uploading"
+          class="upload-button"
+        >
+          <mat-icon>upload_file</mat-icon>
+          {{ isUpdate ? 'Cambiar Archivo' : 'Seleccionar PDF' }}
+        </button>
+        <div class="file-info">
+          <mat-icon [color]="selectedFile ? 'accent' : ''">
+            {{ selectedFile ? 'check_circle' : 'insert_drive_file' }}
+          </mat-icon>
+          <span>{{ fileName }}</span>
+        </div>
+      </div>
+
+      <!-- Upload Progress -->
+      <div *ngIf="uploading" class="upload-progress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <span class="progress-text">Subiendo evidencia...</span>
+      </div>
+
+      <!-- Info Note -->
+      <div class="info-note">
+        <mat-icon>info</mat-icon>
+        <span>El archivo debe ser PDF y no superar los 10MB</span>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="uploading">
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="uploading || !selectedFile"
+    >
+      <mat-icon *ngIf="!uploading">cloud_upload</mat-icon>
+      <mat-spinner *ngIf="uploading" diameter="20"></mat-spinner>
+      <span *ngIf="!uploading">{{ isUpdate ? 'Actualizar' : 'Subir Evidencia' }}</span>
+      <span *ngIf="uploading">Subiendo...</span>
+    </button>
+  </mat-dialog-actions>
+</div>

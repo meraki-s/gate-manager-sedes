@@ -6,9 +6,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CertificatesComponent } from './dialogs-validate-documents/certificates/certificates.component';
 import { ChecklistComponent } from './dialogs-validate-documents/checklist/checklist.component';
 import { EquipmentsComponent } from './dialogs-validate-documents/equipments/equipments.component';
+import { UploadEvidenceComponent } from './dialogs-dissemination/upload-evidence/upload-evidence.component';
 
 @NgModule({
   declarations: [
+  
+    UploadEvidenceComponent
   ],
   imports: [
     CommonModule,

@@ -42,15 +42,29 @@
     .result__entry {
       display: flex;
       flex-direction: row;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
       margin-bottom: 1rem;
       border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      padding: 0.5rem 0;
 
-      button {
+      button:not(.exit-button) {
         width: 110px;
         color: white;
         font-size: 12px;
+      }
+
+      .exit-button {
+        margin-left: 0.5rem;
+        transition: transform 0.2s ease-in-out;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        mat-icon {
+          font-size: 24px;
+        }
       }
 
       &__company-name {

@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Confirmar salida forzada</h2>
+<mat-dialog-content>
+  <div class="dialog-content">
+    <mat-icon class="warning-icon">warning</mat-icon>
+    <p class="warning-text">
+      ¿Está seguro que desea retirar manualmente a este personal de la planta?
+    </p>
+    <div class="person-info">
+      <p><strong>Nombre:</strong> {{ data.name }} {{ data.lastname }}</p>
+      <p><strong>DNI:</strong> {{ data.dni }}</p>
+      <p><strong>Empresa:</strong> {{ data.companyName }}</p>
+    </div>
+    <p class="note">
+      Esta acción registrará una salida forzada en el historial y reducirá el contador de personal en planta.
+    </p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">
+    Confirmar salida
+  </button>
+</mat-dialog-actions>

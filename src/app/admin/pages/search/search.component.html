@@ -254,6 +254,72 @@
     </div>
   </div>
 
+  <!-- Dissemination Documents Section -->
+  <div class="access-list" *ngIf="providerSearch">
+    <div class="access-card mat-elevation-z4">
+      <div class="header">
+        <h3 class="header__title">Documentos de Difusión</h3>
+      </div>
+      <ng-container *ngIf="disseminationData$ | async as disseminationItems">
+        <div
+          class="document-card"
+          *ngFor="let item of disseminationItems"
+        >
+          <ng-container *ngIf="item.evidence; else noEvidence">
+            <div class="document-card__header">
+              <mat-icon
+                class="document-card__header__icon"
+                [ngClass]="{
+                  'document-card__header__icon--approved': item.status === 'approved',
+                  'document-card__header__icon--pending': item.status === 'pending',
+                  'document-card__header__icon--rejected': item.status === 'rejected'
+                }"
+                >{{
+                  item.status === "approved"
+                    ? "check_circle"
+                    : item.status === "pending"
+                    ? "schedule"
+                    : item.status === "rejected"
+                    ? "cancel"
+                    : "help"
+                }}</mat-icon
+              >
+              <span class="document-card__header__title">{{
+                item.document.name
+              }}</span>
+              <span class="fill"></span>
+              <button
+                mat-icon-button
+                class="document-card__header__actions"
+                matTooltip="Revisar evidencia"
+                (click)="onReviewDisseminationEvidence(item)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+            <div class="document-card__chips">
+              <div class="chip" (click)="onReviewDisseminationEvidence(item)">
+                <span class="chip__name">{{
+                  item.evidence.evidenceFileName.length > 30
+                    ? "..." + (item.evidence.evidenceFileName | slice : -27)
+                    : item.evidence.evidenceFileName
+                }}</span>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noEvidence>
+            <span>
+              Sin evidencia para <strong>{{ item.document.name }}</strong>
+            </span>
+          </ng-template>
+        </div>
+        <div class="default" *ngIf="disseminationItems.length === 0">
+          <p>No hay documentos de difusión configurados</p>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
   <div class="access-list">
     <div class="access-card mat-elevation-z4">
       <ng-container *ngIf="loading$ | async">

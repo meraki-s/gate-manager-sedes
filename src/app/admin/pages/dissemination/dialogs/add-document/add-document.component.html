@@ -1,0 +1,94 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Agregar Documento de Difusión</h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="form" class="document-form">
+      <!-- File Upload -->
+      <div class="file-upload-section">
+        <input
+          type="file"
+          #fileInput
+          accept="application/pdf"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+        <button
+          type="button"
+          mat-stroked-button
+          color="primary"
+          (click)="fileInput.click()"
+          [disabled]="uploading"
+        >
+          <mat-icon>upload_file</mat-icon>
+          Seleccionar PDF
+        </button>
+        <span class="file-name">{{ fileName }}</span>
+      </div>
+
+      <!-- Name Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre del Documento *</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          placeholder="Ej: Política de Seguridad"
+          [disabled]="uploading"
+        />
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          El nombre es requerido
+        </mat-error>
+        <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
+          Máximo 100 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción (Opcional)</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Descripción del documento"
+          rows="3"
+          [disabled]="uploading"
+        ></textarea>
+        <mat-error *ngIf="form.get('description')?.hasError('maxlength')">
+          Máximo 500 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Required Checkbox -->
+      <div class="checkbox-section">
+        <mat-checkbox formControlName="required" [disabled]="uploading">
+          Documento Obligatorio
+        </mat-checkbox>
+        <mat-hint>
+          Si está marcado, los proveedores deben subir evidencia obligatoriamente
+        </mat-hint>
+      </div>
+
+      <!-- Upload Progress -->
+      <div *ngIf="uploading" class="upload-progress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <span class="progress-text">Subiendo documento...</span>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="uploading">
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="uploading || form.invalid || !selectedFile"
+    >
+      <mat-icon *ngIf="!uploading">save</mat-icon>
+      <mat-spinner *ngIf="uploading" diameter="20"></mat-spinner>
+      <span *ngIf="!uploading">Guardar</span>
+      <span *ngIf="uploading">Guardando...</span>
+    </button>
+  </mat-dialog-actions>
+</div>

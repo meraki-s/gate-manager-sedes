@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Guard } from '../shared/guard/auth.guard';
 import { AdminComponent } from './admin.component';
+import { DisseminationComponent } from './pages/dissemination/dissemination.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,18 @@ const routes: Routes = [
         path: 'locations',
         loadChildren: () =>
           import('./pages/locations/locations.module').then((m) => m.LocationsModule),
+      },
+      {
+        path: 'dissemination',
+        component: DisseminationComponent,
+        canActivate: [Guard],
+      },
+      {
+        path: 'downloads',
+        loadChildren: () =>
+          import('./pages/downloads/downloads.module').then(
+            (m) => m.DownloadsModule
+          ),
       },
       {
         path: 'settings',

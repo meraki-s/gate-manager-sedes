@@ -1,0 +1,119 @@
+<div class="dissemination-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Documentos de Difusión</h1>
+    <p class="subtitle">
+      Gestione los documentos que los proveedores deben revisar y presentar evidencia
+    </p>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onAddDocument()"
+      class="add-button"
+    >
+      <mat-icon>add</mat-icon>
+      Agregar Documento
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando documentos...</p>
+  </div>
+
+  <!-- Documents List -->
+  <div *ngIf="!loading && documents.length > 0" class="documents-section">
+    <div class="section-hint">
+      <mat-icon>info</mat-icon>
+      <span>Arrastre y suelte para cambiar el orden de los documentos</span>
+    </div>
+
+    <div
+      cdkDropList
+      class="documents-list"
+      (cdkDropListDropped)="onDrop($event)"
+    >
+      <div
+        *ngFor="let document of documents; let i = index"
+        class="document-item"
+        cdkDrag
+      >
+        <!-- Drag Handle -->
+        <div class="drag-handle" cdkDragHandle>
+          <mat-icon>drag_indicator</mat-icon>
+        </div>
+
+        <!-- Document Info -->
+        <div class="document-info">
+          <div class="document-header">
+            <mat-icon class="pdf-icon">picture_as_pdf</mat-icon>
+            <h3>{{ document.name }}</h3>
+            <mat-chip *ngIf="document.required" class="required-chip">
+              Obligatorio
+            </mat-chip>
+          </div>
+          <p *ngIf="document.description" class="document-description">
+            {{ document.description }}
+          </p>
+          <div class="document-meta">
+            <span class="meta-item">
+              <mat-icon>description</mat-icon>
+              {{ document.fileName }}
+            </span>
+            <span class="meta-item">
+              <mat-icon>person</mat-icon>
+              {{ document.createdBy.displayName }}
+            </span>
+            <span class="meta-item" *ngIf="document.createdAt">
+              <mat-icon>calendar_today</mat-icon>
+              {{ document.createdAt.toDate() | date : 'dd/MM/yyyy HH:mm' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="document-actions">
+          <button
+            mat-icon-button
+            matTooltip="Ver documento"
+            (click)="viewDocument(document)"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Editar"
+            (click)="onEditDocument(document)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            matTooltip="Eliminar"
+            (click)="onDeleteDocument(document)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <!-- Drag Preview -->
+        <div class="document-placeholder" *cdkDragPlaceholder></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && documents.length === 0" class="empty-state">
+    <mat-icon>folder_open</mat-icon>
+    <h2>No hay documentos de difusión</h2>
+    <p>
+      Los documentos de difusión aparecerán aquí una vez que los agregue
+    </p>
+    <button mat-raised-button color="primary" (click)="onAddDocument()">
+      <mat-icon>add</mat-icon>
+      Agregar Primer Documento
+    </button>
+  </div>
+</div>

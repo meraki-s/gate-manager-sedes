@@ -1,0 +1,168 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Revisión de Evidencia de Difusión</h2>
+
+  <mat-dialog-content>
+    <!-- Provider Info -->
+    <div class="info-section">
+      <mat-icon color="primary">business</mat-icon>
+      <div class="info-details">
+        <h3>{{ data.providerName }}</h3>
+        <p>RUC: {{ data.providerRUC }}</p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Document Info -->
+    <div class="document-section">
+      <div class="section-header">
+        <mat-icon>description</mat-icon>
+        <h3>Documento de Difusión Original</h3>
+      </div>
+      <div class="document-card">
+        <div class="document-info">
+          <strong>{{ data.document.name }}</strong>
+          <p *ngIf="data.document.description">
+            {{ data.document.description }}
+          </p>
+        </div>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="openDocument(data.document.fileURL)"
+        >
+          <mat-icon>open_in_new</mat-icon>
+          Ver Documento
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Evidence Info -->
+    <div class="evidence-section">
+      <div class="section-header">
+        <mat-icon>cloud_upload</mat-icon>
+        <h3>Evidencia Subida por Proveedor</h3>
+      </div>
+      <div class="evidence-card">
+        <div class="evidence-info">
+          <div class="info-row">
+            <span class="label">Archivo:</span>
+            <span class="value">{{ data.evidence.evidenceFileName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Subido por:</span>
+            <span class="value"
+              >{{ data.evidence.createdBy.displayName }} el
+              {{
+                data.evidence.createdAt.toDate() | date: "dd/MM/yyyy HH:mm"
+              }}</span
+            >
+          </div>
+          <div class="info-row">
+            <span class="label">Estado actual:</span>
+            <span
+              class="status-badge"
+              [attr.data-status]="data.evidence.status"
+            >
+              {{
+                data.evidence.status === "pending"
+                  ? "Pendiente"
+                  : data.evidence.status === "approved"
+                    ? "Aprobada"
+                    : "Rechazada"
+              }}
+            </span>
+          </div>
+          <div
+            class="info-row"
+            *ngIf="
+              data.evidence.status === 'rejected' &&
+              data.evidence.rejectionReason
+            "
+          >
+            <span class="label">Motivo de rechazo:</span>
+            <span class="value rejection-reason">{{
+              data.evidence.rejectionReason
+            }}</span>
+          </div>
+        </div>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="openDocument(data.evidence.evidenceFileURL)"
+        >
+          <mat-icon>picture_as_pdf</mat-icon>
+          Ver Evidencia PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Rejection Form -->
+    <div class="rejection-form" *ngIf="showRejectionForm">
+      <mat-divider></mat-divider>
+      <form [formGroup]="rejectionForm">
+        <h3>Motivo de Rechazo</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Describa el motivo del rechazo</mat-label>
+          <textarea
+            matInput
+            formControlName="reason"
+            rows="4"
+            placeholder="Ej: El documento no está firmado correctamente..."
+          ></textarea>
+          <mat-error *ngIf="rejectionForm.get('reason')?.hasError('required')">
+            El motivo es requerido
+          </mat-error>
+          <mat-error *ngIf="rejectionForm.get('reason')?.hasError('minlength')">
+            El motivo debe tener al menos 10 caracteres
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      (click)="onCancelRejection()"
+      *ngIf="showRejectionForm"
+      [disabled]="processing"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Cancelar Rechazo
+    </button>
+    <button
+      mat-button
+      (click)="onClose()"
+      *ngIf="!showRejectionForm"
+      [disabled]="processing"
+    >
+      Cerrar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onApprove()"
+      [disabled]="processing || data.evidence.status === 'approved'"
+      *ngIf="!showRejectionForm"
+      style="color: white"
+    >
+      <mat-icon *ngIf="!processing">check_circle</mat-icon>
+      <mat-spinner *ngIf="processing" diameter="20"></mat-spinner>
+      Aprobar
+    </button>
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="onReject()"
+      [disabled]="processing"
+    >
+      <mat-icon *ngIf="!processing && !showRejectionForm">cancel</mat-icon>
+      <mat-icon *ngIf="!processing && showRejectionForm">send</mat-icon>
+      <mat-spinner *ngIf="processing" diameter="20"></mat-spinner>
+      {{ showRejectionForm ? "Confirmar Rechazo" : "Rechazar" }}
+    </button>
+  </mat-dialog-actions>
+</div>

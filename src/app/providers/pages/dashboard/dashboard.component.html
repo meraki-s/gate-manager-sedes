@@ -14,13 +14,13 @@
           [ngClass]="{
             'folder--empty':
               docs.ipercDocuments[1].exists || docs.ipercDocuments[3].exists,
-              'folder--rejected': docs.ipercDocuments[2].exists,
-              'folder--done': docs.ipercDocuments[0].exists,
+            'folder--rejected': docs.ipercDocuments[2].exists,
+            'folder--done': docs.ipercDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('iperc')"
         >
           <div class="counter">
-            {{ numIpercDocs | number : "2.0-0" }} Documentos
+            {{ numIpercDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">IPERC</div>
         </div>
@@ -29,13 +29,13 @@
           [ngClass]="{
             'folder--empty':
               docs.atsDocuments[1].exists || docs.atsDocuments[3].exists,
-              'folder--rejected': docs.atsDocuments[2].exists,
-              'folder--done': docs.atsDocuments[0].exists,
+            'folder--rejected': docs.atsDocuments[2].exists,
+            'folder--done': docs.atsDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('ats')"
         >
           <div class="counter">
-            {{ numAtsDocs | number : "2.0-0" }} Documentos
+            {{ numAtsDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">ATS</div>
         </div>
@@ -43,14 +43,15 @@
           class="folder"
           [ngClass]="{
             'folder--empty':
-              docs.emergencyDocuments[1].exists || docs.emergencyDocuments[3].exists,
-              'folder--rejected': docs.emergencyDocuments[2].exists,
-              'folder--done': docs.emergencyDocuments[0].exists,
+              docs.emergencyDocuments[1].exists ||
+              docs.emergencyDocuments[3].exists,
+            'folder--rejected': docs.emergencyDocuments[2].exists,
+            'folder--done': docs.emergencyDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('emergency')"
         >
           <div class="counter">
-            {{ numEmergencyDocs | number : "2.0-0" }} Documentos
+            {{ numEmergencyDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">Plan Emerg.</div>
         </div>
@@ -59,13 +60,13 @@
           [ngClass]="{
             'folder--empty':
               docs.petsDocuments[1].exists || docs.petsDocuments[3].exists,
-              'folder--rejected': docs.petsDocuments[2].exists,
-              'folder--done': docs.petsDocuments[0].exists,
+            'folder--rejected': docs.petsDocuments[2].exists,
+            'folder--done': docs.petsDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('pets')"
         >
           <div class="counter">
-            {{ numPetsDocs | number : "2.0-0" }} Documentos
+            {{ numPetsDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">PETS</div>
         </div>
@@ -73,14 +74,15 @@
           class="folder"
           [ngClass]="{
             'folder--empty':
-              docs.certificatesDocuments[1].exists || docs.certificatesDocuments[3].exists,
-              'folder--rejected': docs.certificatesDocuments[2].exists,
-              'folder--done': docs.certificatesDocuments[0].exists,
+              docs.certificatesDocuments[1].exists ||
+              docs.certificatesDocuments[3].exists,
+            'folder--rejected': docs.certificatesDocuments[2].exists,
+            'folder--done': docs.certificatesDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('certificates')"
         >
           <div class="counter">
-            {{ numCertificatesDocs | number : "2.0-0" }} Documentos
+            {{ numCertificatesDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">Certificados</div>
         </div>
@@ -89,13 +91,13 @@
           [ngClass]="{
             'folder--empty':
               docs.msdsDocuments[1].exists || docs.msdsDocuments[3].exists,
-              'folder--rejected': docs.msdsDocuments[2].exists,
-              'folder--done': docs.msdsDocuments[0].exists,
+            'folder--rejected': docs.msdsDocuments[2].exists,
+            'folder--done': docs.msdsDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('msds')"
         >
           <div class="counter">
-            {{ numMsdsDocs | number : "2.0-0" }} Documentos
+            {{ numMsdsDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">MSDS</div>
         </div>
@@ -103,14 +105,15 @@
           class="folder"
           [ngClass]="{
             'folder--empty':
-              docs.checklistDocuments[1].exists || docs.checklistDocuments[3].exists,
-              'folder--rejected': docs.checklistDocuments[2].exists,
-              'folder--done': docs.checklistDocuments[0].exists,
+              docs.checklistDocuments[1].exists ||
+              docs.checklistDocuments[3].exists,
+            'folder--rejected': docs.checklistDocuments[2].exists,
+            'folder--done': docs.checklistDocuments[0].exists,
           }"
           (click)="openModalValidateDocuments('checklist')"
         >
           <div class="counter">
-            {{ numChecklistDocs | number : "2.0-0" }} Documentos
+            {{ numChecklistDocs | number: "2.0-0" }} Documentos
           </div>
           <div class="title">Check List</div>
         </div>
@@ -137,6 +140,113 @@
           count="5"
           appearance="circle"
         ></ngx-skeleton-loader> -->
+      </ng-template>
+    </div>
+
+    <!-- Dissemination Documents Section -->
+    <div class="archives" style="margin-top: 2rem">
+      <div class="header">
+        <span class="title">Documentos de Difusión</span>
+        <span class="info">Revise y suba evidencias de difusión</span>
+      </div>
+
+      <div
+        *ngIf="
+          disseminationData$ | async as documents;
+          else disseminationLoader
+        "
+      >
+        <div *ngIf="documents.length > 0" class="dissemination-grid">
+          <mat-card *ngFor="let item of documents" class="dissemination-card">
+            <mat-card-header>
+              <div
+                mat-card-avatar
+                class="dissemination-card__avatar"
+                [attr.data-status]="item.status"
+              >
+                <mat-icon>{{ getStatusIcon(item.status) }}</mat-icon>
+              </div>
+              <mat-card-title class="dissemination-card__title">
+                {{ item.document.name }}
+              </mat-card-title>
+              <mat-card-subtitle [style.color]="getStatusColor(item.status)">
+                {{ getStatusText(item.status) }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p
+                *ngIf="item.document.description"
+                class="dissemination-card__description"
+              >
+                {{ item.document.description }}
+              </p>
+
+              <div
+                *ngIf="item.status === 'rejected' && item.evidence"
+                class="dissemination-card__rejection"
+              >
+                <mat-icon color="warn">error_outline</mat-icon>
+                <div>
+                  <strong>Motivo de rechazo:</strong>
+                  <p>
+                    {{ item.evidence.rejectionReason || "No especificado" }}
+                  </p>
+                </div>
+              </div>
+
+              <div
+                *ngIf="item.evidence && item.evidence.evidenceFileName"
+                class="dissemination-card__evidence"
+              >
+                <mat-icon>attach_file</mat-icon>
+                <span>{{ item.evidence.evidenceFileName }}</span>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Ver documento original"
+                (click)="onViewDisseminationDocument(item.document)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+
+              <button
+                *ngIf="item.evidence"
+                mat-icon-button
+                color="warn"
+                matTooltip="Ver evidencia"
+                (click)="onViewEvidence(item.evidence)"
+              >
+                <mat-icon>picture_as_pdf</mat-icon>
+              </button>
+
+              <button
+                mat-stroked-button
+                class="upload-btn"
+                (click)="onUploadEvidence(item)"
+              >
+                <mat-icon>cloud_upload</mat-icon>
+                {{ item.evidence ? "Actualizar" : "Subir Evidencia" }}
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <div *ngIf="documents.length === 0" class="dissemination-empty">
+          <mat-icon>info</mat-icon>
+          <p>No hay documentos de difusión disponibles</p>
+        </div>
+      </div>
+
+      <ng-template #disseminationLoader>
+        <div class="dissemination-loader">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando documentos de difusión...</p>
+        </div>
       </ng-template>
     </div>
 
@@ -215,12 +325,12 @@
                 <span class="fill"></span>
                 <div *ngIf="!deviceXs" class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
-                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                    item.validityDate.seconds * 1000 | date: "dd/MM/yy"
                   }}</span>
                 </div>
                 <div *ngIf="!deviceXs" class="counter-tag">
                   <strong>{{
-                    item.collaborators.length | number : "2."
+                    item.collaborators.length | number: "2."
                   }}</strong>
                   Colaboradores
                 </div>
@@ -233,12 +343,12 @@
                   </div>
                   <div class="card__validity">
                     Vigencia:<span class="card__validity--text">{{
-                      item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                      item.validityDate.seconds * 1000 | date: "dd/MM/yy"
                     }}</span>
                   </div>
                   <div *ngIf="!deviceXs" class="counter-tag">
                     <strong>{{
-                      item.collaborators.length | number : "2."
+                      item.collaborators.length | number: "2."
                     }}</strong>
                     Colaboradores
                   </div>
@@ -328,12 +438,12 @@
                   <span class="fill"></span>
                   <div class="card__validity">
                     Vigencia:<span class="card__validity--text">{{
-                      item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                      item.validityDate.seconds * 1000 | date: "dd/MM/yy"
                     }}</span>
                   </div>
                   <div *ngIf="!deviceXs" class="counter-tag">
                     <strong>{{
-                      item.collaborators.length | number : "2."
+                      item.collaborators.length | number: "2."
                     }}</strong>
                     Colaboradores
                   </div>
@@ -346,12 +456,12 @@
                 <span class="fill"></span>
                 <div *ngIf="!deviceXs" class="card__validity">
                   Vigencia:<span class="card__validity--text">{{
-                    item.validityDate.seconds * 1000 | date : "dd/MM/yy"
+                    item.validityDate.seconds * 1000 | date: "dd/MM/yy"
                   }}</span>
                 </div>
                 <div *ngIf="!deviceXs" class="counter-tag">
                   <strong>{{
-                    item.collaborators.length | number : "2."
+                    item.collaborators.length | number: "2."
                   }}</strong>
                   Colaboradores
                 </div>

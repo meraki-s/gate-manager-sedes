@@ -1,0 +1,31 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Eliminar Documento</h2>
+
+  <mat-dialog-content>
+    <div class="warning-icon">
+      <mat-icon color="warn">warning</mat-icon>
+    </div>
+    <p class="warning-text">
+      ¿Está seguro que desea eliminar el documento
+      <strong>"{{ document.name }}"</strong>?
+    </p>
+    <p class="info-text">
+      Esta acción no se puede deshacer. El documento será eliminado permanentemente.
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="deleting">
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="onConfirm()"
+      [disabled]="deleting"
+    >
+      <mat-spinner *ngIf="deleting" diameter="20"></mat-spinner>
+      <span *ngIf="!deleting">Eliminar</span>
+    </button>
+  </mat-dialog-actions>
+</div>
