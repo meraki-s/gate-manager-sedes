@@ -1,0 +1,237 @@
+.dissemination-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    margin-bottom: 3rem;
+    text-align: center;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 1rem;
+      margin: 0 0 2rem 0;
+    }
+
+    .add-button {
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1rem;
+
+    p {
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+
+  .documents-section {
+    .section-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: #e8f5e9;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      color: #27ae60;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      span {
+        font-size: 0.9rem;
+      }
+    }
+
+    .documents-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .document-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 12px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: #27ae60;
+          box-shadow: 0 4px 12px rgba(39, 174, 96, 0.1);
+        }
+
+        &.cdk-drag-preview {
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+          border-color: #27ae60;
+          opacity: 0.9;
+        }
+
+        &.cdk-drag-animating {
+          transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        .drag-handle {
+          cursor: move;
+          color: #999;
+          display: flex;
+          align-items: center;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+
+          &:hover {
+            color: #27ae60;
+          }
+        }
+
+        .document-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .document-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            .pdf-icon {
+              color: #d32f2f;
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+            }
+
+            h3 {
+              margin: 0;
+              font-size: 1.1rem;
+              font-weight: 500;
+              color: #333;
+              flex: 1;
+            }
+
+            .required-chip {
+              background: #27ae60;
+              color: white;
+              font-size: 0.75rem;
+              height: 24px;
+              padding: 0 8px;
+            }
+          }
+
+          .document-description {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+            padding-left: 2.5rem;
+          }
+
+          .document-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding-left: 2.5rem;
+
+            .meta-item {
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+              color: #999;
+              font-size: 0.85rem;
+
+              mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+              }
+            }
+          }
+        }
+
+        .document-actions {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            &:hover {
+              background: rgba(39, 174, 96, 0.1);
+            }
+          }
+        }
+
+        .document-placeholder {
+          background: #f5f5f5;
+          border: 2px dashed #27ae60;
+          min-height: 80px;
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+
+    mat-icon {
+      font-size: 80px;
+      width: 80px;
+      height: 80px;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #666;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      color: #999;
+      margin: 0 0 2rem 0;
+    }
+
+    button {
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+// CDK Drag & Drop Styling
+.cdk-drop-list-dragging .document-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

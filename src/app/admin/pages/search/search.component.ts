@@ -5,6 +5,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import {
   debounceTime,
@@ -26,6 +27,9 @@ import { ProviderSearch } from '../../models/providerSearch.model';
 import { SearchService } from '../../services/search.service';
 import { RejectedDescriptionComponent } from './dialogs/rejected-description/rejected-description.component';
 import { DeleteCollaboratorComponent } from './dialogs/delete-collaborator/delete-collaborator.component';
+import { DisseminationReviewComponent } from './dialogs/dissemination-review/dissemination-review.component';
+import { DisseminationDocument } from '../../models/dissemination-document.model';
+import { DisseminationEvidence } from 'src/app/providers/models/dissemination-evidence.model';
 
 @Component({
   selector: 'app-search',
@@ -63,6 +67,8 @@ export class SearchComponent implements OnInit {
   providers$!: Observable<Provider[]>;
   collaborators = new BehaviorSubject<Collaborator[]>([]);
   collaborators$ = this.collaborators.asObservable();
+
+  disseminationData$!: Observable<any[]>;
   //#endregion
 
   //#region other variables
@@ -119,7 +125,8 @@ export class SearchComponent implements OnInit {
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
-    private breakpoint: BreakpointObserver
+    private breakpoint: BreakpointObserver,
+    private afs: AngularFirestore
   ) {}
 
   ngOnInit(): void {
@@ -208,6 +215,7 @@ export class SearchComponent implements OnInit {
                 return a.entryDeparture.localeCompare(b.entryDeparture);
               });
             this.buildDocumentData(provider);
+            this.buildDisseminationData(provider.providerId);
             this.searchDNIControl.enable();
             this.collaborators.next(this.providerSearch.collaborators);
           } else {
@@ -651,6 +659,118 @@ export class SearchComponent implements OnInit {
     });
   }
 
+  /**
+   * Build dissemination data for the provider
+   * Combines dissemination documents with provider's evidences
+   */
+  buildDisseminationData(providerId: string): void {
+    const disseminationDocuments$ = this.afs
+      .collection<DisseminationDocument>('db/ferreyros/disseminationDocuments', (ref) =>
+        ref.orderBy('order', 'asc')
+      )
+      .valueChanges({ idField: 'id' });
+
+    const disseminationEvidences$ = this.searchService.getProviderDisseminationEvidences(providerId);
+
+    this.disseminationData$ = combineLatest([
+      disseminationDocuments$,
+      disseminationEvidences$,
+    ]).pipe(
+      map(([documents, evidences]) => {
+        return documents.map((doc) => {
+          const evidence = evidences.find(
+            (e: DisseminationEvidence) => e.disseminationDocumentId === doc.id
+          );
+          return {
+            document: doc,
+            evidence: evidence || null,
+            status: evidence?.status || 'not-uploaded',
+          };
+        });
+      })
+    );
+  }
+
+  /**
+   * Open dissemination review dialog
+   */
+  onReviewDisseminationEvidence(item: any): void {
+    if (!item.evidence) return;
+
+    const dialogRef = this.dialog.open(DisseminationReviewComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: {
+        document: item.document,
+        evidence: item.evidence,
+        providerName: this.providerSearch!.companyName,
+        providerRUC: this.providerSearch!.companyRuc,
+      },
+      panelClass: 'border-dialog',
+    });
+
+    dialogRef.afterClosed().pipe(take(1)).subscribe((result) => {
+      if (result) {
+        // Evidence was approved/rejected, refresh will happen automatically via observable
+        this.snackbar.open('✅ Evidencia actualizada', 'Cerrar', {
+          duration: 2000,
+        });
+      }
+    });
+  }
+
+  /**
+   * Get status color for dissemination evidence
+   */
+  getDisseminationStatusColor(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'primary';
+      case 'pending':
+        return 'accent';
+      case 'rejected':
+        return 'warn';
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Get status icon for dissemination evidence
+   */
+  getDisseminationStatusIcon(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'check_circle';
+      case 'pending':
+        return 'schedule';
+      case 'rejected':
+        return 'cancel';
+      case 'not-uploaded':
+        return 'cloud_off';
+      default:
+        return 'help';
+    }
+  }
+
+  /**
+   * Get status text for dissemination evidence
+   */
+  getDisseminationStatusText(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'Aprobada';
+      case 'pending':
+        return 'Pendiente';
+      case 'rejected':
+        return 'Rechazada';
+      case 'not-uploaded':
+        return 'No subida';
+      default:
+        return 'Desconocido';
+    }
+  }
+
   // approveMedicalExamination(collaborator: Collaborator): void {
   //   this.loadingMedicalExamination.next(true);
   //   this.searchService
@@ -820,4 +940,5 @@ export class SearchComponent implements OnInit {
   //       }
   //     });
   // }
+
 }

@@ -7,9 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { RejectedDescriptionComponent } from './dialogs/rejected-description/rejected-description.component';
 import { DeleteCollaboratorComponent } from './dialogs/delete-collaborator/delete-collaborator.component';
+import { DisseminationReviewComponent } from './dialogs/dissemination-review/dissemination-review.component';
 
 @NgModule({
-  declarations: [SearchComponent, RejectedDescriptionComponent, DeleteCollaboratorComponent],
+  declarations: [SearchComponent, RejectedDescriptionComponent, DeleteCollaboratorComponent, DisseminationReviewComponent],
   imports: [
     CommonModule,
     SearchRoutingModule,

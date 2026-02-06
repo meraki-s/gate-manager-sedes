@@ -1,0 +1,230 @@
+.dialog-container {
+  padding: 1rem;
+
+  h2 {
+    margin: 0 0 1rem 0;
+    color: #27ae60;
+    font-size: 1.5rem;
+  }
+
+  mat-dialog-content {
+    padding: 1.5rem 0;
+    min-width: 700px;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    mat-divider {
+      margin: 0.5rem 0;
+    }
+
+    .info-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f5f5f5;
+      border-radius: 8px;
+
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+      }
+
+      .info-details {
+        flex: 1;
+
+        h3 {
+          margin: 0 0 0.25rem 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #333;
+        }
+
+        p {
+          margin: 0;
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .document-section,
+    .evidence-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        mat-icon {
+          color: #27ae60;
+        }
+
+        h3 {
+          margin: 0;
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: #333;
+        }
+      }
+
+      .document-card,
+      .evidence-card {
+        padding: 1.5rem;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+
+        .document-info,
+        .evidence-info {
+          flex: 1;
+
+          strong {
+            font-size: 1rem;
+            color: #333;
+          }
+
+          p {
+            margin: 0.5rem 0 0 0;
+            color: #666;
+            font-size: 0.9rem;
+          }
+
+          .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            .label {
+              font-weight: 500;
+              color: #666;
+              min-width: 120px;
+            }
+
+            .value {
+              color: #333;
+              flex: 1;
+            }
+
+            .rejection-reason {
+              color: #d32f2f;
+              font-style: italic;
+            }
+
+            .status-badge {
+              padding: 0.25rem 0.75rem;
+              border-radius: 12px;
+              font-size: 0.85rem;
+              font-weight: 500;
+
+              &[data-status="pending"] {
+                background: #fff3cd;
+                color: #856404;
+              }
+
+              &[data-status="approved"] {
+                background: #d4edda;
+                color: #155724;
+              }
+
+              &[data-status="rejected"] {
+                background: #f8d7da;
+                color: #721c24;
+              }
+            }
+          }
+        }
+
+        button {
+          white-space: nowrap;
+
+          mat-icon {
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+
+    .rejection-form {
+      margin-top: 1rem;
+
+      h3 {
+        margin: 1rem 0 0.5rem 0;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #d32f2f;
+      }
+
+      .full-width {
+        width: 100%;
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 1rem 0 0 0;
+
+    button {
+      margin-left: 0.5rem;
+
+      mat-icon,
+      mat-spinner {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 0.5rem;
+      }
+
+      mat-spinner {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .dialog-container {
+    mat-dialog-content {
+      min-width: 100%;
+
+      .document-section,
+      .evidence-section {
+        .document-card,
+        .evidence-card {
+          flex-direction: column;
+          align-items: stretch;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    mat-dialog-actions {
+      flex-direction: column;
+      align-items: stretch;
+
+      button {
+        margin: 0.25rem 0;
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>Editar Documento de Difusión</h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="form" class="document-form">
+      <!-- Current File Info -->
+      <div class="file-info">
+        <mat-icon color="primary">picture_as_pdf</mat-icon>
+        <div class="file-details">
+          <span class="file-name">{{ document.fileName }}</span>
+          <span class="file-hint">No se puede cambiar el archivo PDF</span>
+        </div>
+      </div>
+
+      <!-- Name Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre del Documento *</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          placeholder="Ej: Política de Seguridad"
+          [disabled]="updating"
+        />
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          El nombre es requerido
+        </mat-error>
+        <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
+          Máximo 100 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción (Opcional)</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Descripción del documento"
+          rows="3"
+          [disabled]="updating"
+        ></textarea>
+        <mat-error *ngIf="form.get('description')?.hasError('maxlength')">
+          Máximo 500 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Required Checkbox -->
+      <div class="checkbox-section">
+        <mat-checkbox formControlName="required" [disabled]="updating">
+          Documento Obligatorio
+        </mat-checkbox>
+        <mat-hint>
+          Si está marcado, los proveedores deben subir evidencia obligatoriamente
+        </mat-hint>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="updating">
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="updating || form.invalid"
+    >
+      <mat-icon *ngIf="!updating">save</mat-icon>
+      <mat-spinner *ngIf="updating" diameter="20"></mat-spinner>
+      <span *ngIf="!updating">Guardar Cambios</span>
+      <span *ngIf="updating">Guardando...</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -37,6 +37,7 @@ import localeEsPe from '@angular/common/locales/es-PE';
 import { CertificatesComponent } from './pages/dashboard/dialogs-validate-documents/certificates/certificates.component';
 import { ChecklistComponent } from './pages/dashboard/dialogs-validate-documents/checklist/checklist.component';
 import { EquipmentsComponent } from './pages/dashboard/dialogs-validate-documents/equipments/equipments.component';
+import { UploadEvidenceComponent } from './pages/dashboard/dialogs-dissemination/upload-evidence/upload-evidence.component';
 
 registerLocaleData(localeEsPe, 'es-PE');
 @NgModule({
@@ -69,6 +70,7 @@ registerLocaleData(localeEsPe, 'es-PE');
     CertificatesComponent,
     ChecklistComponent,
     EquipmentsComponent,
+    UploadEvidenceComponent,
   ],
   imports: [
     CommonModule,

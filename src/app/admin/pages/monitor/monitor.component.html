@@ -95,6 +95,16 @@
           >
             VISITA
           </span>
+
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="onForceExit(person)"
+            matTooltip="Retirar personal de planta"
+            class="exit-button"
+          >
+            <mat-icon>exit_to_app</mat-icon>
+          </button>
           <!-- <span
             *ngIf="person.entryDeparture"
             class="result__entry__status"

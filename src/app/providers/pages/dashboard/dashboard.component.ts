@@ -28,6 +28,7 @@ import { EmergencyValidateDocumentsService } from '../../services/validate-docum
 import { MsdsValidateDocumentsService } from '../../services/validate-documents/msds-validate-documents.service';
 import { PetsValidateDocumentsService } from '../../services/validate-documents/pets-validate-documents.service';
 import { SwornDeclarationService } from '../../services/sworn-declaration.service';
+import { DisseminationEvidenceService } from '../../services/dissemination-evidence.service';
 //#endregion
 
 //#region Components
@@ -50,6 +51,7 @@ import { MsdsComponent } from './dialogs-validate-documents/msds/msds.component'
 import { RegisterCollaboratorComponent } from './dialogs/register-collaborator/register-collaborator.component';
 import { UpdateSwornDeclarationComponent } from './dialogs/sworn-declaration/update-sworn-declaration/update-sworn-declaration.component';
 import { VisorPdfComponent } from 'src/app/shared/components/visor-pdf/visor-pdf.component';
+import { UploadEvidenceComponent } from './dialogs-dissemination/upload-evidence/upload-evidence.component';
 //#endregion
 
 //#region Models
@@ -71,6 +73,8 @@ import { EquipmentsValidateDocumentsService } from '../../services/validate-docu
 import { CertificatesComponent } from './dialogs-validate-documents/certificates/certificates.component';
 import { ChecklistComponent } from './dialogs-validate-documents/checklist/checklist.component';
 import { EquipmentsComponent } from './dialogs-validate-documents/equipments/equipments.component';
+import { DisseminationDocument } from 'src/app/admin/models/dissemination-document.model';
+import { DisseminationEvidence } from '../../models/dissemination-evidence.model';
 //#endregion
 
 @Component({
@@ -124,6 +128,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   numMsdsDocs: number = 0;
   numChecklistDocs: number = 0;
 
+  // Dissemination documents
+  disseminationData$!: Observable<{
+    document: DisseminationDocument;
+    evidence: DisseminationEvidence | null;
+    status: 'not-uploaded' | 'pending' | 'approved' | 'rejected';
+  }[]>;
+
   info: string = '❇️ Leyendo documentos ...';
 
   subscriptions = new Subscription();
@@ -145,6 +156,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private msdsValidateDocumentsService: MsdsValidateDocumentsService,
     private checklistValidateDocumentsService: ChecklistValidateDocumentsService,
     private equipmentsValidateDocumentsService: EquipmentsValidateDocumentsService,
+    private disseminationEvidenceService: DisseminationEvidenceService,
     private snackbar: MatSnackBar,
     private breakpoint: BreakpointObserver
   ) {}
@@ -180,6 +192,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (!provider) return;
 
         this.provider = provider;
+
+        // Initialize dissemination documents
+        this.initDisseminationDocuments();
       });
 
     this.sctr$ = combineLatest(
@@ -1137,6 +1152,102 @@ export class DashboardComponent implements OnInit, OnDestroy {
         })
     );
   }
+
+  //#region Dissemination Documents
+  initDisseminationDocuments(): void {
+    if (!this.user?.providerId) return;
+
+    this.disseminationData$ = combineLatest([
+      this.disseminationEvidenceService.getAllDisseminationDocuments(),
+      this.disseminationEvidenceService.getProviderEvidences(this.user.providerId)
+    ]).pipe(
+      map(([documents, evidences]) => {
+        return documents.map(doc => {
+          const evidence = evidences.find(e => e.disseminationDocumentId === doc.id);
+          return {
+            document: doc,
+            evidence: evidence || null,
+            status: evidence?.status || 'not-uploaded'
+          };
+        });
+      })
+    );
+  }
+
+  onUploadEvidence(item: {
+    document: DisseminationDocument;
+    evidence: DisseminationEvidence | null;
+  }): void {
+    const dialogRef = this.dialog.open(UploadEvidenceComponent, {
+      width: '600px',
+      data: {
+        document: item.document,
+        existingEvidence: item.evidence,
+        providerId: this.user?.providerId,
+        providerName: this.provider.companyName,
+        providerRUC: this.provider.companyRuc
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.snackbar.open('✅ Evidencia subida exitosamente', 'Cerrar', {
+          duration: 3000,
+        });
+      }
+    });
+  }
+
+  onViewDisseminationDocument(document: DisseminationDocument): void {
+    window.open(document.fileURL, '_blank');
+  }
+
+  onViewEvidence(evidence: DisseminationEvidence): void {
+    window.open(evidence.evidenceFileURL, '_blank');
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'approved':
+        return '#27ae60';
+      case 'pending':
+        return '#f39c12';
+      case 'rejected':
+        return '#e74c3c';
+      default:
+        return '#95a5a6';
+    }
+  }
+
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'Aprobada';
+      case 'pending':
+        return 'Pendiente';
+      case 'rejected':
+        return 'Rechazada';
+      case 'not-uploaded':
+        return 'Sin subir';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  getStatusIcon(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'check_circle';
+      case 'pending':
+        return 'schedule';
+      case 'rejected':
+        return 'cancel';
+      default:
+        return 'upload_file';
+    }
+  }
+  //#endregion
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

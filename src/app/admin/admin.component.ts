@@ -40,6 +40,16 @@ export class AdminComponent implements OnInit {
         icon: 'search',
       },
       {
+        routerLink: '/admin/dissemination',
+        nameNavigate: 'Documentos de Difusión',
+        icon: 'description',
+      },
+      {
+        routerLink: '/admin/downloads',
+        nameNavigate: 'Descargas',
+        icon: 'cloud_download',
+      },
+      {
         routerLink: '/admin/monitor',
         nameNavigate: 'Monitor planta',
         icon: 'monitor_heart',
