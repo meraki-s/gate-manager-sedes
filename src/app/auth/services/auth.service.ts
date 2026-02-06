@@ -19,7 +19,7 @@ export class AuthService {
 
   uiConfig: UiConfig = new UiConfig();
 
-  version: string = '2.0.1';
+  version: string = '2.0.2';
 
   constructor(
     private afAuth: AngularFireAuth,
