@@ -164,7 +164,7 @@
                   'document-card__header__icon--pending':
                     document.status === 'pending',
                   'document-card__header__icon--rejected':
-                    document.status === 'rejected'
+                    document.status === 'rejected',
                 }"
                 >{{ document.status === "approved" ? "check_circle" : "" }}
                 {{ document.status === "pending" ? "rate_review" : "" }}
@@ -200,14 +200,14 @@
                 *ngFor="let file of document['files']"
                 class="chip"
                 matTooltip="V: {{
-                  file.validityDate.seconds * 1000 | date : 'dd/MM/yy'
+                  file.validityDate.seconds * 1000 | date: 'dd/MM/yy'
                 }}
                 "
                 (click)="openPdfViewer(file)"
               >
                 <span class="chip__name">{{
                   file.name.length > 30
-                    ? "..." + (file.name | slice : -27)
+                    ? "..." + (file.name | slice: -27)
                     : file.name
                 }}</span>
               </div>
@@ -255,33 +255,33 @@
   </div>
 
   <!-- Dissemination Documents Section -->
-  <div class="access-list" *ngIf="providerSearch">
+  <div class="access-list" *ngIf="providerSearch" style="padding: 0 1rem">
     <div class="access-card mat-elevation-z4">
       <div class="header">
         <h3 class="header__title">Documentos de Difusión</h3>
       </div>
       <ng-container *ngIf="disseminationData$ | async as disseminationItems">
-        <div
-          class="document-card"
-          *ngFor="let item of disseminationItems"
-        >
+        <div class="document-card" *ngFor="let item of disseminationItems">
           <ng-container *ngIf="item.evidence; else noEvidence">
             <div class="document-card__header">
               <mat-icon
                 class="document-card__header__icon"
                 [ngClass]="{
-                  'document-card__header__icon--approved': item.status === 'approved',
-                  'document-card__header__icon--pending': item.status === 'pending',
-                  'document-card__header__icon--rejected': item.status === 'rejected'
+                  'document-card__header__icon--approved':
+                    item.status === 'approved',
+                  'document-card__header__icon--pending':
+                    item.status === 'pending',
+                  'document-card__header__icon--rejected':
+                    item.status === 'rejected',
                 }"
                 >{{
                   item.status === "approved"
                     ? "check_circle"
                     : item.status === "pending"
-                    ? "schedule"
-                    : item.status === "rejected"
-                    ? "cancel"
-                    : "help"
+                      ? "schedule"
+                      : item.status === "rejected"
+                        ? "cancel"
+                        : "help"
                 }}</mat-icon
               >
               <span class="document-card__header__title">{{
@@ -301,7 +301,7 @@
               <div class="chip" (click)="onReviewDisseminationEvidence(item)">
                 <span class="chip__name">{{
                   item.evidence.evidenceFileName.length > 30
-                    ? "..." + (item.evidence.evidenceFileName | slice : -27)
+                    ? "..." + (item.evidence.evidenceFileName | slice: -27)
                     : item.evidence.evidenceFileName
                 }}</span>
               </div>
@@ -426,20 +426,20 @@
                     item.sctrStatus === 'unassigned',
                   'document-item__icon--rejected':
                     item.sctrStatus === 'rejected',
-                  'document-item__icon--expired': item.sctrStatus === 'expired'
+                  'document-item__icon--expired': item.sctrStatus === 'expired',
                 }"
                 [matTooltip]="
                   item.sctrStatus === 'approved'
                     ? 'Aprobado'
                     : item.sctrStatus === 'pending'
-                    ? 'Pendiente'
-                    : item.sctrStatus === 'unassigned'
-                    ? 'No asignado'
-                    : item.sctrStatus === 'rejected'
-                    ? 'Rechazado'
-                    : item.sctrStatus === 'expired'
-                    ? 'Vencido'
-                    : ''
+                      ? 'Pendiente'
+                      : item.sctrStatus === 'unassigned'
+                        ? 'No asignado'
+                        : item.sctrStatus === 'rejected'
+                          ? 'Rechazado'
+                          : item.sctrStatus === 'expired'
+                            ? 'Vencido'
+                            : ''
                 "
                 >{{ item.sctrStatus === "approved" ? "check_circle" : "" }}
                 {{ item.sctrStatus === "pending" ? "rate_review" : "" }}
@@ -473,20 +473,20 @@
                     item.svlStatus === 'unassigned',
                   'document-item__icon--rejected':
                     item.svlStatus === 'rejected',
-                  'document-item__icon--expired': item.svlStatus === 'expired'
+                  'document-item__icon--expired': item.svlStatus === 'expired',
                 }"
                 [matTooltip]="
                   item.svlStatus === 'approved'
                     ? 'Aprobado'
                     : item.svlStatus === 'pending'
-                    ? 'Pendiente'
-                    : item.svlStatus === 'unassigned'
-                    ? 'No asignado'
-                    : item.svlStatus === 'rejected'
-                    ? 'Rechazado'
-                    : item.svlStatus === 'expired'
-                    ? 'Vencido'
-                    : ''
+                      ? 'Pendiente'
+                      : item.svlStatus === 'unassigned'
+                        ? 'No asignado'
+                        : item.svlStatus === 'rejected'
+                          ? 'Rechazado'
+                          : item.svlStatus === 'expired'
+                            ? 'Vencido'
+                            : ''
                 "
                 >{{ item.svlStatus === "approved" ? "check_circle" : "" }}
                 {{ item.svlStatus === "pending" ? "rate_review" : "" }}
@@ -565,20 +565,20 @@
                   'document-item__icon--rejected':
                     item.inductionStatus === 'rejected',
                   'document-item__icon--expired':
-                    item.inductionStatus === 'expired'
+                    item.inductionStatus === 'expired',
                 }"
                 [matTooltip]="
                   item.inductionStatus === 'approved'
                     ? 'Aprobado'
                     : item.inductionStatus === 'pending'
-                    ? 'Pendiente'
-                    : item.inductionStatus === 'unassigned'
-                    ? 'No asignado'
-                    : item.inductionStatus === 'rejected'
-                    ? 'Rechazado'
-                    : item.inductionStatus === 'expired'
-                    ? 'Vencido'
-                    : ''
+                      ? 'Pendiente'
+                      : item.inductionStatus === 'unassigned'
+                        ? 'No asignado'
+                        : item.inductionStatus === 'rejected'
+                          ? 'Rechazado'
+                          : item.inductionStatus === 'expired'
+                            ? 'Vencido'
+                            : ''
                 "
                 >{{ item.inductionStatus === "approved" ? "check_circle" : "" }}
                 {{ item.inductionStatus === "pending" ? "rate_review" : "" }}
