@@ -57,8 +57,8 @@ async function getInduction(dni) {
     });
     const api = google.sheets({ version: "v4", auth });
     const response = await api.spreadsheets.values.get({
-      spreadsheetId: "1w0UkLnROOQDd2GD6kOmQMNjrhmCQHwEplKCC-62sI8A",
-      range: "Hoja 1!A:J",
+      spreadsheetId: "1CaRMmuKIRQpANB4XXM3p5YpD-OyrOHoXBPxonret9P8",
+      range: "INDUCCIÓN!B:N",
     });
 
     if (!response.data || !response.data.values) {
@@ -127,16 +127,17 @@ async function getInduction(dni) {
 
     if (matches.length > 0) {
       functions.logger.info(matches, { structuredData: true });
-      // first flat the array ti validity dates
-      const validityArray = matches.map((match) => {
-        return match.validity;
-      });
+      // prioritize approved+valid matches; fall back to all matches
+      const approvedMatches = matches.filter((m) => m.isApproved && m.isValidDate);
+      const pool = approvedMatches.length > 0 ? approvedMatches : matches;
+      // use timestamps for numeric comparison
+      const validityArray = pool.map((match) => match.validity.getTime());
       // get the max value
       const maxValidity = Math.max(...validityArray);
       // get the index of the max value
       const index = validityArray.indexOf(maxValidity);
       // get the match with the max value
-      const match = matches[index];
+      const match = pool[index];
 
       functions.logger.info(match, { structuredData: true });
 
@@ -167,7 +168,7 @@ async function getSymptomatology(dni) {
   // 1DCRDAJfvpOaDOYzAN4qK2UKY5lC-ug1faKUO1m-ba4g
   const response = await api.spreadsheets.values.get({
     spreadsheetId: "10fKlzt9m7O1uiDW8tfI3nx4qj6xGl2qSDVEdNQtxWgY",
-    range: "Hoja 1!G:P",
+    range: "'Hoja 1'!G:P",
   });
 
   let matches = [];
@@ -242,40 +243,80 @@ async function getSymptomatology(dni) {
 }
 
 async function getLoto(dni) {
+  try {
   const auth = await google.auth.getClient({
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
   const api = google.sheets({ version: "v4", auth });
   const response = await api.spreadsheets.values.get({
-    spreadsheetId: "1ZsvZz3-Rhc_SEQDBrOkcvNBuE3msUF9CX72zrSeRPrA",
-    range: "Hoja 1!A:J",
+    spreadsheetId: "1CaRMmuKIRQpANB4XXM3p5YpD-OyrOHoXBPxonret9P8",
+    range: "LOTO!C:O",
   });
+
+  if (!response.data || !response.data.values) {
+    throw new Error("No data found in loto spreadsheet");
+  }
 
   let matches = [];
 
   for (let row of response.data.values) {
-    if (row[0] + "" === dni) {
+    if ((row[0] + "").trim() === (dni + "").trim()) {
       let isApproved = false;
       let isValidDate = false;
-      const validityDate = row[8];
-      functions.logger.info(row[8], { structuredData: true });
-      const splittedDate = validityDate.split("/");
-      const validity = new Date(
-        parseInt(splittedDate[2]),
-        parseInt(splittedDate[1]) - 1,
-        parseInt(splittedDate[0])
-      ).getTime();
+      const validityDate = row[9];
+
+      functions.logger.info(`[getLoto] raw row: ${JSON.stringify(row)}`, { structuredData: true });
+      functions.logger.info(`[getLoto] validityDate (row[9]): ${validityDate}`, { structuredData: true });
+      functions.logger.info(`[getLoto] status (row[12]): ${row[12]}`, { structuredData: true });
+
+      if (!validityDate) {
+        functions.logger.warn(`[getLoto] missing validityDate, skipping row`, { structuredData: true });
+        continue;
+      }
+
+      // Separa el día, mes y año de la cadena
+      var partesFecha = validityDate.split("-");
+
+      // Obtiene el día, el mes y el año
+      var dia = parseInt(partesFecha[0], 10);
+      var mes = partesFecha[1]; // El mes ya está en formato de texto
+      // Si el año ya tiene 4 dígitos no se antepone "20"
+      var yearRaw = partesFecha[2];
+      var año = yearRaw.length === 2 ? "20" + parseInt(yearRaw, 10) : parseInt(yearRaw, 10);
+      functions.logger.info(`[getLoto] parsed date parts: dia=${dia}, mes=${mes}, año=${año}`, { structuredData: true });
+
+      // Mapea el mes a su número correspondiente (0 para enero, 1 para febrero, etc.)
+      var meses = {
+        ene: 0,
+        feb: 1,
+        mar: 2,
+        abr: 3,
+        may: 4,
+        jun: 5,
+        jul: 6,
+        ago: 7,
+        sep: 8,
+        oct: 9,
+        nov: 10,
+        dic: 11,
+      };
+
+      // Convierte el mes de texto a número usando el objeto de meses
+      var numeroMes = meses[mes.substring(0, 3).toLowerCase()]; // Obtener las primeras tres letras del mes
+
+      // Construye el objeto de fecha utilizando las partes extraídas
+      var validity = new Date(año, numeroMes, dia);
 
       const now = Date.now() - 5 * 60 * 60 * 1000;
-      // const validity = new Date(row[4].split('/')).getTime();
-      const status = row[9];
+
+      const status = row[12];
 
       // functions.logger.info(row[4], { structuredData: true });
       // functions.logger.info(validity, { structuredData: true });
       // functions.logger.info(status, { structuredData: true });
 
       // check if the status is approved
-      isApproved = status === "VIGENTE";
+      isApproved = status === "AUTORIZADO";
       // check if date is still valid
       isValidDate = now < validity;
 
@@ -284,16 +325,17 @@ async function getLoto(dni) {
   }
 
   if (matches.length > 0) {
-    // first flat the array ti validity dates
-    const validityArray = matches.map((match) => {
-      return match.validity;
-    });
+    // prioritize approved+valid matches; fall back to all matches
+    const approvedMatches = matches.filter((m) => m.isApproved && m.isValidDate);
+    const pool = approvedMatches.length > 0 ? approvedMatches : matches;
+    // use timestamps for numeric comparison
+    const validityArray = pool.map((match) => match.validity.getTime());
     // get the max value
     const maxValidity = Math.max(...validityArray);
     // get the index of the max value
     const index = validityArray.indexOf(maxValidity);
     // get the match with the max value
-    const match = matches[index];
+    const match = pool[index];
 
     const isApproved = match.isApproved;
     const isValidDate = match.isValidDate;
@@ -305,6 +347,10 @@ async function getLoto(dni) {
       return { status: "rejected", validity: validityDate };
     if (isApproved && isValidDate)
       return { status: "approved", validity: validityDate };
+  }
+  } catch (error) {
+    functions.logger.error(`[getLoto] Could not get loto`, error);
+    return null;
   }
 }
 

@@ -6,8 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, Observable, Subscription } from 'rxjs';
 import {
+  concatMap,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -63,6 +64,9 @@ export class SearchComponent implements OnInit {
 
   syncingDrive = new BehaviorSubject<boolean>(false);
   syncingDrive$ = this.syncingDrive.asObservable();
+
+  syncAllProgress = new BehaviorSubject<{ current: number; total: number } | null>(null);
+  syncAllProgress$ = this.syncAllProgress.asObservable();
 
   providers$!: Observable<Provider[]>;
   collaborators = new BehaviorSubject<Collaborator[]>([]);
@@ -648,6 +652,68 @@ export class SearchComponent implements OnInit {
               });
             });
         }
+      });
+  }
+
+  syncAllDrive(): void {
+    const collaborators = this.providerSearch?.collaborators;
+    if (!collaborators || collaborators.length === 0) return;
+
+    const total = collaborators.length;
+    let current = 0;
+
+    this.syncingDrive.next(true);
+    this.syncAllProgress.next({ current, total });
+
+    const requests = collaborators.map((collaborator, index) =>
+      this.searchService
+        .syncDrive(
+          collaborator.id,
+          collaborator.name + ' ' + collaborator.lastname,
+          collaborator.dni,
+          this.providerSearch!.providerId,
+          this.providerSearch!.companyName,
+          this.providerSearch!.companyRuc
+        )
+        .pipe(
+          take(1),
+          map((res) => ({ res, index }))
+        )
+    );
+
+    from(requests)
+      .pipe(concatMap((req) => req))
+      .subscribe({
+        next: ({ res, index }) => {
+          current++;
+          this.syncAllProgress.next({ current, total });
+          if (res) {
+            res.batch.commit().then(() => {
+              this.providerSearch!.collaborators[index].inductionStatus = res
+                .driveData.inductionStatus
+                ? res.driveData.inductionStatus
+                : 'unassigned';
+              this.providerSearch!.collaborators[index].inductionDate = res
+                .driveData.inductionDate
+                ? res.driveData.inductionDate
+                : (new Date(0) as Date & firebase.default.firestore.Timestamp);
+            });
+          }
+        },
+        error: () => {
+          this.syncingDrive.next(false);
+          this.syncAllProgress.next(null);
+          this.snackbar.open('😞 Error al sincronizar Drive', 'Cerrar', {
+            duration: 5000,
+          });
+        },
+        complete: () => {
+          this.syncingDrive.next(false);
+          this.syncAllProgress.next(null);
+          this.snackbar.open('✅ Drive sincronizado para todos', 'Cerrar', {
+            duration: 5000,
+          });
+        },
       });
   }
 

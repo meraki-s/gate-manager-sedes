@@ -333,11 +333,33 @@
             Personal registrado (
             {{ (filteredCollaborators$ | async)?.length ?? "...cargando" }} )
           </h3>
+          <button
+            mat-stroked-button
+            color="primary"
+            [disabled]="syncingDrive$ | async"
+            (click)="syncAllDrive()"
+          >
+            <mat-icon>sync</mat-icon>
+            Actualizar todo
+          </button>
         </div>
-        <div *ngIf="syncingDrive$ | async" class="loading">
-          <span>Sincronizado drive</span>
-          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        </div>
+        <ng-container *ngIf="syncingDrive$ | async">
+          <ng-container *ngIf="syncAllProgress$ | async as progress; else singleSync">
+            <div class="loading">
+              <span>Sincronizando {{ progress.current }} / {{ progress.total }}...</span>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="(progress.current / progress.total) * 100"
+              ></mat-progress-bar>
+            </div>
+          </ng-container>
+          <ng-template #singleSync>
+            <div class="loading">
+              <span>Sincronizando drive...</span>
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+          </ng-template>
+        </ng-container>
         <div *ngIf="loadingMedicalExamination$ | async" class="loading">
           <span>Actualizando examen médico</span>
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
