@@ -352,6 +352,10 @@ export class SearchService {
           // symptomatologyDate:
           //   (new Date(data['symptomatologyValidity']) as Date &
           //     firebase.default.firestore.Timestamp) ?? null,
+          lotoStatus: data['lotoStatus'] ?? 'unassigned',
+          lotoDate:
+            (new Date(data['lotoValidity']) as Date &
+              firebase.default.firestore.Timestamp) ?? null,
         };
 
         batch.update(collaboratorDocRef, driveData);

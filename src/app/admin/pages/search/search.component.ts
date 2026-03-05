@@ -6,7 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, combineLatest, from, Observable, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  from,
+  Observable,
+  Subscription,
+} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -65,7 +71,10 @@ export class SearchComponent implements OnInit {
   syncingDrive = new BehaviorSubject<boolean>(false);
   syncingDrive$ = this.syncingDrive.asObservable();
 
-  syncAllProgress = new BehaviorSubject<{ current: number; total: number } | null>(null);
+  syncAllProgress = new BehaviorSubject<{
+    current: number;
+    total: number;
+  } | null>(null);
   syncAllProgress$ = this.syncAllProgress.asObservable();
 
   providers$!: Observable<Provider[]>;
@@ -130,7 +139,7 @@ export class SearchComponent implements OnInit {
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
     private breakpoint: BreakpointObserver,
-    private afs: AngularFirestore
+    private afs: AngularFirestore,
   ) {}
 
   ngOnInit(): void {
@@ -144,7 +153,7 @@ export class SearchComponent implements OnInit {
           } else {
             this.isMobile = false;
           }
-        })
+        }),
     );
 
     // check if component route has params for provider pre-loading
@@ -157,7 +166,7 @@ export class SearchComponent implements OnInit {
           this.searchRUC.next(true);
           this.firstTime = false;
         }
-      })
+      }),
     );
 
     this.searchDNIControl.disable();
@@ -173,11 +182,11 @@ export class SearchComponent implements OnInit {
             const ruc = parseInt(
               this.searchRUCControl.value['companyRuc']
                 ? this.searchRUCControl.value['companyRuc']
-                : this.searchRUCControl.value
+                : this.searchRUCControl.value,
             );
 
             return this.searchService.getProvider(ruc);
-          })
+          }),
         )
         .subscribe((provider) => {
           if (provider) {
@@ -232,7 +241,7 @@ export class SearchComponent implements OnInit {
 
           this.loading.next(false);
           this.searchDNI.next(false);
-        })
+        }),
     );
 
     this.filteredCollaborators$ = combineLatest(
@@ -240,17 +249,19 @@ export class SearchComponent implements OnInit {
       this.searchDNIControl.valueChanges.pipe(
         startWith(''),
         debounceTime(300),
-        distinctUntilChanged()
-      )
+        distinctUntilChanged(),
+      ),
     ).pipe(
       map(([collaborators, dni]) => {
         if (!dni) return collaborators;
 
         const term = dni.toLowerCase().trim();
         return collaborators.filter((collaborator) => {
-          return collaborator.dni.toLowerCase().includes(term);
+          return collaborator.dni
+            ? collaborator.dni.toString().toLowerCase().includes(term)
+            : false;
         });
-      })
+      }),
     );
 
     // providers observable
@@ -259,8 +270,8 @@ export class SearchComponent implements OnInit {
       this.searchRUCControl.valueChanges.pipe(
         startWith(''),
         debounceTime(300),
-        distinctUntilChanged()
-      )
+        distinctUntilChanged(),
+      ),
     ).pipe(
       map(([providers, ruc]) => {
         let filteredProviders = [...providers];
@@ -275,7 +286,7 @@ export class SearchComponent implements OnInit {
         });
 
         return filteredProviders;
-      })
+      }),
     );
   }
 
@@ -319,12 +330,12 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[0].status = provider.ipercFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.ipercFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
 
     //#region ats
@@ -340,12 +351,12 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[1].status = provider.atsFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.atsFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
 
     //#region emergency
@@ -361,12 +372,12 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[2].status = provider.emergencyFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.emergencyFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
 
     //#region pets
@@ -382,12 +393,12 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[3].status = provider.petsFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.petsFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
 
     //#region procedures
@@ -403,12 +414,12 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[4].status = provider.certificatesFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.certificatesFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
 
     //#region msds
@@ -424,12 +435,12 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[5].status = provider.msdsFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.msdsFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
 
     //#region checklist
@@ -445,19 +456,19 @@ export class SearchComponent implements OnInit {
 
     // check if there is a file with approved status otherwise set to rejected
     this.documents[6].status = provider.checklistFiles.every(
-      (file) => file.status === 'approved'
+      (file) => file.status === 'approved',
     )
       ? 'approved'
       : provider.checklistFiles.every((file) => file.status === 'rejected')
-      ? 'rejected'
-      : 'pending';
+        ? 'rejected'
+        : 'pending';
     //#endregion
   }
 
   approveDocuments(
     files: ValidateDocumentsModel[],
     collectionName: string,
-    index: number
+    index: number,
   ): void {
     this.loadingDocuments.next(true);
     this.searchService
@@ -466,7 +477,7 @@ export class SearchComponent implements OnInit {
         this.providerSearch!.providerId,
         this.providerSearch!.companyName,
         this.providerSearch!.companyRuc,
-        collectionName
+        collectionName,
       )
       .pipe(take(1))
       .subscribe((batch) => {
@@ -496,7 +507,7 @@ export class SearchComponent implements OnInit {
   rejectDocuments(
     files: ValidateDocumentsModel[],
     collectionName: string,
-    index: number
+    index: number,
   ): void {
     this.loadingDocuments.next(true);
     this.searchService
@@ -505,7 +516,7 @@ export class SearchComponent implements OnInit {
         this.providerSearch!.providerId,
         this.providerSearch!.companyName,
         this.providerSearch!.companyRuc,
-        collectionName
+        collectionName,
       )
       .pipe(take(1))
       .subscribe((batch) => {
@@ -551,7 +562,7 @@ export class SearchComponent implements OnInit {
                 this.providerSearch!.providerId,
                 this.providerSearch!.companyName,
                 this.providerSearch!.companyRuc,
-                desc
+                desc,
               )
               .pipe(take(1))
               .subscribe((batch) => {
@@ -576,7 +587,7 @@ export class SearchComponent implements OnInit {
           this.providerSearch.status,
           this.providerSearch.providerId,
           this.providerSearch.companyName,
-          this.providerSearch.companyRuc
+          this.providerSearch.companyRuc,
         )
         .pipe(take(1))
         .subscribe((batch) => {
@@ -616,7 +627,7 @@ export class SearchComponent implements OnInit {
         collaborator.dni,
         this.providerSearch!.providerId,
         this.providerSearch!.companyName,
-        this.providerSearch!.companyRuc
+        this.providerSearch!.companyRuc,
       )
       .pipe(take(1))
       .subscribe((res) => {
@@ -673,12 +684,12 @@ export class SearchComponent implements OnInit {
           collaborator.dni,
           this.providerSearch!.providerId,
           this.providerSearch!.companyName,
-          this.providerSearch!.companyRuc
+          this.providerSearch!.companyRuc,
         )
         .pipe(
           take(1),
-          map((res) => ({ res, index }))
-        )
+          map((res) => ({ res, index })),
+        ),
     );
 
     from(requests)
@@ -731,12 +742,14 @@ export class SearchComponent implements OnInit {
    */
   buildDisseminationData(providerId: string): void {
     const disseminationDocuments$ = this.afs
-      .collection<DisseminationDocument>('db/ferreyros/disseminationDocuments', (ref) =>
-        ref.orderBy('order', 'asc')
+      .collection<DisseminationDocument>(
+        'db/ferreyros/disseminationDocuments',
+        (ref) => ref.orderBy('order', 'asc'),
       )
       .valueChanges({ idField: 'id' });
 
-    const disseminationEvidences$ = this.searchService.getProviderDisseminationEvidences(providerId);
+    const disseminationEvidences$ =
+      this.searchService.getProviderDisseminationEvidences(providerId);
 
     this.disseminationData$ = combineLatest([
       disseminationDocuments$,
@@ -745,7 +758,7 @@ export class SearchComponent implements OnInit {
       map(([documents, evidences]) => {
         return documents.map((doc) => {
           const evidence = evidences.find(
-            (e: DisseminationEvidence) => e.disseminationDocumentId === doc.id
+            (e: DisseminationEvidence) => e.disseminationDocumentId === doc.id,
           );
           return {
             document: doc,
@@ -753,7 +766,7 @@ export class SearchComponent implements OnInit {
             status: evidence?.status || 'not-uploaded',
           };
         });
-      })
+      }),
     );
   }
 
@@ -775,14 +788,17 @@ export class SearchComponent implements OnInit {
       panelClass: 'border-dialog',
     });
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe((result) => {
-      if (result) {
-        // Evidence was approved/rejected, refresh will happen automatically via observable
-        this.snackbar.open('✅ Evidencia actualizada', 'Cerrar', {
-          duration: 2000,
-        });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result) => {
+        if (result) {
+          // Evidence was approved/rejected, refresh will happen automatically via observable
+          this.snackbar.open('✅ Evidencia actualizada', 'Cerrar', {
+            duration: 2000,
+          });
+        }
+      });
   }
 
   /**
@@ -1006,5 +1022,4 @@ export class SearchComponent implements OnInit {
   //       }
   //     });
   // }
-
 }

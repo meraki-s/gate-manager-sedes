@@ -1,6 +1,8 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import {
@@ -11,8 +13,14 @@ import {
 } from 'rxjs/operators';
 import { MonitorService } from 'src/app/admin/services/monitor.service';
 import { Provider } from 'src/app/auth/models/provider.model';
+import { User } from 'src/app/auth/models/user.model';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { Collaborator } from 'src/app/providers/models/register-collaborator';
 import { RegisterVisit } from 'src/app/providers/models/register-visit.model';
+import {
+  ForceExitDialogComponent,
+  ForceExitDialogData,
+} from '../../admin/pages/monitor/dialogs/force-exit-dialog/force-exit-dialog.component';
 
 @Component({
   selector: 'app-monitor',
@@ -39,14 +47,27 @@ export class MonitorComponent implements OnInit {
 
   subscriptions = new Subscription();
   isMobile!: boolean;
+  currentUser!: User;
   //#endregion
   constructor(
     private monitorService: MonitorService,
     private router: Router,
-    private breakpoint: BreakpointObserver
+    private breakpoint: BreakpointObserver,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
+    // Get current user for admin name
+    this.subscriptions.add(
+      this.authService.user$.subscribe((user) => {
+        if (user) {
+          this.currentUser = user;
+        }
+      }),
+    );
+
     this.subscriptions.add(
       this.breakpoint
         .observe([Breakpoints.HandsetPortrait])
@@ -56,7 +77,7 @@ export class MonitorComponent implements OnInit {
           } else {
             this.isMobile = false;
           }
-        })
+        }),
     );
 
     this.providers$ = combineLatest(
@@ -64,8 +85,8 @@ export class MonitorComponent implements OnInit {
       this.rucControl.valueChanges.pipe(
         startWith(''),
         debounceTime(300),
-        distinctUntilChanged()
-      )
+        distinctUntilChanged(),
+      ),
     ).pipe(
       map(([providers, ruc]) => {
         let filteredProviders = [...providers];
@@ -78,7 +99,7 @@ export class MonitorComponent implements OnInit {
         this.totalProviders = filteredProviders.length;
 
         return filteredProviders;
-      })
+      }),
     );
 
     this.collaborators$ = combineLatest(
@@ -86,8 +107,8 @@ export class MonitorComponent implements OnInit {
       this.dniControl.valueChanges.pipe(
         startWith(''),
         debounceTime(300),
-        distinctUntilChanged()
-      )
+        distinctUntilChanged(),
+      ),
     ).pipe(
       map(([collaborators, dni]) => {
         let filteredCollaborators = [...collaborators];
@@ -98,7 +119,7 @@ export class MonitorComponent implements OnInit {
         });
 
         return filteredCollaborators;
-      })
+      }),
     );
 
     this.visits$ = combineLatest(
@@ -106,8 +127,8 @@ export class MonitorComponent implements OnInit {
       this.dniControl.valueChanges.pipe(
         startWith(''),
         debounceTime(300),
-        distinctUntilChanged()
-      )
+        distinctUntilChanged(),
+      ),
     ).pipe(
       map(([visits, dni]) => {
         let filteredVisits = [...visits];
@@ -118,7 +139,7 @@ export class MonitorComponent implements OnInit {
         });
 
         return filteredVisits;
-      })
+      }),
     );
 
     this.peopleInPlant$ = combineLatest(this.collaborators$, this.visits$).pipe(
@@ -132,7 +153,108 @@ export class MonitorComponent implements OnInit {
         this.totalPeople = people.length;
 
         return people;
-      })
+      }),
     );
+  }
+
+  /**
+   * Check if a person is a collaborator (vs a visit)
+   */
+  isCollaborator(person: Collaborator | RegisterVisit): person is Collaborator {
+    return 'entryDeparture' in person;
+  }
+
+  /**
+   * Force exit for a person (collaborator or visit)
+   * Opens confirmation dialog and processes the forced exit
+   */
+  onForceExit(person: Collaborator | RegisterVisit): void {
+    if (!this.currentUser) {
+      this.snackBar.open('Error: Usuario no autenticado', 'Cerrar', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    console.log(this.currentUser.role);
+    
+    // Check if user is Administrator
+    if (this.currentUser.role !== 'Vigilant') {
+      this.snackBar.open(
+        'Solo los administradores pueden forzar salidas',
+        'Cerrar',
+        {
+          duration: 3000,
+        },
+      );
+      return;
+    }
+
+    const dialogData: ForceExitDialogData = {
+      name: person.name,
+      lastname: person.lastname,
+      dni: this.isCollaborator(person) ? person.dni : person.dni.toString(),
+      companyName: person.companyName,
+    };
+
+    const dialogRef = this.dialog.open(ForceExitDialogComponent, {
+      width: '500px',
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        const adminName = `${this.currentUser.name} ${this.currentUser.lastname}`;
+
+        if (this.isCollaborator(person)) {
+          // Force exit collaborator
+          this.monitorService
+            .forceExitCollaborator(
+              person.id,
+              person.providerId,
+              person,
+              adminName,
+            )
+            .subscribe({
+              next: () => {
+                this.snackBar.open(
+                  'Colaborador retirado exitosamente',
+                  'Cerrar',
+                  {
+                    duration: 3000,
+                  },
+                );
+              },
+              error: (error) => {
+                console.error('Error al forzar salida de colaborador:', error);
+                this.snackBar.open('Error al retirar colaborador', 'Cerrar', {
+                  duration: 3000,
+                });
+              },
+            });
+        } else {
+          // Force exit visit
+          this.monitorService
+            .forceExitVisit(person.id, person.providerId, person, adminName)
+            .subscribe({
+              next: () => {
+                this.snackBar.open(
+                  'Visitante retirado exitosamente',
+                  'Cerrar',
+                  {
+                    duration: 3000,
+                  },
+                );
+              },
+              error: (error) => {
+                console.error('Error al forzar salida de visitante:', error);
+                this.snackBar.open('Error al retirar visitante', 'Cerrar', {
+                  duration: 3000,
+                });
+              },
+            });
+        }
+      }
+    });
   }
 }

@@ -3,7 +3,7 @@
   [ngClass]="isMobile ? 'container--mobile' : 'container--desktop'"
 >
   <div
-    class="access-list"
+    class="access-list access-list--company"
     [ngClass]="isMobile ? 'access-list--mobile' : 'access-list--desktop'"
   >
     <div class="search-container">
@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <div class="access-list">
+  <div class="access-list access-list--colaborators">
     <div class="search-container">
       <mat-form-field appearance="fill" class="search-collaborator">
         <mat-label>Buscar por DNI</mat-label>
@@ -87,6 +87,16 @@
           >
             VISITA
           </span>
+
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="onForceExit(person)"
+            matTooltip="Retirar personal de planta"
+            class="exit-button"
+          >
+            <mat-icon>exit_to_app</mat-icon>
+          </button>
           <span
             *ngIf="person.entryDeparture"
             class="result__entry__status"
